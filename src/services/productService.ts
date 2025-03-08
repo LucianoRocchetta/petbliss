@@ -8,14 +8,11 @@ export const getProducts = async () => {
     return await res.json();
 }
 
-export const createProduct = async (formData: Product) => {
+export const createProduct = async (formData: FormData) => {
     try {
         const res = await fetch("/api/products", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData)
+            body: formData
         })
     
         if(!res.ok) {
@@ -55,6 +52,20 @@ export const getProductsByCategory = async (category: string) => {
 
     if(!res.ok) {
         throw new Error("Failed to fetch products by category");
+    }
+
+    return await res.json();
+}
+
+export const updateProductById = async (newData: Product) => {
+    const res = await fetch(`/api/products/${newData._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newData),
+    });
+
+    if (!res.ok) {
+        throw new Error("Error updating product");
     }
 
     return await res.json();

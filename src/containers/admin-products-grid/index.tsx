@@ -4,7 +4,7 @@ import { Grid } from "@/components/shared/grid";
 import { useCallback, useState } from "react";
 import { debounce } from "lodash";
 import { IconCircleDashedPlus } from "@tabler/icons-react";
-import { CreateProductModal } from "@/components/admin/createProductModal";
+import { CreateProductModal } from "@/components/admin";
 import { deleteAllProducts } from "@/services/productService";
 
 export const AdminProductsGrid = () => {
@@ -35,7 +35,7 @@ export const AdminProductsGrid = () => {
     }
 
     return (
-        <section>
+        <section >
             <div className="flex items-center justify-between mb-5">
             <input 
             className="p-2 border rounded-2xl border-gray-400 w-3/4" 
@@ -51,7 +51,7 @@ export const AdminProductsGrid = () => {
             <Grid keyword={keyword} columns={4}/>
             <CreateProductModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
 
-            <div className="bg-red-300 p-5 rounded-2xl">
+            <div className="bg-red-300 p-5 rounded-2xl mt-10">
                 <h2 className="text-2xl font-bold">Danger zone</h2> 
                 <button onClick={handleDeleteProductsButton} className="bg-red-500 text-white rounded-2xl p-2">Eliminar todo</button>
             </div>

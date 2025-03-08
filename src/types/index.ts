@@ -1,6 +1,5 @@
-import { StaticImageData } from "next/image";
-
 export type Product = {
+    _id?: string;
     name: string;
     price: number;
     stock: number;

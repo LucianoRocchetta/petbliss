@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { connectDB } from "@/libs/mongoose";
 import product from "@/models/product";
+import fs from "fs";
+import path from "path";
 
 export async function GET (request: NextRequest) {
     await connectDB();
@@ -25,17 +27,50 @@ export async function GET (request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const data = await request.json();
+        const formData = await request.formData(); 
 
-        if (!data.name || !data.price || !data.description || !data.imageURL || !data.category || !data.stock) {
+        const name = formData.get("name");
+        const price = formData.get("price");
+        const description = formData.get("description");
+        const category = formData.get("category");
+        const stock = formData.get("stock");
+        const image = formData.get("image") as File;
+
+        if (!name || !price || !description || !category || !stock || !image) {
             return NextResponse.json({ error: 'Missing required fields to create the product.' }, { status: 400 });
         }
- 
+
+        if (typeof name !== 'string' || typeof description !== 'string' || typeof category !== 'string') {
+            return NextResponse.json({ error: 'Invalid data types for name, description, or category.' }, { status: 400 });
+        }
+
+        if (typeof price !== 'string' || typeof stock !== 'string') { 
+            return NextResponse.json({ error: 'Price and stock should be numbers.' }, { status: 400 });
+        }
+
         await connectDB();
 
-        const newProduct = new product(data);
+        const uploadDir = path.join(process.cwd(), "public/images");
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
 
+        const imageName = image.name;
+        const filePath = path.join(uploadDir, imageName);
+        const buffer = await image.arrayBuffer();
+        fs.writeFileSync(filePath, Buffer.from(buffer));
+
+        const imageURL = `/images/${imageName}`;
+        const newProduct = new product({
+            name,
+            price: parseFloat(price),
+            description,
+            category,
+            stock: parseInt(stock),
+            imageURL,
+        });
         await newProduct.save();
+
         return NextResponse.json({ message: 'Product successfully created', product: newProduct }, { status: 201 });
     } catch (error) {
         console.error('Error creating product:', error);

@@ -1,5 +1,6 @@
 import { Category } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 
 type CategoryProps = {
   categories: Category[];
@@ -14,7 +15,7 @@ export default function Categories({ categories }: CategoryProps) {
       </div>
       <div className="grid grid-cols-4 gap-2">
         {categories.map((category) => (
-          <div
+          <Link href={`/shop?category=${category.title}`}
             key={category.id}
             className="bg-slate-50 rounded-2xl h-40 relative overflow-hidden flex items-center p-5"
             style={{
@@ -32,7 +33,7 @@ export default function Categories({ categories }: CategoryProps) {
               height={150}
               className="absolute bottom-0 right-0"
             />
-          </div>
+          </Link>
         ))}
       </div>
     </div>

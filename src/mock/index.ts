@@ -26,8 +26,8 @@ export const featuredProducts = [
 ];
 
 export const categories = [
-    {id: 1, title: 'Perros', image: '/images/dog.png'},
-    {id: 2, title: 'Gatos', image: '/images/cat.png'},
-    {id: 3, title: 'Accesorios', image: '/images/accessories.png'},
-    {id: 4, title: 'Medicamentos', image: '/images/medicines.png'}
+    {id: 1, title: 'perro', image: '/images/dog.png'},
+    {id: 2, title: 'gato', image: '/images/cat.png'},
+    {id: 3, title: 'accesorio', image: '/images/accessories.png'},
+    {id: 4, title: 'medicamento', image: '/images/medicines.png'}
 ];

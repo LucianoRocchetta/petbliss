@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "@tabler/icons-react": "^3.31.0",
+    "gridfs-stream": "^1.1.1",
     "lodash": "^4.17.21",
     "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.1",
     "next": "14.2.24",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/gridfs-stream": "^0.5.39",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",
     "@types/react": "^18",

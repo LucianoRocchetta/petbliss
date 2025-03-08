@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getProducts, getProductsByCategory, getProductsByKeyword } from "@/services/productService";
 import { ProductCard } from "../productCard";
 import { ProductCardAdmin } from "@/components/admin";
+import product from "@/models/product";
 
 type GridProps = {
     columns: number;
@@ -23,6 +24,7 @@ export const Grid = ({columns, keyword, category}: GridProps) => {
                 if(category) {
                     products = await getProductsByCategory(category)
                     setProducts(products)
+                    console.log(products)
                     return;
                 }
                 if(keyword) {
