@@ -36,6 +36,7 @@ export const AdminProductsGrid = () => {
 
     return (
         <section >
+            <h2 className="text-2xl font-bold">Productos</h2>
             <div className="flex items-center justify-between mb-5">
             <input 
             className="p-2 border rounded-2xl border-gray-400 w-3/4" 

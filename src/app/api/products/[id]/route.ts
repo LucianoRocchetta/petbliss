@@ -1,7 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/product"
 import { connectDB } from "@/libs/mongoose";
 import product from "@/models/product";
+
+export async function DELETE(request: NextRequest, { params }: {params: {id: string}}) {
+    try {
+        await connectDB();
+
+        const { id } = params
+    
+        if(!id) return NextResponse.json({message: "Product ID is required"}, {status: 400})
+    
+        const deletedProduct = await Product.findByIdAndDelete(id);
+    
+        if(!deletedProduct) return NextResponse.json({message: "Product not found"}, {status: 404})
+    
+        return NextResponse.json({message: "Product deleted successfully"}, {status: 200})
+    } catch (error) {
+        return NextResponse.json({message: "Error deleting product by ID", error}, {status: 500})
+    }
+    
+}
 
 export async function PUT(req: Request, {params}: {params: {id: string}}) {
     try {

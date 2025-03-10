@@ -1,4 +1,4 @@
-import { AdminProductsGrid } from "@/containers";
+import { AdminProductsGrid, AdminCategoriesPanel } from "@/containers";
 
 
 export default function AdminPanel() {
@@ -7,9 +7,9 @@ export default function AdminPanel() {
         <div className="h-full">
             <h2>Admin Panel</h2>
 
-            <h2 className="text-2xl font-bold">Productos</h2>
-            <AdminProductsGrid />
             
+            <AdminProductsGrid />
+            <AdminCategoriesPanel />
            
         </div>
     );

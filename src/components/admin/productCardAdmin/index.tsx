@@ -1,9 +1,10 @@
 "use client"
 
 import { Product } from "@/types"
-import { IconPencil } from "@tabler/icons-react";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import Image from "next/image";
 import { EditProductModal } from "../editProductModal";
+import { deleteProductById } from "@/services/productService";
 import { useState } from "react";
 
 type ProductCardAdminProps = {
@@ -15,6 +16,20 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
 
     const handleIsModalVisible = () => {
         setIsModalVisible(true);
+    }
+
+    const handleDeleteProduct = async (productId: string) => {
+        try {
+            const res = await deleteProductById(productId);
+
+            if(!res) {
+                alert("Failed to delete product");
+                return;
+            }
+            alert("Product deleted successfully") 
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (
@@ -36,7 +51,10 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
                                 <h3 className="text-xl font-semibold">{product.name}</h3>
                                 <p>${product.price}</p>
                             </div>
+                            <div className="flex gap-2">
                             <IconPencil onClick={handleIsModalVisible} className="w-10 h-10 p-2 border rounded-full border-black" />
+                            <IconTrash onClick={() => {handleDeleteProduct(product._id ? product._id : "")}} className="w-10 h-10 p-2 border rounded-full border-black text-gray-50 bg-red-500" />
+                            </div>
                         </div>
                     </div>
     )

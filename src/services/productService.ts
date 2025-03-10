@@ -31,10 +31,22 @@ export const deleteAllProducts = async () => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to delete");
+        throw new Error("Failed to delete all products");
     }
 
     return await res.json();
+}
+
+export const deleteProductById = async (productId: string) => {
+    const res = await fetch(`/api/products/${productId}`, {
+        method: "DELETE"
+    })
+
+    if(!res.ok) {
+        throw new Error(`Failed to delete product ${productId}`)
+    }
+
+    return await res.status;
 }
 
 export const getProductsByKeyword = async (keyword: string) => {

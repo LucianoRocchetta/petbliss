@@ -9,7 +9,7 @@ export type Product = {
 }
 
 export type Category = {
-    id: number;
-    title: string;
-    image: string;
+    _id?: string;
+    name: string;
+    imageURL: string;
 }
