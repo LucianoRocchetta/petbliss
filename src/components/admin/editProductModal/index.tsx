@@ -4,25 +4,28 @@ import React, { useState } from "react"
 import { createProduct } from "@/services/productService"
 import { Product } from "@/types"
 import { IconX } from "@tabler/icons-react"
+import { updateProductById } from "@/services/productService"
+import { update } from "lodash"
 
-interface CreateProductModalProps {
+interface EditProductModal {
+    product: Product,
     setIsModalVisible: (isModalVisible: Boolean) => void,
     isModalVisible: Boolean
 }
 
-export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreateProductModalProps) => {
+export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: EditProductModal) => {
 
     const formDataTemplate = {
-        name: "",
-        price: 0,
-        imageURL: "",
-        stock: 0,
-        category: "",
-        description: ""
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        imageURL: product.imageURL,
+        stock: product.stock,
+        category: product.category,
+        description: product.description
     }
 
     const [formData, setFormData] = useState<Product>(formDataTemplate)
-    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({
@@ -31,38 +34,23 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
         })
     }
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-          setImageFile(file);
-        }
-      };
-
     const handleSubmit = async (e: React.FormEvent) => {
         try {
-
-            const formDataToSend = new FormData();
-            formDataToSend.append("name", formData.name);
-            formDataToSend.append("price", String(formData.price));
-            formDataToSend.append("category", formData.category);
-            formDataToSend.append("description", String(formData.description));
-            formDataToSend.append("stock", String(formData.stock));
-
-            if (imageFile) {
-                formDataToSend.append("image", imageFile);
+            const updatedData = {
+                _id: formData._id,
+                name: formData.name,
+                price: formData.price,
+                imageURL: formData.imageURL,
+                category: formData.category,
+                description: formData.description,
+                stock: formData.stock
             }
 
-            const res = await createProduct(formDataToSend);
+            const res = await updateProductById(updatedData)
 
-            if (res) {
-                alert("Product created")
-                setFormData(formDataTemplate)
-                setIsModalVisible(false);
-            } else {
-                alert("Failed to create product")
-            }
-        } catch (error) {
-            alert(error)
+        }
+        catch (error) {
+            alert("Error updating product")
         }
     }
 
@@ -70,7 +58,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
         isModalVisible && (
         <div className="bg-white absolute w-1/4 top-0 right-0 p-6 h-full border-gray-400 border">
             <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold mb-4">Crear producto</h2>
+            <h2 className="text-xl font-bold mb-4">Editar producto</h2>
             <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)}/>
             </div>
 
@@ -108,7 +96,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                     <h2>Categoría</h2>
                     <input 
                         name="category"
-                        value={formData.category}
+                        value={formData.category.name}
                         onChange={handleFormChange}
                         className="p-2 border rounded-2xl border-gray-400 w-full"
                     />
@@ -123,16 +111,10 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                     />
                 </div>
                 <div>
-            <h2>Imagen</h2>
-            <input
-              type="file"
-              onChange={handleImageChange}
-              className="p-2 border rounded-2xl border-gray-400 w-full"
-            />
           </div>
             </form>
             <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg" onClick={handleSubmit}>
-                    Crear Producto
+                    Modificar producto
             </button>
         </div>
     ));

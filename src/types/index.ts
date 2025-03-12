@@ -1,16 +1,19 @@
-import { StaticImageData } from "next/image";
-
 export type Product = {
+    _id?: string;
     name: string;
     price: number;
     stock: number;
-    category: string;
+    category: {
+        _id?: string;
+        name: string;
+        imageURL: string;
+    }
     imageURL: string;
     description?: string;
 }
 
 export type Category = {
-    id: number;
-    title: string;
-    image: string;
+    _id?: string;
+    name: string;
+    imageURL: string;
 }
