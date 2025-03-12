@@ -1,8 +1,9 @@
-// src/app/layout.tsx
+"use client"
 
 import '@/styles/globals.css';
 import { SideBarMenu } from '@/components/shared';
 import { Roboto } from 'next/font/google'
+import { SessionProvider } from 'next-auth/react';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -16,6 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <SessionProvider>
     <html lang="en">
       <body className={`${roboto.className} flex h-screen`}>
         <SideBarMenu />
@@ -24,5 +26,6 @@ export default function RootLayout({
         </main>
       </body>
     </html>
+    </SessionProvider>
   );
 }

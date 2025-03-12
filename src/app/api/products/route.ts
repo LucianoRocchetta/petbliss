@@ -3,13 +3,14 @@ import { connectDB } from "@/libs/mongoose";
 import product from "@/models/product";
 import fs from "fs";
 import path from "path";
+import category from "@/models/category";
 
 export async function GET (request: NextRequest) {
     await connectDB();
 
     const { searchParams } = new URL(request.url)
     const keyword = searchParams.get('keyword');
-    const category = searchParams.get('category');
+    const categoryParam = searchParams.get('category');
 
     const query:any = {};
 
@@ -19,9 +20,17 @@ export async function GET (request: NextRequest) {
                 $options: 'i'
             }
     }
-    if (category) query.category = category;
+    if (categoryParam) {
+        const productCategory = await category.findOne({name: categoryParam})
 
-    const products = await product.find(query);
+        if(productCategory) {
+            query.category = productCategory._id;
+        } else {
+            return NextResponse.json([], {status: 200});
+        }
+    }
+
+    const products = await product.find(query).populate('category');
     return NextResponse.json(products);
 }
 

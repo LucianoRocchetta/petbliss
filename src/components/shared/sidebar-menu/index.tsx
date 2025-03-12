@@ -1,7 +1,15 @@
+"use client"
+
 import Link from "next/link"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/router"
 import { IconHome, IconShoppingCart, IconCat } from "@tabler/icons-react"
 
 export const SideBarMenu = () => {
+    const { data: session, status } = useSession();
+
+    console.log(session)
+
     return (
         <aside className="w-1/6 border-gray-300 border-r bg-gray-50">
             <div className="w-full flex items-center justify-center p-4">
@@ -21,6 +29,13 @@ export const SideBarMenu = () => {
                         <IconCat className="w-10 h-10"/>
                         <h2 className="text-xl">Sobre nosotros</h2>
                     </Link>
+
+                    {
+                        session?.user.role == "admin" ? <div>
+                            <button>Panel de control</button>
+                            <button>Cerrar sesión</button>
+                        </div> : ""
+                    }
                 </ul>
             </menu>
         </aside>
