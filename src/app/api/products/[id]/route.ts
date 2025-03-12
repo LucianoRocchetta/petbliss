@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/product"
 import { connectDB } from "@/libs/mongoose";
 import product from "@/models/product";
+import mongoose from "mongoose";
+import category from "@/models/category";
 
 export async function DELETE(request: NextRequest, { params }: {params: {id: string}}) {
     try {
@@ -35,10 +37,20 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
             return NextResponse.json({error: "Product not found"}, {status: 404});
         }
 
+        if(data.category) {
+            const categoryDoc = await category.findOne({ name: data.category });
+
+            if (!categoryDoc) {
+                return NextResponse.json({ error: "Category not found" }, { status: 404 });
+            }
+
+            data.category = categoryDoc._id;
+        }
+
         const updatedProduct = await product.findByIdAndUpdate(id, data, {
             new: true,
             runValidators: true,
-        })
+        }).populate("category")
         return NextResponse.json(updatedProduct, {status: 200})
     } catch (error) {
         return NextResponse.json({error: "Internal server error"}, {status: 500})

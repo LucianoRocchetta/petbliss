@@ -96,7 +96,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                     <h2>Categoría</h2>
                     <input 
                         name="category"
-                        value={formData.category}
+                        value={formData.category.name}
                         onChange={handleFormChange}
                         className="p-2 border rounded-2xl border-gray-400 w-full"
                     />

@@ -21,7 +21,6 @@ export default withAuth(
   }
 );
 
-// Aplica el middleware a todas las rutas dentro de /admin/
 export const config = {
-  matcher: "/admin/:path*",
+  matcher: "/admin",
 };
