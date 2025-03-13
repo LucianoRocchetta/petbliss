@@ -12,10 +12,10 @@ export default function HomeGrid() {
                         fill
                         className="object-cover rounded-xl"
                     />
-                    <div className="absolute inset-0 bg-black opacity-20 rounded-xl"></div>
+                    <div className="absolute inset-0 bg-zinc-900 opacity-20 rounded-xl"></div>
                     <div className="absolute bottom-0 left-0 flex flex-col p-5 gap-2">
-                        <h2 className="text-4xl font-bold text-white">Lorem ipsum dolor sit amet</h2>
-                        <button className="bg-white text-black rounded-xl p-2 w-1/4">Explorar</button>
+                        <h2 className="text-3xl font-bold lg:text-4xl">Lorem ipsum dolor sit amet</h2>
+                        <button className="bg-zinc-200 text-zinc-800 rounded-xl p-2 w-fit">Explorar</button>
                     </div>
                 </div>
                 <div className="h-[300px] relative rounded-xl">
@@ -25,10 +25,10 @@ export default function HomeGrid() {
                         fill
                         className="object-cover rounded-xl"
                     />
-                    <div className="absolute inset-0 bg-black opacity-20 rounded-xl"></div>
+                    <div className="absolute inset-0 bg-zinc-900 opacity-20 rounded-xl"></div>
                     <div className="absolute bottom-0 left-0 flex flex-col p-5 gap-2">
-                        <h2 className="text-4xl font-bold text-white">Lorem ipsum dolor sit amet</h2>
-                        <button className="bg-white text-black rounded-xl p-2 w-1/4">Explorar</button>
+                        <h2 className="text-3xl font-bold text-white lg:text-4xl">Lorem ipsum dolor sit amet</h2>
+                        <button className="bg-zinc-200 text-zinc-800 rounded-xl p-2 w-fit">Explorar</button>
                     </div>
                 </div>
                 <div className="h-[300px] relative rounded-xl">
@@ -38,10 +38,10 @@ export default function HomeGrid() {
                         fill
                         className="object-cover rounded-xl"
                     />
-                    <div className="absolute inset-0 bg-black opacity-20 rounded-xl"></div>
+                    <div className="absolute inset-0 bg-zinc-900 opacity-20 rounded-xl"></div>
                     <div className="absolute bottom-0 left-0 flex flex-col p-5 gap-2">
-                        <h2 className="text-4xl font-bold text-white">Lorem ipsum dolor sit amet</h2>
-                        <button className="bg-white text-black rounded-xl p-2 w-1/4">Explorar</button>
+                        <h2 className="text-3xl font-bold text-white lg:text-4xl">Lorem ipsum dolor sit amet</h2>
+                        <button className="bg-zinc-200 text-zinc-800 rounded-xl p-2 w-fit">Explorar</button>
                     </div>
                 </div>
             </div>

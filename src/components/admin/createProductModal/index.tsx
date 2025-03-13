@@ -1,9 +1,10 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { createProduct } from "@/services/productService"
 import { Product } from "@/types"
 import { IconX } from "@tabler/icons-react"
+import { getCategoriesNames } from "@/services/categoryService"
 
 interface CreateProductModalProps {
     setIsModalVisible: (isModalVisible: Boolean) => void,
@@ -11,6 +12,23 @@ interface CreateProductModalProps {
 }
 
 export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreateProductModalProps) => {
+    const [categories, setCategories] = useState();
+
+    useEffect(() => {
+        const fetchCategoriesNames = async () => {
+            try {
+                const res = await getCategoriesNames();
+    
+                const categoryNames = res.map((category: { _id: string, name: string }) => category.name);
+
+                setCategories(categoryNames)
+            } catch (error) {
+                console.error("Failed to fetch categories names")
+            }
+        }
+        fetchCategoriesNames();
+    }, [])
+    
 
     const formDataTemplate = {
         name: "",
@@ -68,7 +86,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
 
     return (
         isModalVisible && (
-        <div className="bg-white absolute w-1/4 top-0 right-0 p-6 h-full border-gray-400 border">
+        <div className="z-20 w-full h-full bg-zinc-800 absolute lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l">
             <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold mb-4">Crear producto</h2>
             <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)}/>
@@ -81,7 +99,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                         name="name"
                         value={formData.name}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl w-full text-zinc-800"
                     />
                 </div>
                 <div>
@@ -91,7 +109,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                         type="number"
                         value={formData.price}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl w-full text-zinc-800"
                     />
                 </div>
                 <div>
@@ -101,25 +119,34 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                         type="number"
                         value={formData.stock}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl w-full text-zinc-800"
                     />
                 </div>
                 <div>
-                    <h2>Categoría</h2>
-                    <input 
-                        name="category"
-                        value={formData.category}
-                        onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
-                    />
-                </div>
+            <h2>Categoría</h2>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleFormChange}
+              className="p-2 border rounded-2xl w-full text-zinc-800"
+            >
+              <option value="" disabled>
+                Selecciona una categoría
+              </option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
                 <div>
                     <h2>Descripción</h2>
                     <textarea 
                         name="description"
                         value={formData.description}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl w-full text-zinc-800"
                     />
                 </div>
                 <div>
@@ -127,7 +154,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
             <input
               type="file"
               onChange={handleImageChange}
-              className="p-2 border rounded-2xl border-gray-400 w-full"
+              className="p-2 border rounded-2xl w-full text-zinc-800"
             />
           </div>
             </form>

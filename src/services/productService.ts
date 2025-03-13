@@ -1,12 +1,22 @@
 import { Product } from "@/types";
 
-export const getProducts = async () => {
-    const res = await fetch("/api/products");
-    if(!res.ok) {
-        throw new Error("Failed to fetch products");
+export const getProducts = async ({ page = 1, keyword = "", category = "" }) => {
+    try {
+        const queryParams = new URLSearchParams({
+            page: page.toString(),
+            ...(keyword && { keyword }),
+            ...(category && { category }),
+        }).toString();
+
+        const res = await fetch(`/api/products?${queryParams}`);
+        if (!res.ok) throw new Error("Failed to fetch products");
+
+        return await res.json();
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return { products: [], totalPages: 1 };
     }
-    return await res.json();
-}
+};
 
 export const createProduct = async (formData: FormData) => {
     try {

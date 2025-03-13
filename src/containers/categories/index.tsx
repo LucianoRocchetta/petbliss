@@ -28,21 +28,20 @@ export default function Categories() {
     <div>
       <div className="flex flex-row items-center justify-between mb-5">
           <h2 className="text-2xl font-bold">Categorias</h2>
-          <button className="border rounded-2xl p-2">Ver más categorias</button>
       </div>
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
         {categories.map((category) => (
           <Link href={`/shop?category=${category.name}`}
             key={category._id}
-            className="bg-slate-50 rounded-2xl h-40 relative overflow-hidden flex items-center p-5"
+            className="rounded-2xl h-40 relative overflow-hidden flex items-center p-5"
             style={{
-              backgroundImage: `linear-gradient(to bottom, #2193b0, #6dd5ed)`,
+              backgroundImage: `linear-gradient(to bottom, #505050, #434343)`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
           >
-            <div className="absolute inset-0 bg-black opacity-30"></div>
-            <h2 className="text-2xl text-white font-bold z-50">{category.name}</h2>
+            <div className="absolute inset-0 bg-zinc-800 opacity-30"></div>
+            <h2 className="text-2xl text-zinc-200 font-bold z-30">{category.name}</h2>
             <Image
               src={category.imageURL}
               alt={category.name}

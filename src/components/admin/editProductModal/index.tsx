@@ -1,11 +1,9 @@
 "use client"
 
 import React, { useState } from "react"
-import { createProduct } from "@/services/productService"
 import { Product } from "@/types"
 import { IconX } from "@tabler/icons-react"
 import { updateProductById } from "@/services/productService"
-import { update } from "lodash"
 
 interface EditProductModal {
     product: Product,
@@ -56,7 +54,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
 
     return (
         isModalVisible && (
-        <div className="bg-white absolute w-1/4 top-0 right-0 p-6 h-full border-gray-400 border">
+        <div className="z-50 w-full h-full bg-zinc-800 absolute lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l">
             <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold mb-4">Editar producto</h2>
             <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)}/>
@@ -69,7 +67,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                         name="name"
                         value={formData.name}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl text-zinc-800 w-full"
                     />
                 </div>
                 <div>
@@ -79,7 +77,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                         type="number"
                         value={formData.price}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl text-zinc-800 w-full"
                     />
                 </div>
                 <div>
@@ -89,16 +87,16 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                         type="number"
                         value={formData.stock}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl text-zinc-800 w-full"
                     />
                 </div>
                 <div>
                     <h2>Categoría</h2>
                     <input 
                         name="category"
-                        value={formData.category.name}
+                        value={formData.category ? formData.category.name : ""}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl text-zinc-800 w-full"
                     />
                 </div>
                 <div>
@@ -107,7 +105,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                         name="description"
                         value={formData.description}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl text-zinc-800 w-full"
                     />
                 </div>
                 <div>

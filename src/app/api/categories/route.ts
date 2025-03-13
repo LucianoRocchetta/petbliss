@@ -1,4 +1,4 @@
-import { connectDB } from "@/libs/mongoose";
+import { connectDB } from "@/lib/mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";

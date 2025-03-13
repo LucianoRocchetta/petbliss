@@ -6,6 +6,8 @@ import Image from "next/image";
 import { EditProductModal } from "../editProductModal";
 import { deleteProductById } from "@/services/productService";
 import { useState } from "react";
+import AlertDialogShadcn from "@/components/shared/alertDialogDelete";
+import AlertDialogDelete from "@/components/shared/alertDialogDelete";
 
 type ProductCardAdminProps = {
     product: Product;
@@ -33,8 +35,10 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
     }
 
     return (
-        <div key={product.name} className="border rounded-2xl border-gray-300 bg-zinc-50 p-4 z-20">
+        <>
             <EditProductModal product={product} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
+<div key={product.name} className="border rounded-2xl bg-zinc-200 text-zinc-900 p-4">
+            
             <div className="flex justify-center items-center mb-4">
                 <div className="w-64 h-64 overflow-hidden">
                     <Image
@@ -49,13 +53,18 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
                         <div className="flex justify-between items-center">
                             <div>
                                 <h3 className="text-xl font-semibold">{product.name}</h3>
+                                <p className={!product.category ? "text-red-600" : ""}>{product.category ? product.category.name : "Sin categoria"}</p>
                                 <p>${product.price}</p>
                             </div>
                             <div className="flex gap-2">
-                            <IconPencil onClick={handleIsModalVisible} className="w-10 h-10 p-2 border rounded-full border-black" />
-                            <IconTrash onClick={() => {handleDeleteProduct(product._id ? product._id : "")}} className="w-10 h-10 p-2 border rounded-full border-black text-gray-50 bg-red-500" />
+                            <IconPencil onClick={handleIsModalVisible} className="w-10 h-10 p-2 border rounded-full text-zinc-800 border-zinc-800" />
+                            <AlertDialogDelete onConfirm={() => handleDeleteProduct(product._id ?? "")}>
+                                <IconTrash className="w-10 h-10 p-2 rounded-full text-zinc-200 bg-red-600" />
+                            </AlertDialogDelete>                            
                             </div>
                         </div>
                     </div>
+        </>
+        
     )
 }
