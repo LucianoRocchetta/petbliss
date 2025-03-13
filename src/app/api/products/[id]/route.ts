@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/product"
-import { connectDB } from "@/libs/mongoose";
+import { connectDB } from "@/lib/mongoose";
 import product from "@/models/product";
 import mongoose from "mongoose";
 import category from "@/models/category";

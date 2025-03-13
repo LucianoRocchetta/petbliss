@@ -60,7 +60,7 @@ export const CreateCategoryModal = ({setIsModalVisible, isModalVisible}: CreateC
 
     return (
         isModalVisible && (
-        <div className="bg-white absolute w-1/4 top-0 right-0 p-6 h-full border-gray-400 border">
+        <div className="z-20 w-full h-full bg-zinc-800 absolute lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l">
             <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold mb-4">Crear Categoria</h2>
             <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)}/>
@@ -73,7 +73,7 @@ export const CreateCategoryModal = ({setIsModalVisible, isModalVisible}: CreateC
                         name="name"
                         value={formData.name}
                         onChange={handleFormChange}
-                        className="p-2 border rounded-2xl border-gray-400 w-full"
+                        className="p-2 border rounded-2xl text-zinc-800 w-full"
                     />
                 </div>
                 <div>
@@ -81,7 +81,7 @@ export const CreateCategoryModal = ({setIsModalVisible, isModalVisible}: CreateC
                 <input
                 type="file"
                 onChange={handleImageChange}
-                className="p-2 border rounded-2xl border-gray-400 w-full"
+                className="p-2 border rounded-2xl text-zinc-800 w-full"
                 />
             </div>
             </form>

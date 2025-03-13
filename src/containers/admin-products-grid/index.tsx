@@ -36,14 +36,14 @@ export const AdminProductsGrid = () => {
 
     return (
         <section >
-            <h2 className="text-2xl font-bold">Productos</h2>
+            <h2 className="mb-5 text-2xl font-bold">Productos</h2>
             <div className="flex items-center justify-between mb-5">
             <input 
-            className="p-2 border rounded-2xl border-gray-400 w-3/4" 
+            className="p-2 border rounded-2xl text-zinc-800 lg:w-3/4" 
             placeholder="Busqueda"
             onChange={onInputChange}>
             </input>
-                <button onClick={handleIsModalVisible} className="p-2 bg-blue-500 flex items-center justify-center gap-2 rounded-2xl text-white">
+                <button onClick={handleIsModalVisible} className="p-2 bg-blue-500 flex items-center justify-center gap-2 rounded-2xl text-zinc-200">
                     <IconCircleDashedPlus className="w-8 h-8"/>
                     Agregar
                 </button>
@@ -52,9 +52,9 @@ export const AdminProductsGrid = () => {
             <Grid keyword={keyword} columns={4}/>
             <CreateProductModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
 
-            <div className="bg-red-300 p-5 rounded-2xl mt-10">
+            <div className="bg-red-900 p-5 rounded-2xl mt-10 space-y-5">
                 <h2 className="text-2xl font-bold">Danger zone</h2> 
-                <button onClick={handleDeleteProductsButton} className="bg-red-500 text-white rounded-2xl p-2">Eliminar todo</button>
+                <button onClick={handleDeleteProductsButton} className="bg-red-500 rounded-2xl p-2">Eliminar todo</button>
             </div>
         </section>
     )

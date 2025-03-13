@@ -1,38 +1,56 @@
 import { NextResponse, NextRequest } from "next/server";
-import { connectDB } from "@/libs/mongoose";
+import { connectDB } from "@/lib/mongoose";
 import product from "@/models/product";
 import fs from "fs";
 import path from "path";
 import category from "@/models/category";
 
-export async function GET (request: NextRequest) {
-    await connectDB();
+export async function GET(request: NextRequest) {
+    try {
+        await connectDB();
 
-    const { searchParams } = new URL(request.url)
-    const keyword = searchParams.get('keyword');
-    const categoryParam = searchParams.get('category');
+        const { searchParams } = new URL(request.url);
+        const keyword = searchParams.get("keyword");
+        const categoryParam = searchParams.get("category");
+        const page = parseInt(searchParams.get("page") || "1", 10);
+        const limit = 4;
+        const skip = (page - 1) * limit;
 
-    const query:any = {};
+        const query: any = {};
 
-    if (keyword) {
-        query.name = {
-                $regex: keyword,
-                $options: 'i'
-            }
-    }
-    if (categoryParam) {
-        const productCategory = await category.findOne({name: categoryParam})
-
-        if(productCategory) {
-            query.category = productCategory._id;
-        } else {
-            return NextResponse.json([], {status: 200});
+        if (keyword) {
+            query.name = { $regex: keyword, $options: "i" };
         }
-    }
 
-    const products = await product.find(query).populate('category');
-    return NextResponse.json(products);
+        if (categoryParam) {
+            const productCategory = await category.findOne({ name: categoryParam });
+
+            if (productCategory) {
+                query.category = productCategory._id;
+            } else {
+                return NextResponse.json({ products: [], total: 0, totalPages: 0 }, { status: 200 });
+            }
+        }
+
+        const products = await product.find(query)
+            .populate("category")
+            .skip(skip)
+            .limit(limit);
+
+        const total = await product.countDocuments(query);
+
+        return NextResponse.json({
+            products,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+        });
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return NextResponse.json({ error: "Error fetching products" }, { status: 500 });
+    }
 }
+
 
 export async function POST(request: NextRequest) {
     try {

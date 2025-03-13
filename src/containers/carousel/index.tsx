@@ -9,7 +9,7 @@ type CarouselProps = {
 export const Carousel = ({ title, category }: CarouselProps) => {
     return (
         <section>
-            <div className="flex flex-row items-center justify-between mb-5">
+            <div className="flex flex-col space-y-2 w-fit lg:flex-row lg:items-center justify-between mb-5 lg:w-full">
             <h2 className="text-2xl font-bold">{title}</h2>
             <Link href={`/shop?category=${category}`} className="border rounded-2xl p-2">
                 Ver más {title}

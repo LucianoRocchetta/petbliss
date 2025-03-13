@@ -23,6 +23,15 @@ export const getCategories = async () => {
     return await res.json();
 }
 
+export const getCategoriesNames = async () => {
+    const res = await fetch("/api/categories/metadata");
+
+    if(!res.ok) {
+        throw new Error("Failed to fetch categories names")
+    }
+    return await res.json();
+}
+
 export const deleteCategoryById = async (categoryId: string) => {
     const res = await fetch(`/api/categories/${categoryId}`, {
         method: "DELETE"
