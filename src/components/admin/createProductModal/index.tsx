@@ -6,12 +6,12 @@ import { IconX } from "@tabler/icons-react"
 import { getCategoriesNames } from "@/services/categoryService"
 
 interface CreateProductModalProps {
-    setIsModalVisible: (isModalVisible: Boolean) => void,
-    isModalVisible: Boolean
+    setIsModalVisible: (isModalVisible: boolean) => void,
+    isModalVisible: boolean
 }
 
 export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreateProductModalProps) => {
-    const [categories, setCategories] = useState();
+    const [categories, setCategories] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchCategoriesNames = async () => {
@@ -34,6 +34,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
         price: 0,
         imageURL: "",
         available: "true",
+        byOrder: false,
         category: "",
         description: ""
     }
@@ -64,6 +65,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
             formDataToSend.append("category", formData.category);
             formDataToSend.append("description", String(formData.description));
             formDataToSend.append("available", String(formData.available));
+            formDataToSend.append("byOrder", String(formData.byOrder));
 
             if (imageFile) {
                 formDataToSend.append("image", imageFile);
@@ -85,13 +87,13 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
 
     return (
         isModalVisible && (
-        <div className="z-20 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l">
+        <div className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l transform ${isModalVisible ? "translate-x-0" : "translate-x-full"} transition-transform duration-300`}>
             <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold mb-4">Crear producto</h2>
             <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)}/>
             </div>
 
-            <form>
+            <form className="space-y-2">
                 <div>
                     <h2>Nombre del producto</h2>
                     <input 
@@ -124,6 +126,17 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                     </select>
                 </div>
                 <div>
+                <div>
+                        <h2>Por encargo</h2>
+                        <input
+                            type="checkbox"
+                            name="byOrder"
+                            checked={formData.byOrder}
+                            onChange={(e) => setFormData({ ...formData, byOrder: e.target.checked })}
+                            className="mr-2"
+                        />
+                        <label htmlFor="byOrder">Sí</label>
+                </div>
             <h2>Categoría</h2>
             <select
               name="category"

@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
         const keyword = searchParams.get("keyword");
         const categoryParam = searchParams.get("category");
         const page = parseInt(searchParams.get("page") || "1", 10);
-        const limit = 4;
+        const limit = parseInt(searchParams.get("limit") || "8", 10);
         const skip = (page - 1) * limit;
 
         const query: any = {};
@@ -62,8 +62,9 @@ export async function POST(request: NextRequest) {
         const categoryParam = formData.get("category");
         const available = formData.get("available") === "true"
         const image = formData.get("image") as File;
+        const byOrder = formData.get("byOrder") === "true"
 
-        if (!name || !price || !description || !categoryParam || available === null || !image) {
+        if (!name || !price || !description || !categoryParam || available === null || !image || byOrder === null) {
             return NextResponse.json({ error: 'Missing required fields to create the product.' }, { status: 400 });
         }
 
@@ -100,6 +101,7 @@ export async function POST(request: NextRequest) {
             description,
             category: productCategory._id,
             available: available,
+            byOrder: byOrder,
             imageURL,
         });
         await newProduct.save();

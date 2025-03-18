@@ -47,7 +47,7 @@ export const Catalog = () => {
         <section>
             <div className="flex flex-col items-start justify-center mb-5 space-y-2 p-5 bg-zinc-700 rounded-2xl">
             <input 
-            className="p-2 border rounded-2xl w-full lg:w-1/2 mb-5 text-zinc-800" 
+            className="p-4 border rounded-2xl w-full lg:w-1/4 mb-5 text-zinc-800" 
             placeholder="Busqueda"
             onChange={onInputChange}>
             </input>
@@ -66,7 +66,7 @@ export const Catalog = () => {
                 <h2 className="text-2xl font-bold">{keyword ? `Busqueda > ${keyword}` : "Todos"}</h2>
                 <button className="border rounded-2xl p-2">Ordenar por</button>
             </div>
-            <Grid keyword={keyword} category={category} columns={4}/>
+            <Grid keyword={keyword} category={category} columns={4} limit={8}/>
         </section>
     )
 }

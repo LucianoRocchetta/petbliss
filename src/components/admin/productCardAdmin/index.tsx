@@ -1,7 +1,7 @@
 "use client"
 
 import { Product } from "@/types"
-import { IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconPencil, IconTrash, IconReport } from "@tabler/icons-react";
 import Image from "next/image";
 import { EditProductModal } from "../editProductModal";
 import { deleteProductById } from "@/services/productService";
@@ -13,7 +13,7 @@ type ProductCardAdminProps = {
 }
 
 export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
-    const [isModalVisible, setIsModalVisible] = useState<Boolean>(false);
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     console.log(product)
 
@@ -38,7 +38,7 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
     return (
         <>
             <EditProductModal product={product} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
-<div key={product.name} className="border rounded-2xl bg-zinc-200 text-zinc-900 p-4">
+<div key={product.name} className="relative border rounded-2xl bg-zinc-200 text-zinc-900 p-4">
             
             <div className="flex justify-center items-center mb-4">
                 <div className="w-64 h-64 overflow-hidden">
@@ -64,7 +64,16 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
                                 <IconTrash className="w-10 h-10 p-2 rounded-full text-zinc-200 bg-red-600" />
                             </AlertDialogDelete>                            
                             </div>
+                            
                         </div>
+                        {
+                                    product.byOrder ? (
+                                        <div className="absolute top-0 left-4 w-1/2 flex gap-2 bg-blue-600/90 p-1 mt-2 rounded-2xl text-zinc-200 items-center justify-center">
+                                            <IconReport className="w-8 h-8 text-zinc-200"/>
+                                            <p className="font-bold">Por encargo</p>
+                                        </div>
+                                    ) : ""
+                                }
                     </div>
         </>
         

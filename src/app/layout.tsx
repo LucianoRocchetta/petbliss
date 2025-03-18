@@ -25,6 +25,7 @@ export default function RootLayout({
         <main className="w-3/4 m-auto my-20">
           {children}
         </main>
+        
         <Footer />
       </body>
     </html>

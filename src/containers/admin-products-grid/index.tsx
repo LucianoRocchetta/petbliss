@@ -9,7 +9,7 @@ import { deleteAllProducts } from "@/services/productService";
 
 export const AdminProductsGrid = () => {
     const [keyword, setKeyword] = useState<string>('');
-    const [isModalVisible, setIsModalVisible] = useState<Boolean>(false);
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     const handleKeywordChange = useCallback(
         debounce((value: string) => {
@@ -37,24 +37,24 @@ export const AdminProductsGrid = () => {
     return (
         <section >
             <h2 className="mb-5 text-2xl font-bold">Productos</h2>
-            <div className="flex items-center justify-between mb-5">
+            <div className="grid grid-cols-3 gap-2 items-center justify-between mb-5 lg:flex">
             <input 
-            className="p-2 border rounded-2xl text-zinc-800 lg:w-3/4" 
+            className="p-2 lg:p-4 border rounded-2xl text-zinc-800 col-span-2 lg:w-1/4" 
             placeholder="Busqueda"
             onChange={onInputChange}>
             </input>
-                <button onClick={handleIsModalVisible} className="p-2 bg-blue-500 flex items-center justify-center gap-2 rounded-2xl text-zinc-200">
+                <button onClick={handleIsModalVisible} className="p-2 col-span-1 gap-1 bg-blue-600 flex items-center justify-center  rounded-2xl text-zinc-200">
                     <IconCircleDashedPlus className="w-8 h-8"/>
                     Agregar
                 </button>
             </div>
             
             <Grid keyword={keyword} columns={4}/>
-            <CreateProductModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
+            {isModalVisible && <CreateProductModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>}
 
             <div className="bg-red-900 p-5 rounded-2xl mt-10 space-y-5">
                 <h2 className="text-2xl font-bold">Danger zone</h2> 
-                <button onClick={handleDeleteProductsButton} className="bg-red-500 rounded-2xl p-2">Eliminar todo</button>
+                <button onClick={handleDeleteProductsButton} className="bg-red-600 rounded-2xl p-2">Eliminar todo</button>
             </div>
         </section>
     )

@@ -15,7 +15,7 @@ export const Carousel = ({ title, category }: CarouselProps) => {
                 Ver más {title}
             </Link>
             </div>
-            <Grid columns={4} category={category}/>
+            <Grid columns={4} category={category} limit={4} pagination={false}/>
         </section>
     )
 }

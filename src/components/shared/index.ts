@@ -1,4 +1,5 @@
 export * from './alertDialogDelete/index';
+export * from './cart/index';
 export * from './categoriesCardSkeleton/index';
 export * from './grid/index';
 export * from './pagination/index';

@@ -1,11 +1,12 @@
 import { Product, ProductDTO } from "@/types";
 
-export const getProducts = async ({ page = 1, keyword = "", category = "" }) => {
+export const getProducts = async ({ page = 1, keyword = "", category = "", limit=8 }) => {
     try {
         const queryParams = new URLSearchParams({
             page: page.toString(),
             ...(keyword && { keyword }),
             ...(category && { category }),
+            limit: limit.toString(),
         }).toString();
 
         const res = await fetch(`/api/products?${queryParams}`);

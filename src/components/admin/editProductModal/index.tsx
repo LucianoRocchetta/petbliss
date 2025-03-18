@@ -8,8 +8,8 @@ import { getCategoriesNames } from "@/services/categoryService"
 
 interface EditProductModal {
     product: Product,
-    setIsModalVisible: (isModalVisible: Boolean) => void,
-    isModalVisible: Boolean
+    setIsModalVisible: (isModalVisible: boolean) => void,
+    isModalVisible: boolean
 }
 
 export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: EditProductModal) => {
@@ -29,13 +29,14 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
             }
             fetchCategoriesNames();
     }, []);
-
+    
     const formDataTemplate = {
         _id: product._id,
         name: product.name,
         price: product.price,
         imageURL: product.imageURL,
         available: product.available,
+        byOrder: product.byOrder,
         category: product.category.name,
         description: product.description
     }
@@ -57,6 +58,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                 price: formData.price,
                 imageURL: formData.imageURL,
                 category: formData.category,
+                byOrder: formData.byOrder,
                 description: formData.description,
                 available: formData.available,
             }
@@ -76,7 +78,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                     <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)} />
                 </div>
 
-                <form>
+                <form className="space-y-2">
                     <div>
                         <h2>Nombre del producto</h2>
                         <input 
@@ -107,6 +109,17 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                             <option value="true">Disponible</option>
                             <option value="false">No disponible</option>
                         </select>
+                    </div>
+                    <div>
+                        <h2>Por encargo</h2>
+                        <input
+                            type="checkbox"
+                            name="byOrder"
+                            checked={formData.byOrder}
+                            onChange={(e) => setFormData({ ...formData, byOrder: e.target.checked })}
+                            className="mr-2"
+                        />
+                        <label htmlFor="byOrder">Sí</label>
                     </div>
                     <div>
                         <h2>Categoría</h2>

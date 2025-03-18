@@ -6,6 +6,7 @@ const ProductSchema = new Schema({
     imageURL: {type: String, required: true},
     available: {type: Boolean, required: true},
     category: {type: Schema.Types.ObjectId, ref: "Category", required: true},
+    byOrder: {type: Boolean, required: true},
     description: {type: String, required: true}
 })
 

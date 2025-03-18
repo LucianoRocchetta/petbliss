@@ -13,9 +13,11 @@ type GridProps = {
     columns: number;
     keyword?: string;
     category?: string;
+    limit?: number;
+    pagination?: boolean;
 }
 
-export const Grid = ({columns, keyword, category}: GridProps) => {
+export const Grid = ({columns, keyword, category, limit, pagination = true}: GridProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState<Boolean>(true);
     const {data: session, status} = useSession();
@@ -26,7 +28,7 @@ export const Grid = ({columns, keyword, category}: GridProps) => {
             setIsLoading(true);
         const fetchProducts = async () => {
             try {
-                const response = await getProducts({ page, keyword, category });
+                const response = await getProducts({ page, keyword, category, limit });
 
                 if (response) {
                     setProducts(response.products);
@@ -51,14 +53,16 @@ export const Grid = ({columns, keyword, category}: GridProps) => {
                 <>
                     <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-4 mb-5`}>
                         {products.length > 0 ? (
-                            products.map((product: Product) =>
+                            products.slice(0, limit).map((product: Product) =>
                                 session?.user.role === "admin"
                                     ? <ProductCardAdmin key={product.name} product={product} />
                                     : <ProductCard key={product.name} product={product} />
                             )
                         ) : <p>No hay productos disponibles</p> }
                     </div>
-                    {totalPages > 1 && <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />}
+                    {pagination && totalPages > 1 && (
+                        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+                    )}
                 </>
             )}
         </>

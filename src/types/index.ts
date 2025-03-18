@@ -9,6 +9,7 @@ export type Product = {
         imageURL: string;
     }
     imageURL: string;
+    byOrder: boolean;
     description?: string;
 }
 
@@ -17,9 +18,15 @@ export type ProductDTO = {
     name: string;
     price: number;
     available: boolean;
+    byOrder: string;
     category: string;
     imageURL: string;
     description?: string;
+}
+
+export type CartItem = {
+    product: Product,
+    quantity: number;
 }
 
 export type Category = {
