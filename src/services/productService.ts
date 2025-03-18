@@ -1,4 +1,4 @@
-import { Product } from "@/types";
+import { Product, ProductDTO } from "@/types";
 
 export const getProducts = async ({ page = 1, keyword = "", category = "" }) => {
     try {
@@ -79,7 +79,7 @@ export const getProductsByCategory = async (category: string) => {
     return await res.json();
 }
 
-export const updateProductById = async (newData: Product) => {
+export const updateProductById = async (newData: ProductDTO) => {
     const res = await fetch(`/api/products/${newData._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

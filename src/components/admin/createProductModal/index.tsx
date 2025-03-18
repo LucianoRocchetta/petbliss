@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react"
 import { createProduct } from "@/services/productService"
-import { Product } from "@/types"
 import { IconX } from "@tabler/icons-react"
 import { getCategoriesNames } from "@/services/categoryService"
 
@@ -34,20 +33,20 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
         name: "",
         price: 0,
         imageURL: "",
-        stock: 0,
+        available: "true",
         category: "",
         description: ""
     }
 
-    const [formData, setFormData] = useState<Product>(formDataTemplate)
+    const [formData, setFormData] = useState(formDataTemplate)
     const [imageFile, setImageFile] = useState<File | null>(null);
 
-    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
-        })
-    }
+        });
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -64,7 +63,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
             formDataToSend.append("price", String(formData.price));
             formDataToSend.append("category", formData.category);
             formDataToSend.append("description", String(formData.description));
-            formDataToSend.append("stock", String(formData.stock));
+            formDataToSend.append("available", String(formData.available));
 
             if (imageFile) {
                 formDataToSend.append("image", imageFile);
@@ -86,7 +85,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
 
     return (
         isModalVisible && (
-        <div className="z-20 w-full h-full bg-zinc-800 absolute lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l">
+        <div className="z-20 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l">
             <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold mb-4">Crear producto</h2>
             <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)}/>
@@ -113,14 +112,16 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                     />
                 </div>
                 <div>
-                    <h2>Stock</h2>
-                    <input 
-                        name="stock"
-                        type="number"
-                        value={formData.stock}
+                <h2>Disponibilidad</h2>
+                    <select
+                        name="available"
+                        value={String(formData.available)}
                         onChange={handleFormChange}
                         className="p-2 border rounded-2xl w-full text-zinc-800"
-                    />
+                    >
+                        <option value="true">Disponible</option>
+                        <option value="false">No disponible</option>
+                    </select>
                 </div>
                 <div>
             <h2>Categoría</h2>

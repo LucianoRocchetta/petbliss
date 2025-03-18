@@ -9,7 +9,6 @@ export default function HomePage () {
                <HomeGrid />
                <Carousel title="Productos destacados" category="destacado"/>
                <Carousel title="Accesorios" category="accesorio"/>
-               <Categories/>
             </div>
         </>
     )

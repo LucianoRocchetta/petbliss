@@ -45,24 +45,26 @@ export const Catalog = () => {
 
     return (
         <section>
+            <div className="flex flex-col items-start justify-center mb-5 space-y-2 p-5 bg-zinc-700 rounded-2xl">
             <input 
-            className="p-2 border rounded-2xl border-gray-400 w-full lg:w-3/4 mb-5" 
+            className="p-2 border rounded-2xl w-full lg:w-1/2 mb-5 text-zinc-800" 
             placeholder="Busqueda"
             onChange={onInputChange}>
             </input>
-            <div className="flex flex-row items-center justify-between">
-                <h2 className="text-2xl font-bold">{keyword ? `Busqueda > ${keyword}` : "Todos"}</h2>
-                <button className="border rounded-2xl p-2">Ordenar por</button>
-            </div>
-            <div className="mb-5 space-y-2">
-                <h2 className="text-xl font-bold">Categorias</h2>
-                <div className="flex gap-2">
+            <div className="w-full">
+                <h2 className="text-xl font-bold mb-2">Categorias</h2>
+                <div className="grid-cols-2 grid lg:grid-cols-10 gap-2">
                 {
                     categories.map((category) => {
-                        return <Link onClick={() => handleCategory(category)} href={`/shop?category=${category}`} className="border border-zinc-200 rounded-2xl px-2 py-2">{category}</Link>
+                        return <Link onClick={() => handleCategory(category)} href={`/shop?category=${category}`} className="border border-zinc-200 rounded-2xl px-2 py-2 text-center hover:text-zinc-800 hover:bg-zinc-200 duration-200">{category}</Link>
                     })
                 }
                 </div>
+            </div>
+            </div>
+            <div className="flex flex-row items-center justify-between mb-10">
+                <h2 className="text-2xl font-bold">{keyword ? `Busqueda > ${keyword}` : "Todos"}</h2>
+                <button className="border rounded-2xl p-2">Ordenar por</button>
             </div>
             <Grid keyword={keyword} category={category} columns={4}/>
         </section>

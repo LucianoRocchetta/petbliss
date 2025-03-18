@@ -6,7 +6,6 @@ import Image from "next/image";
 import { EditProductModal } from "../editProductModal";
 import { deleteProductById } from "@/services/productService";
 import { useState } from "react";
-import AlertDialogShadcn from "@/components/shared/alertDialogDelete";
 import AlertDialogDelete from "@/components/shared/alertDialogDelete";
 
 type ProductCardAdminProps = {
@@ -15,6 +14,8 @@ type ProductCardAdminProps = {
 
 export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
     const [isModalVisible, setIsModalVisible] = useState<Boolean>(false);
+
+    console.log(product)
 
     const handleIsModalVisible = () => {
         setIsModalVisible(true);
@@ -54,6 +55,7 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
                             <div>
                                 <h3 className="text-xl font-semibold">{product.name}</h3>
                                 <p className={!product.category ? "text-red-600" : ""}>{product.category ? product.category.name : "Sin categoria"}</p>
+                                <p className={!product.available ? "text-red-600" : "text-green-600"}>{!product.available ? "No disponible" : `Disponible`}</p>
                                 <p>${product.price}</p>
                             </div>
                             <div className="flex gap-2">

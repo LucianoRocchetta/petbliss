@@ -60,10 +60,10 @@ export async function POST(request: NextRequest) {
         const price = formData.get("price");
         const description = formData.get("description");
         const categoryParam = formData.get("category");
-        const stock = formData.get("stock");
+        const available = formData.get("available") === "true"
         const image = formData.get("image") as File;
 
-        if (!name || !price || !description || !categoryParam || !stock || !image) {
+        if (!name || !price || !description || !categoryParam || available === null || !image) {
             return NextResponse.json({ error: 'Missing required fields to create the product.' }, { status: 400 });
         }
 
@@ -71,13 +71,15 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Invalid data types for name, description, or category.' }, { status: 400 });
         }
 
-        if (typeof price !== 'string' || typeof stock !== 'string') { 
-            return NextResponse.json({ error: 'Price and stock should be numbers.' }, { status: 400 });
+        if (typeof price !== 'string') { 
+            return NextResponse.json({ error: 'Price should be a number.' }, { status: 400 });
         }
 
         const productCategory = await category.findOne({name: categoryParam})
 
-        if(!productCategory) NextResponse.json({messsage: "Invalid category", status: 400})
+        if (!productCategory) {
+            return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+        }        
 
         await connectDB();
 
@@ -97,7 +99,7 @@ export async function POST(request: NextRequest) {
             price: parseFloat(price),
             description,
             category: productCategory._id,
-            stock: parseInt(stock),
+            available: available,
             imageURL,
         });
         await newProduct.save();

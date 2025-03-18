@@ -47,6 +47,8 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
             data.category = categoryDoc._id;
         }
 
+        data.available = data.available == "true"
+
         const updatedProduct = await product.findByIdAndUpdate(id, data, {
             new: true,
             runValidators: true,
