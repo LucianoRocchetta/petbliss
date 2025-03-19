@@ -15,20 +15,24 @@ type GridProps = {
     category?: string;
     limit?: number;
     pagination?: boolean;
+    order?: string;
+    sortBy?: string;
 }
 
-export const Grid = ({columns, keyword, category, limit, pagination = true}: GridProps) => {
+export const Grid = ({columns, keyword, category, limit, order, sortBy, pagination = true}: GridProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState<Boolean>(true);
     const {data: session, status} = useSession();
     const [page, setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
 
+    console.log(order, sortBy);
+
     useEffect(() => {
             setIsLoading(true);
         const fetchProducts = async () => {
             try {
-                const response = await getProducts({ page, keyword, category, limit });
+                const response = await getProducts({ page, keyword, category, limit, order, sortBy });
 
                 if (response) {
                     setProducts(response.products);
@@ -41,7 +45,7 @@ export const Grid = ({columns, keyword, category, limit, pagination = true}: Gri
         };
 
         fetchProducts();
-    }, [page, keyword, category]);
+    }, [page, keyword, category, order, sortBy]);
 
     return (
         <>

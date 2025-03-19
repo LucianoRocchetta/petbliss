@@ -5,7 +5,6 @@ import { useCallback, useState } from "react";
 import { debounce } from "lodash";
 import { IconCircleDashedPlus } from "@tabler/icons-react";
 import { CreateProductModal } from "@/components/admin";
-import { deleteAllProducts } from "@/services/productService";
 
 export const AdminProductsGrid = () => {
     const [keyword, setKeyword] = useState<string>('');
@@ -21,15 +20,6 @@ export const AdminProductsGrid = () => {
         handleKeywordChange(e.target.value);
     }
 
-    const handleDeleteProductsButton = async () => {
-        try {
-            await deleteAllProducts();
-            alert('Products successfully deleted');
-        } catch (error) {
-            alert('Error deleting products');
-        }
-    }
-
     const handleIsModalVisible = () => {
         setIsModalVisible(true);
     }
@@ -43,7 +33,7 @@ export const AdminProductsGrid = () => {
             placeholder="Busqueda"
             onChange={onInputChange}>
             </input>
-                <button onClick={handleIsModalVisible} className="p-2 col-span-1 gap-1 bg-blue-600 flex items-center justify-center  rounded-2xl text-zinc-200">
+                <button onClick={handleIsModalVisible} className="p-2 col-span-1 gap-1 bg-blue-600 flex items-center justify-center rounded-2xl text-zinc-200 hover:bg-blue-700 duration-200">
                     <IconCircleDashedPlus className="w-8 h-8"/>
                     Agregar
                 </button>
@@ -51,11 +41,6 @@ export const AdminProductsGrid = () => {
             
             <Grid keyword={keyword} columns={4}/>
             {isModalVisible && <CreateProductModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>}
-
-            <div className="bg-red-900 p-5 rounded-2xl mt-10 space-y-5">
-                <h2 className="text-2xl font-bold">Danger zone</h2> 
-                <button onClick={handleDeleteProductsButton} className="bg-red-600 rounded-2xl p-2">Eliminar todo</button>
-            </div>
         </section>
     )
 }

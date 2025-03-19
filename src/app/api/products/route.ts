@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
         const keyword = searchParams.get("keyword");
         const categoryParam = searchParams.get("category");
         const page = parseInt(searchParams.get("page") || "1", 10);
+        const sortBy = searchParams.get("sortBy") || "price";
+        const order  = searchParams.get("order") === "desc" ? -1 : 1;
         const limit = parseInt(searchParams.get("limit") || "8", 10);
         const skip = (page - 1) * limit;
 
@@ -35,6 +37,7 @@ export async function GET(request: NextRequest) {
         const products = await product.find(query)
             .populate("category")
             .skip(skip)
+            .sort({ [sortBy]: order})
             .limit(limit);
 
         const total = await product.countDocuments(query);
@@ -57,14 +60,15 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData(); 
 
         const name = formData.get("name");
-        const price = formData.get("price");
+        const price = parseInt(formData.get("price") as string);
         const description = formData.get("description");
         const categoryParam = formData.get("category");
         const available = formData.get("available") === "true"
+        const stock = parseInt(formData.get("stock") as string)
         const image = formData.get("image") as File;
         const byOrder = formData.get("byOrder") === "true"
 
-        if (!name || !price || !description || !categoryParam || available === null || !image || byOrder === null) {
+        if (!name || !price || !description || !categoryParam || available === null || !image || byOrder === null || !stock) {
             return NextResponse.json({ error: 'Missing required fields to create the product.' }, { status: 400 });
         }
 
@@ -72,8 +76,12 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Invalid data types for name, description, or category.' }, { status: 400 });
         }
 
-        if (typeof price !== 'string') { 
-            return NextResponse.json({ error: 'Price should be a number.' }, { status: 400 });
+        if (isNaN(price) || price <= 0) { 
+            return NextResponse.json({ error: 'Price should be a valid positive number.' }, { status: 400 });
+        }
+
+        if (isNaN(stock) || stock <= 0) { 
+            return NextResponse.json({ error: 'Stock should be a valid positive number.' }, { status: 400 });
         }
 
         const productCategory = await category.findOne({name: categoryParam})
@@ -97,7 +105,8 @@ export async function POST(request: NextRequest) {
         const imageURL = `/images/${imageName}`;
         const newProduct = new product({
             name,
-            price: parseFloat(price),
+            price: price,
+            stock: stock,
             description,
             category: productCategory._id,
             available: available,

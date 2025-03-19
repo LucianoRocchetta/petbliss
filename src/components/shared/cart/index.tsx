@@ -17,14 +17,14 @@ export default function CartPanel ({setIsOpen, isOpen}: CartPanelProps ) {
 
     const handleIncreaseQuantity = (id: string) => {
       const item = items.find((i) => i.product._id === id)
-      if(item) {
+      if(item && item.product.stock > item.quantity) {
         updateQuantity(id, item.quantity + 1);
       }
     }
 
     const handleDecreaseQuantity = (id: string) => {
       const item = items.find((i) => i.product._id === id)
-      if(item) {
+      if(item && item.quantity > 0) {
         updateQuantity(id, item.quantity - 1);
       }
     }
@@ -37,7 +37,7 @@ export default function CartPanel ({setIsOpen, isOpen}: CartPanelProps ) {
     <div className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l transform ${isOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300`}>
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Carrito</h2>
-        <IconX onClick={toggleCartPanel} className="hidden lg:w-10 lg:h-10 p-2 rounded-full bg-zinc-200 text-zinc-800 lg:block"></IconX>
+        <IconX onClick={toggleCartPanel} className="w-10 h-10 p-2 rounded-full bg-zinc-200 text-zinc-800 lg:block"></IconX>
       </div>
 
         {items.length === 0 ? (
@@ -53,9 +53,9 @@ export default function CartPanel ({setIsOpen, isOpen}: CartPanelProps ) {
                   <p className="text-xl">{item.product.name}</p>
                   <p className="text-md font-bold">${item.product.price * item.quantity}</p>
                   <div className="flex gap-2 mt-2">
-                  <IconChevronUp onClick={() => item.product._id && handleIncreaseQuantity(item.product._id)} className="hidden lg:w-8 lg:h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block"></IconChevronUp>
+                  <IconChevronUp onClick={() => item.product._id && handleIncreaseQuantity(item.product._id)} className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block"></IconChevronUp>
                     <p className="font-bold text-xl">{item.quantity}</p>
-                    <IconChevronDown onClick={() => item.product._id && handleDecreaseQuantity(item.product._id)} className="hidden lg:w-8 lg:h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block"></IconChevronDown>
+                    <IconChevronDown onClick={() => item.product._id && handleDecreaseQuantity(item.product._id)} className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block"></IconChevronDown>
                   </div>
                   </div>
                   </div>
@@ -64,12 +64,14 @@ export default function CartPanel ({setIsOpen, isOpen}: CartPanelProps ) {
               ))}
             </ul>
             
+            <div className="grid grid-cols-2 gap-2 mt-5">
             <Link href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}?text=${generateWhatsAppMessage()}`} target="_blank" rel="noopener noreferrer">
-              <button className="bg-zinc-700 text-zinc-200 rounded-2xl w-full p-2 mt-4">
-                Finalizar Pedido por WhatsApp
+              <button className="bg-zinc-700 text-zinc-200 rounded-2xl w-full p-2">
+                Finalizar Pedido
               </button>
             </Link>
-            <button onClick={clearCart} className="bg-red-600 rounded-2xl text-white w-full p-2 mt-2">Vaciar Carrito</button>
+            <button onClick={clearCart} className="bg-red-600 rounded-2xl text-zinc-200 w-full p-2">Vaciar Carrito</button>
+            </div>
           </>
         )}
       </div>

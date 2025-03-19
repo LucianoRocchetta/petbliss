@@ -26,7 +26,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col w-full items-center justify-center min-h-screen">
+    <div className="flex flex-col w-full items-center justify-center">
       <h2 className="text-3xl font-bold">Panel de control</h2>
       <form onSubmit={handleSubmit} className="p-4 flex flex-col w-1/4 text-zinc-800">
         <input

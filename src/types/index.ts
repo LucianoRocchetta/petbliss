@@ -3,6 +3,7 @@ export type Product = {
     name: string;
     price: number;
     available: boolean;
+    stock: number;
     category: {
         _id?: string;
         name: string;
@@ -18,7 +19,8 @@ export type ProductDTO = {
     name: string;
     price: number;
     available: boolean;
-    byOrder: string;
+    stock: number;
+    byOrder: boolean;
     category: string;
     imageURL: string;
     description?: string;

@@ -15,8 +15,6 @@ type ProductCardAdminProps = {
 export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-    console.log(product)
-
     const handleIsModalVisible = () => {
         setIsModalVisible(true);
     }
@@ -37,8 +35,8 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
 
     return (
         <>
-            <EditProductModal product={product} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
-<div key={product.name} className="relative border rounded-2xl bg-zinc-200 text-zinc-900 p-4">
+            {isModalVisible && <EditProductModal product={product} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>}
+<div key={product.name} className="relative border rounded-2xl bg-zinc-200 text-zinc-900 p-4 hover:shadow-lg hover:shadow-zinc-900">
             
             <div className="flex justify-center items-center mb-4">
                 <div className="w-64 h-64 overflow-hidden">
@@ -56,6 +54,7 @@ export const ProductCardAdmin = ({product}: ProductCardAdminProps) => {
                                 <h3 className="text-xl font-semibold">{product.name}</h3>
                                 <p className={!product.category ? "text-red-600" : ""}>{product.category ? product.category.name : "Sin categoria"}</p>
                                 <p className={!product.available ? "text-red-600" : "text-green-600"}>{!product.available ? "No disponible" : `Disponible`}</p>
+                                <p className={product.stock > 0 ? "text-zinc-800" : "text-red-600"}>Stock: {product.stock ? product.stock : 0}</p>
                                 <p>${product.price}</p>
                             </div>
                             <div className="flex gap-2">

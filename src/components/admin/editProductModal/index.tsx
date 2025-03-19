@@ -36,6 +36,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
         price: product.price,
         imageURL: product.imageURL,
         available: product.available,
+        stock: product.stock,
         byOrder: product.byOrder,
         category: product.category.name,
         description: product.description
@@ -57,6 +58,7 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                 name: formData.name,
                 price: formData.price,
                 imageURL: formData.imageURL,
+                stock: formData.stock,
                 category: formData.category,
                 byOrder: formData.byOrder,
                 description: formData.description,
@@ -71,8 +73,9 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
     }
 
     return (
-        isModalVisible && (
-            <div className="z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l">
+            <div className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l transform transition-all duration-300 ease-in-out ${
+                isModalVisible ? "translate-x-0" : "translate-x-full"
+              }`}>
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold mb-4">Editar producto</h2>
                     <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)} />
@@ -109,6 +112,16 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                             <option value="true">Disponible</option>
                             <option value="false">No disponible</option>
                         </select>
+                    </div>
+                    <div>
+                    <h2>Stock</h2>
+                    <input 
+                        name="stock"
+                        type="number"
+                        value={formData.stock}
+                        onChange={handleFormChange}
+                        className="p-2 border rounded-2xl w-full text-zinc-800"
+                    />
                     </div>
                     <div>
                         <h2>Por encargo</h2>
@@ -156,5 +169,5 @@ export const EditProductModal = ({product, setIsModalVisible, isModalVisible}: E
                 </button>
             </div>
         )
-    );
+    ;
 }

@@ -6,8 +6,8 @@ import { IconX } from "@tabler/icons-react"
 import { createCategory } from "@/services/categoryService"
 
 interface CreateCategoryModalProps {
-    setIsModalVisible: (isModalVisible: Boolean) => void,
-    isModalVisible: Boolean
+    setIsModalVisible: (isModalVisible: boolean) => void,
+    isModalVisible: boolean,
 }
 
 export const CreateCategoryModal = ({setIsModalVisible, isModalVisible}: CreateCategoryModalProps) => {
@@ -59,8 +59,7 @@ export const CreateCategoryModal = ({setIsModalVisible, isModalVisible}: CreateC
     }
 
     return (
-        isModalVisible && (
-        <div className="z-20 w-full h-full bg-zinc-800 absolute lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l">
+        <div className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l transform ${isModalVisible ? "translate-x-0" : "translate-x-full"} transition-transform duration-300`}>
             <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold mb-4">Crear Categoria</h2>
             <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)}/>
@@ -89,5 +88,5 @@ export const CreateCategoryModal = ({setIsModalVisible, isModalVisible}: CreateC
                     Crear Categoria
             </button>
         </div>
-    ));
+    );
 }

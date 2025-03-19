@@ -34,6 +34,7 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
         price: 0,
         imageURL: "",
         available: "true",
+        stock: 0,
         byOrder: false,
         category: "",
         description: ""
@@ -65,7 +66,10 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
             formDataToSend.append("category", formData.category);
             formDataToSend.append("description", String(formData.description));
             formDataToSend.append("available", String(formData.available));
+            formDataToSend.append("stock", String(formData.stock));
             formDataToSend.append("byOrder", String(formData.byOrder));
+
+            console.log(formDataToSend)
 
             if (imageFile) {
                 formDataToSend.append("image", imageFile);
@@ -86,8 +90,8 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
     }
 
     return (
-        isModalVisible && (
-        <div className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l transform ${isModalVisible ? "translate-x-0" : "translate-x-full"} transition-transform duration-300`}>
+            <div className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l transform ${isModalVisible ? "translate-x-0" : "translate-x-full"} transition-transform duration-300`}
+            >
             <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold mb-4">Crear producto</h2>
             <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)}/>
@@ -126,7 +130,17 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                     </select>
                 </div>
                 <div>
+                    <h2>Stock</h2>
+                    <input 
+                        name="stock"
+                        type="number"
+                        value={formData.stock}
+                        onChange={handleFormChange}
+                        className="p-2 border rounded-2xl w-full text-zinc-800"
+                    />
+                </div>
                 <div>
+                    <div>
                         <h2>Por encargo</h2>
                         <input
                             type="checkbox"
@@ -176,5 +190,5 @@ export const CreateProductModal = ({setIsModalVisible, isModalVisible}: CreatePr
                     Crear Producto
             </button>
         </div>
-    ));
+    );
 }

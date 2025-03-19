@@ -11,7 +11,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
     const { addItem } = useCartStore();
 
     return (
-        <div key={product.name} className={`relative border rounded-2xl bg-zinc-200 text-zinc-900 p-4 transition-opacity duration-300 ${
+        <div key={product.name} className={`relative border rounded-2xl bg-zinc-200 text-zinc-900 p-4 transition-opacity duration-300 hover:shadow-lg hover:shadow-zinc-900 ${
             !product.available ? "opacity-50 grayscale" : ""
         }`}>
                         <div className="flex justify-center items-center mb-4">
