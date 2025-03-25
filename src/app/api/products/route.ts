@@ -4,6 +4,7 @@ import product from "@/models/product";
 import fs from "fs";
 import path from "path";
 import category from "@/models/category";
+import brand from "@/models/brand";
 
 export async function GET(request: NextRequest) {
     try {
@@ -13,6 +14,7 @@ export async function GET(request: NextRequest) {
         const keyword = searchParams.get("keyword");
         const categoryParam = searchParams.get("category");
         const page = parseInt(searchParams.get("page") || "1", 10);
+        const brandParam = searchParams.get("brand");
         const sortBy = searchParams.get("sortBy") || "price";
         const order  = searchParams.get("order") === "desc" ? -1 : 1;
         const limit = parseInt(searchParams.get("limit") || "8", 10);
@@ -22,6 +24,16 @@ export async function GET(request: NextRequest) {
 
         if (keyword) {
             query.name = { $regex: keyword, $options: "i" };
+        }
+
+        if (brandParam) {
+            const productBrand = await brand.findOne({ name: brandParam });
+        
+            if (productBrand) {
+                query.brand = productBrand._id;
+            } else {
+                return NextResponse.json({ products: [], total: 0, totalPages: 0 }, { status: 200 });
+            }
         }
 
         if (categoryParam) {
@@ -36,6 +48,7 @@ export async function GET(request: NextRequest) {
 
         const products = await product.find(query)
             .populate("category")
+            .populate("brand")
             .skip(skip)
             .sort({ [sortBy]: order})
             .limit(limit);
@@ -60,28 +73,35 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData(); 
 
         const name = formData.get("name");
-        const price = parseInt(formData.get("price") as string);
+        const cost = parseInt(formData.get("cost") as string);
+        const profit = parseInt(formData.get("profit") as string);
+        const discount = parseInt(formData.get("discount") as string);
         const description = formData.get("description");
         const categoryParam = formData.get("category");
         const available = formData.get("available") === "true"
-        const stock = parseInt(formData.get("stock") as string)
+        const onSale = formData.get("onSale") === "true";
+        const brandParam = formData.get("brand");
         const image = formData.get("image") as File;
         const byOrder = formData.get("byOrder") === "true"
 
-        if (!name || !price || !description || !categoryParam || available === null || !image || byOrder === null || !stock) {
+        if (!name || !cost || !description || !categoryParam || available === null || !image || byOrder === null || !brandParam || !profit || onSale === null) {
             return NextResponse.json({ error: 'Missing required fields to create the product.' }, { status: 400 });
         }
 
-        if (typeof name !== 'string' || typeof description !== 'string' || typeof categoryParam !== 'string') {
-            return NextResponse.json({ error: 'Invalid data types for name, description, or category.' }, { status: 400 });
+        if (typeof name !== 'string' || typeof description !== 'string' || typeof categoryParam !== 'string' || typeof brandParam !== 'string') {
+            return NextResponse.json({ error: 'Invalid data types for name, description, brand or category.' }, { status: 400 });
         }
 
-        if (isNaN(price) || price <= 0) { 
-            return NextResponse.json({ error: 'Price should be a valid positive number.' }, { status: 400 });
+        if (isNaN(cost) || cost <= 0) { 
+            return NextResponse.json({ error: 'cost should be a valid positive number.' }, { status: 400 });
         }
 
-        if (isNaN(stock) || stock <= 0) { 
-            return NextResponse.json({ error: 'Stock should be a valid positive number.' }, { status: 400 });
+        if (isNaN(discount) || discount < 0) { 
+            return NextResponse.json({ error: 'discount should be a valid positive number.' }, { status: 400 });
+        }
+
+        if (isNaN(profit) || profit <= 0) { 
+            return NextResponse.json({ error: 'profit should be a valid positive number.' }, { status: 400 });
         }
 
         const productCategory = await category.findOne({name: categoryParam})
@@ -90,7 +110,16 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid category" }, { status: 400 });
         }        
 
+        const productBrand = await brand.findOne({name: brandParam})
+
+        if (!productBrand) {
+            return NextResponse.json({ error: "Invalid brand" }, { status: 400 });
+        }     
+
         await connectDB();
+
+        const price = cost * (1 + profit / 100)
+        const discountedPrice = price * (1 - discount / 100)
 
         const uploadDir = path.join(process.cwd(), "public/images");
         if (!fs.existsSync(uploadDir)) {
@@ -105,10 +134,15 @@ export async function POST(request: NextRequest) {
         const imageURL = `/images/${imageName}`;
         const newProduct = new product({
             name,
+            cost: cost,
+            discount: discount,
+            onSale: onSale,
             price: price,
-            stock: stock,
+            discountedPrice: discountedPrice,
+            profit: profit,
             description,
             category: productCategory._id,
+            brand: productBrand._id,
             available: available,
             byOrder: byOrder,
             imageURL,

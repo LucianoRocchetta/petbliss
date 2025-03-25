@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongoose";
 import product from "@/models/product";
 import mongoose from "mongoose";
 import category from "@/models/category";
+import brand from "@/models/brand";
 
 export async function DELETE(request: NextRequest, { params }: {params: {id: string}}) {
     try {
@@ -47,12 +48,28 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
             data.category = categoryDoc._id;
         }
 
+        if(data.brand) {
+            const brandDoc = await brand.findOne({ name: data.brand});
+
+            if(!brandDoc) {
+                return NextResponse.json({error: "Brand not found"}, {status: 404});
+            }
+
+            data.brand = brandDoc._id;
+        }
+
         data.available = data.available == "true"
+        
+        const price = data.cost * (1 + data.profit / 100)
+        const discountedPrice = price * (1 - data.discount / 100)
+
+        data.price = price
+        data.discountedPrice = discountedPrice
 
         const updatedProduct = await product.findByIdAndUpdate(id, data, {
             new: true,
             runValidators: true,
-        }).populate("category")
+        }).populate("category").populate("brand");
         return NextResponse.json(updatedProduct, {status: 200})
     } catch (error) {
         return NextResponse.json({error: "Internal server error"}, {status: 500})

@@ -1,25 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import { Category } from "@/types";
+import { Brand } from "@/types";
 import { IconX } from "@tabler/icons-react";
-import { createCategory } from "@/services/categoryService";
+import { createBrand } from "@/services/brandService";
 
-interface CreateCategoryModalProps {
+interface CreateBrandModalProps {
   setIsModalVisible: (isModalVisible: boolean) => void;
   isModalVisible: boolean;
 }
 
-export const CreateCategoryModal = ({
+export const CreateBrandModal = ({
   setIsModalVisible,
   isModalVisible,
-}: CreateCategoryModalProps) => {
+}: CreateBrandModalProps) => {
   const formDataTemplate = {
     name: "",
     imageURL: "",
   };
 
-  const [formData, setFormData] = useState<Category>(formDataTemplate);
+  const [formData, setFormData] = useState<Brand>(formDataTemplate);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleFormChange = (
@@ -47,14 +47,14 @@ export const CreateCategoryModal = ({
         formDataToSend.append("image", imageFile);
       }
 
-      const res = await createCategory(formDataToSend);
+      const res = await createBrand(formDataToSend);
 
       if (res) {
-        alert("Category created");
+        alert("Brand created");
         setFormData(formDataTemplate);
         setIsModalVisible(false);
       } else {
-        alert("Failed to create category");
+        alert("Failed to create brand");
       }
     } catch (error) {
       alert(error);
@@ -68,13 +68,13 @@ export const CreateCategoryModal = ({
       } transition-transform duration-300`}
     >
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold mb-4">Crear Categoria</h2>
+        <h2 className="text-xl font-bold mb-4">Crear Marca</h2>
         <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)} />
       </div>
 
       <form>
         <div>
-          <h2>Nombre de la categoria</h2>
+          <h2>Nombre de la marca</h2>
           <input
             name="name"
             value={formData.name}
@@ -95,7 +95,7 @@ export const CreateCategoryModal = ({
         className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
         onClick={handleSubmit}
       >
-        Crear Categoria
+        Crear Marca
       </button>
     </div>
   );

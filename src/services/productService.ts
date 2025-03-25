@@ -2,14 +2,15 @@ import { Product, ProductDTO } from "@/types";
 
 type SearchProps = {
     page: number;
-    keyword: string,
-    category: string,
-    limit: number,
-    order: string, 
-    sortBy: string,
+    keyword?: string,
+    category?: string,
+    brand?: string,
+    limit?: number,
+    order?: string, 
+    sortBy?: string,
 }
 
-export const getProducts = async ({ page = 1, keyword = "", category = "", limit=8, order, sortBy }: SearchProps) => {
+export const getProducts = async ({ brand, order, sortBy, page = 1, keyword = "", category = "", limit=8  }: SearchProps) => {
     try {
         const queryParams = new URLSearchParams({
             page: page.toString(),
@@ -18,6 +19,7 @@ export const getProducts = async ({ page = 1, keyword = "", category = "", limit
             limit: limit.toString(),
             ...(order && { order }),
             ...(sortBy && {sortBy}),
+            ...(brand && {brand})
         }).toString();
 
         const res = await fetch(`/api/products?${queryParams}`);
