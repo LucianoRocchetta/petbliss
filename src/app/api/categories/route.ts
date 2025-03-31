@@ -1,8 +1,7 @@
-import { connectDB } from "@/lib/mongoose";
+import connectDB from "@/lib/mongoose";
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
 import category from "@/models/category";
+import cloudinary from "@/lib/cloudinary";
 
 export async function GET () {
     await connectDB();
@@ -28,20 +27,23 @@ export async function POST(request: NextRequest) {
 
         await connectDB();
 
-        const uploadDir = path.join(process.cwd(), "public/images");
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
+        const arrayBuffer = await image.arrayBuffer();
+              const buffer = Buffer.from(arrayBuffer);
+          
+              const uploadResult = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                  { folder: "categories", resource_type: "image" },
+                  (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result);
+                  }
+                ).end(buffer);
+              });
+        const imageUrl = (uploadResult as any).secure_url;
 
-        const imageName = image.name;
-        const filePath = path.join(uploadDir, imageName);
-        const buffer = await image.arrayBuffer();
-        fs.writeFileSync(filePath, Buffer.from(buffer));
-
-        const imageURL = `/images/${imageName}`;
         const newCategory = new category({
             name,
-            imageURL,
+            imageURL: imageUrl,
         });
         await newCategory.save();
 

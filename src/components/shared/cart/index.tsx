@@ -3,15 +3,91 @@ import Image from "next/image";
 import Link from "next/link";
 import useCartStore from "@/store/cartStore";
 import { generateWhatsAppTemplateMessage } from "@/lib/utils";
+import { CartItem } from "@/types";
+import { useState } from "react";
 
 interface CartPanelProps {
   setIsOpen: (isOpen: Boolean) => void;
   isOpen: Boolean;
 }
 
+interface CheckoutProps {
+  items: CartItem[];
+  setIsCheckoutVisible: (isCheckoutVisible: boolean) => void;
+}
+
+const Checkout = ({ items, setIsCheckoutVisible }: CheckoutProps) => {
+  const {
+    setName,
+    setAddress,
+    setPaymentMethod,
+    name,
+    address,
+    paymentMethod,
+  } = useCartStore();
+
+  return (
+    <div>
+      <h3 className="text-xl font-bold text-zinc-200 mb-2">Detalles</h3>
+
+      <label className="block">Nombre completo</label>
+      <input
+        type="text"
+        name="name"
+        onChange={(e) => setName(e.target.value)}
+        required
+        className="w-full p-2 rounded-2xl bg-zinc-200 text-zinc-800 mb-2"
+      />
+
+      <label className="block text-zinc-200">Dirección completa</label>
+      <input
+        type="text"
+        name="address"
+        onChange={(e) => setAddress(e.target.value)}
+        required
+        className="w-full p-2 rounded-2xl bg-zinc-200 text-zinc-800 mb-2"
+      />
+
+      <label className="block text-white">Método de Pago</label>
+      <select
+        name="paymentMethod"
+        className="w-full p-2 rounded-2xl bg-zinc-200 text-zinc-800 mb-4"
+        onChange={(e) => setPaymentMethod(e.target.value)}
+      >
+        <option value="Efectivo">Efectivo</option>
+        <option value="Transferencia">Transferencia</option>
+      </select>
+      <div className="grid grid-cols-2 gap-2 mt-5">
+        <Link
+          href={`https://wa.me/${
+            process.env.NEXT_PUBLIC_WHATSAPP_NUMBER
+          }?text=${generateWhatsAppTemplateMessage(
+            items,
+            name,
+            address,
+            paymentMethod
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="bg-zinc-700 text-zinc-200 rounded-2xl w-full p-2">
+            Finalizar Pedido
+          </button>
+        </Link>
+        <button
+          onClick={() => setIsCheckoutVisible(false)}
+          className="bg-zinc-200 text-zinc-800 rounded-2xl w-full p-2"
+        >
+          Volver a Carrito
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
-  const { items, addItem, removeItem, updateQuantity, clearCart } =
-    useCartStore();
+  const { items, removeItem, updateQuantity, clearCart } = useCartStore();
+  const [isCheckoutVisible, setIsCheckoutVisible] = useState(false);
 
   const toggleCartPanel = () => setIsOpen(!isOpen);
 
@@ -24,13 +100,13 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
 
   const handleDecreaseQuantity = (id: string) => {
     const item = items.find((i) => i.product._id === id);
-    if (item && item.quantity > 0) {
+    if (item && item.quantity > 1) {
       updateQuantity(id, item.quantity - 1);
     }
   };
 
-  const generateWhatsAppMessage = () => {
-    return generateWhatsAppTemplateMessage(items);
+  const handleCheckoutVisible = () => {
+    +setIsCheckoutVisible(!isCheckoutVisible);
   };
 
   return (
@@ -43,88 +119,83 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
         <h2 className="text-2xl font-bold">Carrito</h2>
         <IconX
           onClick={toggleCartPanel}
-          className="w-10 h-10 p-2 rounded-full bg-zinc-200 text-zinc-800 lg:block"
-        ></IconX>
+          className="w-10 h-10 p-2 rounded-full bg-zinc-200 text-zinc-800 lg:block hover:bg-zinc-300 cursor-pointer duration-200"
+        />
       </div>
-
-      {items.length === 0 ? (
-        <p className="text-zinc-400">El carrito está vacío</p>
+      {isCheckoutVisible ? (
+        <Checkout items={items} setIsCheckoutVisible={setIsCheckoutVisible} />
       ) : (
         <>
-          <ul className="mt-2 overflow-scroll grid grid-cols-1 gap-2">
-            {items.map((item, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center p-2 bg-zinc-200 text-zinc-800 rounded-2xl"
-              >
-                <div className="flex items-center">
-                  <Image
-                    alt={item.product.name}
-                    src={item.product.imageURL}
-                    width={100}
-                    height={100}
-                  ></Image>
-                  <div className="flex flex-col">
-                    <p className="text-xl">{item.product.name}</p>
-                    <p className="text-md font-bold">
-                      $
-                      {item.product.discount > 0
-                        ? (1 - item.product.discount / 100) *
-                          ((1 + item.product.profit / 100) *
-                            item.product.cost) *
-                          item.quantity
-                        : (1 + item.product.profit / 100) *
-                          item.product.cost *
-                          item.quantity}
-                    </p>
-                    <div className="flex gap-2 mt-2">
-                      <IconChevronUp
-                        onClick={() =>
-                          item.product._id &&
-                          handleIncreaseQuantity(item.product._id)
-                        }
-                        className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block"
-                      ></IconChevronUp>
-                      <p className="font-bold text-xl">{item.quantity}</p>
-                      <IconChevronDown
-                        onClick={() =>
-                          item.product._id &&
-                          handleDecreaseQuantity(item.product._id)
-                        }
-                        className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block"
-                      ></IconChevronDown>
+          {items.length === 0 ? (
+            <p className="text-zinc-400">El carrito está vacío</p>
+          ) : (
+            <>
+              <ul className="mt-2 overflow-y-auto grid grid-cols-1 gap-2">
+                {items.map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex justify-between items-center p-2 bg-zinc-200 text-zinc-800 rounded-2xl"
+                  >
+                    <div className="flex items-center">
+                      <Image
+                        alt={item.product.name}
+                        src={item.product.imageURL}
+                        width={100}
+                        height={100}
+                      />
+                      <div className="flex flex-col">
+                        <p className="text-xl">{item.product.name}</p>
+                        <p className="text-md font-bold">
+                          $
+                          {item.product.discount > 0
+                            ? item.product.discountedPrice * item.quantity
+                            : item.product.price * item.quantity}
+                        </p>
+                        <div className="flex gap-2 mt-2">
+                          <IconChevronUp
+                            onClick={() =>
+                              item.product._id &&
+                              handleIncreaseQuantity(item.product._id)
+                            }
+                            className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
+                          />
+                          <p className="font-bold text-xl">{item.quantity}</p>
+                          <IconChevronDown
+                            onClick={() =>
+                              item.product._id &&
+                              handleDecreaseQuantity(item.product._id)
+                            }
+                            className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <IconX
-                  onClick={() =>
-                    item.product._id && removeItem(item.product._id)
-                  }
-                  className="hidden lg:w-10 lg:h-10 p-2 text-zinc-800 lg:block"
-                ></IconX>
-              </li>
-            ))}
-          </ul>
+                    <IconX
+                      onClick={() =>
+                        item.product._id && removeItem(item.product._id)
+                      }
+                      className="hidden lg:w-10 lg:h-10 p-2 text-zinc-800 lg:block cursor-pointer"
+                    />
+                  </li>
+                ))}
+              </ul>
 
-          <div className="grid grid-cols-2 gap-2 mt-5">
-            <Link
-              href={`https://wa.me/${
-                process.env.NEXT_PUBLIC_WHATSAPP_NUMBER
-              }?text=${generateWhatsAppMessage()}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <button className="bg-zinc-700 text-zinc-200 rounded-2xl w-full p-2">
-                Finalizar Pedido
-              </button>
-            </Link>
-            <button
-              onClick={clearCart}
-              className="bg-red-600 rounded-2xl text-zinc-200 w-full p-2"
-            >
-              Vaciar Carrito
-            </button>
-          </div>
+              <div className="grid grid-cols-2 gap-2 mt-5">
+                <button
+                  onClick={handleCheckoutVisible}
+                  className="bg-zinc-200 text-zinc-800 rounded-2xl hover:bg-zinc-300 duration-200"
+                >
+                  Continuar
+                </button>
+                <button
+                  onClick={clearCart}
+                  className="bg-red-600 rounded-2xl text-zinc-200 w-full p-2 hover:bg-red-700 duration-200"
+                >
+                  Vaciar Carrito
+                </button>
+              </div>
+            </>
+          )}
         </>
       )}
     </div>

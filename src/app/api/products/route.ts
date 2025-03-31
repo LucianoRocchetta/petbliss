@@ -1,10 +1,9 @@
 import { NextResponse, NextRequest } from "next/server";
-import { connectDB } from "@/lib/mongoose";
+import connectDB from "@/lib/mongoose";
 import product from "@/models/product";
-import fs from "fs";
-import path from "path";
 import category from "@/models/category";
 import brand from "@/models/brand";
+import cloudinary from "@/lib/cloudinary";
 
 export async function GET(request: NextRequest) {
     try {
@@ -121,17 +120,21 @@ export async function POST(request: NextRequest) {
         const price = cost * (1 + profit / 100)
         const discountedPrice = price * (1 - discount / 100)
 
-        const uploadDir = path.join(process.cwd(), "public/images");
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
+        const arrayBuffer = await image.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+          
+              const uploadResult = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                  { folder: "products", resource_type: "image" },
+                  (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result);
+                  }
+                ).end(buffer);
+              });
+          
+              const imageUrl = (uploadResult as any).secure_url;
 
-        const imageName = image.name;
-        const filePath = path.join(uploadDir, imageName);
-        const buffer = await image.arrayBuffer();
-        fs.writeFileSync(filePath, Buffer.from(buffer));
-
-        const imageURL = `/images/${imageName}`;
         const newProduct = new product({
             name,
             cost: cost,
@@ -145,7 +148,7 @@ export async function POST(request: NextRequest) {
             brand: productBrand._id,
             available: available,
             byOrder: byOrder,
-            imageURL,
+            imageURL: imageUrl,
         });
         await newProduct.save();
 

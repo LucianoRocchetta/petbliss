@@ -1,5 +1,5 @@
 {
-  "name": "whiskers",
+  "name": "petbliss",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,6 +14,7 @@
     "@tabler/icons-react": "^3.31.0",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.6.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.5.0",
     "gridfs-stream": "^1.1.1",

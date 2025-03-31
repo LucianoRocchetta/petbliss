@@ -8,7 +8,12 @@ type ProductCardProps = {
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const { addItem } = useCartStore();
+  const { addItem, openCart } = useCartStore();
+
+  const handleAddItem = () => {
+    addItem({ product: product, quantity: 1 });
+    openCart();
+  };
 
   return (
     <div
@@ -42,7 +47,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </div>
         {product.available ? (
           <IconShoppingCart
-            onClick={() => addItem({ product: product, quantity: 0 })}
+            onClick={() => handleAddItem()}
             className="w-10 h-10 p-2 border rounded-full border-zinc-800 hover:bg-zinc-800 hover:text-zinc-200 duration-75 cursor-pointer"
           />
         ) : (

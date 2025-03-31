@@ -16,8 +16,8 @@ export const authOptions = {
 
         const user = {
           id: "1",
-          username: "admin",
-          password: "$2b$10$wJKEWTPxMaCbXkCk5ay5zutIaLXRBJ.yncbjCfM02KbM08JgB3lji",
+          username: "petblissadmin",
+          password: "$2a$12$uL3.7Id1vsTdvfrRR1C5Hu4NcCgVu4emA53EEV1IDseWx8yEl.rl2",
           role: "admin"
         };
 

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/product"
-import { connectDB } from "@/lib/mongoose";
+import connectDB from "@/lib/mongoose";
 import product from "@/models/product";
-import mongoose from "mongoose";
 import category from "@/models/category";
 import brand from "@/models/brand";
 
@@ -45,7 +44,8 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
                 return NextResponse.json({ error: "Category not found" }, { status: 404 });
             }
 
-            data.category = categoryDoc._id;
+            data.category = categoryDoc.
+            _id;
         }
 
         if(data.brand) {
@@ -56,6 +56,10 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
             }
 
             data.brand = brandDoc._id;
+        }
+
+        if(!data.onSale) {
+            data.discount = 0;
         }
 
         data.available = data.available == "true"
