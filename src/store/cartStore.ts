@@ -1,6 +1,5 @@
 // src/state/cartStore.ts
 import { CartItem } from '@/types';
-import { address } from 'framer-motion/client';
 import { create } from 'zustand';
 
 interface CartState {

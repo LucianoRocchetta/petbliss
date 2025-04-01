@@ -58,6 +58,12 @@ const Checkout = ({ items, setIsCheckoutVisible }: CheckoutProps) => {
         <option value="Transferencia">Transferencia</option>
       </select>
       <div className="grid grid-cols-2 gap-2 mt-5">
+        <button
+          onClick={() => setIsCheckoutVisible(false)}
+          className="bg-zinc-700 text-zinc-200 rounded-2xl w-full p-2"
+        >
+          Volver a Carrito
+        </button>
         <Link
           href={`https://wa.me/${
             process.env.NEXT_PUBLIC_WHATSAPP_NUMBER
@@ -70,16 +76,10 @@ const Checkout = ({ items, setIsCheckoutVisible }: CheckoutProps) => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <button className="bg-zinc-700 text-zinc-200 rounded-2xl w-full p-2">
+          <button className="bg-zinc-200 text-zinc-800 rounded-2xl w-full p-2">
             Finalizar Pedido
           </button>
         </Link>
-        <button
-          onClick={() => setIsCheckoutVisible(false)}
-          className="bg-zinc-200 text-zinc-800 rounded-2xl w-full p-2"
-        >
-          Volver a Carrito
-        </button>
       </div>
     </div>
   );
@@ -152,18 +152,18 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                             : item.product.price * item.quantity}
                         </p>
                         <div className="flex gap-2 mt-2">
-                          <IconChevronUp
-                            onClick={() =>
-                              item.product._id &&
-                              handleIncreaseQuantity(item.product._id)
-                            }
-                            className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
-                          />
-                          <p className="font-bold text-xl">{item.quantity}</p>
                           <IconChevronDown
                             onClick={() =>
                               item.product._id &&
                               handleDecreaseQuantity(item.product._id)
+                            }
+                            className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
+                          />
+                          <p className="font-bold text-xl">{item.quantity}</p>
+                          <IconChevronUp
+                            onClick={() =>
+                              item.product._id &&
+                              handleIncreaseQuantity(item.product._id)
                             }
                             className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
                           />
@@ -182,16 +182,16 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
 
               <div className="grid grid-cols-2 gap-2 mt-5">
                 <button
-                  onClick={handleCheckoutVisible}
-                  className="bg-zinc-200 text-zinc-800 rounded-2xl hover:bg-zinc-300 duration-200"
-                >
-                  Continuar
-                </button>
-                <button
                   onClick={clearCart}
                   className="bg-red-600 rounded-2xl text-zinc-200 w-full p-2 hover:bg-red-700 duration-200"
                 >
                   Vaciar Carrito
+                </button>
+                <button
+                  onClick={handleCheckoutVisible}
+                  className="bg-zinc-200 text-zinc-800 rounded-2xl hover:bg-zinc-300 duration-200"
+                >
+                  Continuar
                 </button>
               </div>
             </>
