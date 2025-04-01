@@ -4,7 +4,7 @@ import product from "@/models/product";
 import category from "@/models/category";
 import brand from "@/models/brand";
 import cloudinary from "@/lib/cloudinary";
-import { isAdmin } from "@/lib/auth";
+import { isAdmin } from "@/lib/authUtils";
 
 export async function GET(request: NextRequest) {
     try {

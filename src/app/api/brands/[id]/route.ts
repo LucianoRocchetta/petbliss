@@ -1,4 +1,4 @@
-import { isAdmin } from "@/lib/auth";
+import { isAdmin } from "@/lib/authUtils";
 import connectDB from "@/lib/mongoose";
 import brand from "@/models/brand";
 import { NextRequest, NextResponse } from "next/server";

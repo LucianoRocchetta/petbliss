@@ -2,7 +2,7 @@ import connectDB from "@/lib/mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import category from "@/models/category";
 import cloudinary from "@/lib/cloudinary";
-import { isAdmin } from "@/lib/auth";
+import { isAdmin } from "@/lib/authUtils";
 
 export async function GET () {
     await connectDB();
