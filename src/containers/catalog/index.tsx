@@ -1,7 +1,7 @@
 "use client";
 
 import { Grid } from "@/components/shared/grid";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState, Suspense } from "react";
 import { debounce } from "lodash";
 import { useSearchParams } from "next/navigation";
 import { Brand, Category } from "@/types";
@@ -10,7 +10,7 @@ import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { getBrands } from "@/services/brandService";
 
-export const Catalog = () => {
+function CatalogContent() {
   const searchParams = useSearchParams();
   const [keyword, setKeyword] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
@@ -27,10 +27,7 @@ export const Catalog = () => {
     const fetchCategories = async () => {
       try {
         const res: Category[] = await getCategories();
-
-        const categoriesNames = res.map(
-          (category) => (category as Category).name
-        );
+        const categoriesNames = res.map((category) => category.name);
         setCategories(categoriesNames);
       } catch (error) {
         console.log("Failed to fetch categories");
@@ -40,14 +37,11 @@ export const Catalog = () => {
     const fetchBrandsNames = async () => {
       try {
         const res = await getBrands();
-
         const brandNames = res.map((brand: { name: string; slug: string }) => ({
           name: brand.name,
           slug: brand.slug,
         }));
-
         setBrands(brandNames);
-        console.log(brandNames);
       } catch (error) {
         console.error("Failed to fetch brands names");
       }
@@ -74,7 +68,6 @@ export const Catalog = () => {
   };
 
   const handleOrderBySelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
     const [sortBy, order] = e.target.value.split("-");
     setOrder(order);
     setSortBy(sortBy);
@@ -114,9 +107,9 @@ export const Catalog = () => {
           <div>
             <h3 className="mr-2">Marca</h3>
             <select
-              value={`${brand}`}
+              value={brand}
               className="p-4 rounded-2xl text-zinc-800"
-              onChange={(e) => handleBrandChange(e)}
+              onChange={handleBrandChange}
             >
               {brands.map((brand) => (
                 <option key={brand.slug} value={brand.slug}>
@@ -144,7 +137,7 @@ export const Catalog = () => {
             <select
               value={`${sortBy}-${order}`}
               className="p-4 rounded-2xl text-zinc-800"
-              onChange={(e) => handleOrderBySelect(e)}
+              onChange={handleOrderBySelect}
             >
               <option value="price-asc">Precio - Ascendente</option>
               <option value="price-desc">Precio - Descendente</option>
@@ -162,5 +155,13 @@ export const Catalog = () => {
         brand={brand}
       />
     </section>
+  );
+}
+
+export const Catalog = () => {
+  return (
+    <Suspense fallback={<div>Cargando catalago</div>}>
+      <CatalogContent />
+    </Suspense>
   );
 };
