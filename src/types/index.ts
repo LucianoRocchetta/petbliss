@@ -38,6 +38,7 @@ export type CartItem = {
 export type Brand = {
     _id?: string;
     name: string;
+    slug?: string;
     imageURL: string;
 }
 

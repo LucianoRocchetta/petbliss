@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Brand, Product, ProductDTO } from "@/types";
+import { Product, ProductDTO } from "@/types";
 import { IconX } from "@tabler/icons-react";
 import { updateProductById } from "@/services/productService";
 import { getCategoriesNames } from "@/services/categoryService";
-import { on } from "events";
 import { getBrandNames } from "@/services/brandService";
 
 interface EditProductModal {

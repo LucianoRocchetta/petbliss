@@ -63,7 +63,6 @@ export const Grid = ({
     fetchProducts();
   }, [page, keyword, category, order, sortBy, brand]);
 
-  console.log(products);
   return (
     <>
       {isLoading ? (

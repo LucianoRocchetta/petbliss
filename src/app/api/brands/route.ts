@@ -2,6 +2,7 @@ import connectDB from "@/lib/mongoose";
 import brand from "@/models/brand";
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
+import { isAdmin } from "@/lib/auth";
 
 export async function GET () {
     await connectDB();
@@ -12,6 +13,12 @@ export async function GET () {
 
 export async function POST(req: NextRequest) {
     try {
+      const auth = await isAdmin(req);
+      
+              if (!auth.authorized) {
+                  return NextResponse.json({ error: auth.error }, { status: auth.status });
+              }
+
       const formData = await req.formData();
       const name = formData.get("name");
       const image = formData.get("image") as File;
@@ -41,7 +48,7 @@ export async function POST(req: NextRequest) {
   
       const imageUrl = (uploadResult as any).secure_url;
   
-      const newBrand = new brand({ name, imageURL: imageUrl });
+      const newBrand = new brand({ name, imageURL: imageUrl, slug: name.toLowerCase().replace(/ /g, "-") });
       await newBrand.save();
   
       return NextResponse.json(

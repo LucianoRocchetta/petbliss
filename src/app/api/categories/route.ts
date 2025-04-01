@@ -2,6 +2,7 @@ import connectDB from "@/lib/mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import category from "@/models/category";
 import cloudinary from "@/lib/cloudinary";
+import { isAdmin } from "@/lib/auth";
 
 export async function GET () {
     await connectDB();
@@ -12,6 +13,12 @@ export async function GET () {
 
 export async function POST(request: NextRequest) {
     try {
+        const auth = await isAdmin(request);
+        
+                if (!auth.authorized) {
+                    return NextResponse.json({ error: auth.error }, { status: auth.status });
+                }
+
         const formData = await request.formData(); 
 
         const name = formData.get("name");

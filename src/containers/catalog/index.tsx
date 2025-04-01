@@ -4,11 +4,11 @@ import { Grid } from "@/components/shared/grid";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { useSearchParams } from "next/navigation";
-import { Category } from "@/types";
+import { Brand, Category } from "@/types";
 import { getCategories } from "@/services/categoryService";
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import { getBrandNames } from "@/services/brandService";
+import { getBrands } from "@/services/brandService";
 
 export const Catalog = () => {
   const searchParams = useSearchParams();
@@ -17,7 +17,7 @@ export const Catalog = () => {
   const [category, setCategory] = useState<string>(
     searchParams.get("category") || ""
   );
-  const [brands, setBrands] = useState<string[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [brand, setBrand] = useState<string>(searchParams.get("brand") || "");
   const [sortBy, setSortBy] = useState<string>("price");
   const [order, setOrder] = useState<string>("asc");
@@ -39,11 +39,15 @@ export const Catalog = () => {
 
     const fetchBrandsNames = async () => {
       try {
-        const res = await getBrandNames();
+        const res = await getBrands();
 
-        const brandNames = res.map((brand: { name: string }) => brand.name);
+        const brandNames = res.map((brand: { name: string; slug: string }) => ({
+          name: brand.name,
+          slug: brand.slug,
+        }));
 
         setBrands(brandNames);
+        console.log(brandNames);
       } catch (error) {
         console.error("Failed to fetch brands names");
       }
@@ -115,8 +119,8 @@ export const Catalog = () => {
               onChange={(e) => handleBrandChange(e)}
             >
               {brands.map((brand) => (
-                <option key={brand} value={brand}>
-                  {brand}
+                <option key={brand.slug} value={brand.slug}>
+                  {brand.name}
                 </option>
               ))}
             </select>

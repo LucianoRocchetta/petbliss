@@ -1,4 +1,4 @@
-import { Product, ProductDTO } from "@/types";
+import { ProductDTO } from "@/types";
 
 type SearchProps = {
     page: number;

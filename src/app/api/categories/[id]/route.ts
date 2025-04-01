@@ -1,9 +1,16 @@
+import { isAdmin } from "@/lib/auth";
 import connectDB from "@/lib/mongoose";
 import category from "@/models/category";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(request: NextRequest, { params }: {params: {id: string}}) {
     try {
+        const auth = await isAdmin(request);
+        
+                if (!auth.authorized) {
+                    return NextResponse.json({ error: auth.error }, { status: auth.status });
+                }
+
         await connectDB();
 
         const { id } = params

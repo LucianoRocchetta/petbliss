@@ -4,6 +4,7 @@ import product from "@/models/product";
 import category from "@/models/category";
 import brand from "@/models/brand";
 import cloudinary from "@/lib/cloudinary";
+import { isAdmin } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
     try {
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
         }
 
         if (brandParam) {
-            const productBrand = await brand.findOne({ name: brandParam });
+            const productBrand = await brand.findOne({ slug: brandParam });
         
             if (productBrand) {
                 query.brand = productBrand._id;
@@ -69,6 +70,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
+        const auth = await isAdmin(request);
+
+        if (!auth.authorized) {
+            return NextResponse.json({ error: auth.error }, { status: auth.status });
+        }
+
         const formData = await request.formData(); 
 
         const name = formData.get("name");
@@ -157,15 +164,4 @@ export async function POST(request: NextRequest) {
         console.error('Error creating product:', error);
         return NextResponse.json({ error: 'Error creating product on the server.' }, { status: 500 });
     }
-}
-
-export async function DELETE () {
-    try {
-        await connectDB();
-        const products = await product.deleteMany();
-        return NextResponse.json({ message: 'Products successfully deleted' });
-    } catch (error) {
-        return NextResponse.json({ error: 'Error deleting products on the server.' }, { status: 500 });
-    }
-    
 }

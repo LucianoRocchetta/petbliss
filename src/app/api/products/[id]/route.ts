@@ -4,9 +4,16 @@ import connectDB from "@/lib/mongoose";
 import product from "@/models/product";
 import category from "@/models/category";
 import brand from "@/models/brand";
+import { isAdmin } from "@/lib/auth";
 
 export async function DELETE(request: NextRequest, { params }: {params: {id: string}}) {
     try {
+        const auth = await isAdmin(request);
+        
+                if (!auth.authorized) {
+                    return NextResponse.json({ error: auth.error }, { status: auth.status });
+                }
+
         await connectDB();
 
         const { id } = params
