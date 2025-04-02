@@ -23,13 +23,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       }`}
     >
       <div className="flex justify-center items-center mb-4">
-        <div className="w-64 h-64 overflow-hidden">
+        <div className="w-64 h-64 overflow-hidden relative">
           <Image
             src={product.imageURL}
             alt={product.name}
             width={250}
             height={250}
-            className="object-cover w-full h-full"
+            className="w-full h-full object-contain"
           />
         </div>
       </div>
