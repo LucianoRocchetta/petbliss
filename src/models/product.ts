@@ -16,9 +16,4 @@ const ProductSchema = new Schema({
     description: {type: String, required: true}
 })
 
-ProductSchema.pre("save", function(next){
-    this.price = Math.round(this.price);
-    this.discountedPrice = Math.round(this.discountedPrice);
-})
-
 export default models.Product || model("Product", ProductSchema);   

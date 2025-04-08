@@ -101,8 +101,6 @@ export const CreateProductModal = ({
       formDataToSend.append("byOrder", String(formData.byOrder));
       formDataToSend.append("brand", formData.brand);
 
-      console.log(formDataToSend);
-
       if (imageFile) {
         formDataToSend.append("image", imageFile);
       }

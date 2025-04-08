@@ -76,6 +76,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: auth.error }, { status: auth.status });
         }
 
+        await connectDB();
+
         const formData = await request.formData(); 
 
         const name = formData.get("name");
@@ -121,8 +123,6 @@ export async function POST(request: NextRequest) {
         if (!productBrand) {
             return NextResponse.json({ error: "Invalid brand" }, { status: 400 });
         }     
-
-        await connectDB();
 
         const price = Math.round(cost * (1 + profit / 100))
         const discountedPrice = Math.round(price * (1 - discount / 100))
