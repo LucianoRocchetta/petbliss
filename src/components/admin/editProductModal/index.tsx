@@ -100,6 +100,8 @@ export const EditProductModal = ({
         available: formData.available,
       };
 
+      console.log(updatedData);
+
       const res = await updateProductById(updatedData);
 
       if (res) {

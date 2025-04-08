@@ -124,8 +124,8 @@ export async function POST(request: NextRequest) {
 
         await connectDB();
 
-        const price = cost * (1 + profit / 100)
-        const discountedPrice = price * (1 - discount / 100)
+        const price = Math.round(cost * (1 + profit / 100))
+        const discountedPrice = Math.round(price * (1 - discount / 100))
 
         const arrayBuffer = await image.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);

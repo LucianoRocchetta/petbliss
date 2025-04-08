@@ -33,6 +33,12 @@ export async function DELETE(request: NextRequest, { params }: {params: {id: str
 
 export async function PUT(req: Request, {params}: {params: {id: string}}) {
     try {
+        const auth = await isAdmin(req);
+        
+                if (!auth.authorized) {
+                    return NextResponse.json({ error: auth.error }, { status: auth.status });
+                }
+
         await connectDB();
 
         const { id } = params
@@ -68,11 +74,9 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
         if(!data.onSale) {
             data.discount = 0;
         }
-
-        data.available = data.available == "true"
         
-        const price = data.cost * (1 + data.profit / 100)
-        const discountedPrice = price * (1 - data.discount / 100)
+        const price = Math.round(data.cost * (1 + data.profit / 100))
+        const discountedPrice = Math.round(price * (1 - data.discount / 100))
 
         data.price = price
         data.discountedPrice = discountedPrice

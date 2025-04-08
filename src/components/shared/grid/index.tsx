@@ -8,6 +8,7 @@ import { ProductCardAdmin } from "@/components/admin";
 import { ProductCardSkeleton } from "../productCardSkeleton";
 import { useSession } from "next-auth/react";
 import Pagination from "../pagination";
+import { debounce } from "lodash";
 
 type GridProps = {
   columns: number;
@@ -35,6 +36,10 @@ export const Grid = ({
   const { data: session, status } = useSession();
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+
+  useEffect(() => {
+    setPage(1);
+  }, [keyword, category, brand, sortBy, order]);
 
   useEffect(() => {
     setIsLoading(true);

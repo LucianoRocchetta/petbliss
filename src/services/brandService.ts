@@ -40,7 +40,7 @@ export const getBrandNames = async () => {
     const res = await fetch("/api/brands/metadata");
 
     if(!res.ok) {
-        throw new Error("Failed to fetch categories names")
+        throw new Error("Failed to fetch brand names")
     }
     return await res.json();
 }

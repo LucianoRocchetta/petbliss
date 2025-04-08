@@ -2,7 +2,7 @@
 
 import { Grid } from "@/components/shared/grid";
 import { ChangeEvent, useCallback, useEffect, useState, Suspense } from "react";
-import { debounce } from "lodash";
+import { debounce, set } from "lodash";
 import { useSearchParams } from "next/navigation";
 import { Brand, Category } from "@/types";
 import { getCategories } from "@/services/categoryService";
@@ -17,11 +17,17 @@ function CatalogContent() {
   const [category, setCategory] = useState<string>(
     searchParams.get("category") || ""
   );
+  const [searchInput, setSearchInput] = useState<string>("");
   const [brands, setBrands] = useState<Brand[]>([]);
   const [brand, setBrand] = useState<string>(searchParams.get("brand") || "");
   const [sortBy, setSortBy] = useState<string>("price");
   const [order, setOrder] = useState<string>("asc");
   const router = useRouter();
+
+  useEffect(() => {
+    setKeyword("");
+    setSearchInput("");
+  }, [category, brand]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -61,10 +67,14 @@ function CatalogContent() {
 
   const handleBrandChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedBrand = e.target.value;
+    setBrand(selectedBrand);
+    const query = new URLSearchParams(searchParams.toString());
     if (selectedBrand) {
-      setBrand(selectedBrand);
-      router.push(`/shop?brand=${selectedBrand}`);
+      query.set("brand", selectedBrand);
+    } else {
+      query.delete("brand");
     }
+    router.push(`/shop?${query.toString()}`);
   };
 
   const handleOrderBySelect = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -81,6 +91,7 @@ function CatalogContent() {
   );
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
     handleKeywordChange(e.target.value);
   };
 
@@ -95,6 +106,7 @@ function CatalogContent() {
           <input
             className="p-4 pl-12 border rounded-2xl w-full text-zinc-800 focus:outline-none"
             placeholder="Buscar productos..."
+            value={searchInput}
             onChange={onInputChange}
           />
         </div>
@@ -111,6 +123,7 @@ function CatalogContent() {
               className="p-4 rounded-2xl text-zinc-800"
               onChange={handleBrandChange}
             >
+              <option value="">Todas las marcas</option>
               {brands.map((brand) => (
                 <option key={brand.slug} value={brand.slug}>
                   {brand.name}
