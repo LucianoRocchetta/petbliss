@@ -2,6 +2,7 @@ import { Product } from "@/types";
 import { IconReport, IconShoppingCart } from "@tabler/icons-react";
 import useCartStore from "@/store/cartStore";
 import Image from "next/image";
+import { useState } from "react";
 
 type ProductCardProps = {
   product: Product;
@@ -9,9 +10,10 @@ type ProductCardProps = {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem, openCart } = useCartStore();
+  const [activeVariant, setActiveVariant] = useState<number>(0);
 
   const handleAddItem = () => {
-    addItem({ product: product, quantity: 1 });
+    addItem({ product: product, quantity: 1, variant: activeVariant });
     openCart();
   };
 
@@ -35,14 +37,26 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       </div>
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-semibold">{product.name}</h3>
-          {product.discount > 0 ? (
-            <div className="flex items-center gap-2">
-              <p className="line-through">${product.price}</p>
-              <p className="text-red-600">${product.discountedPrice}</p>
-            </div>
+          <h3 className="text-xl font-semibold ">{product.name}</h3>
+          <div className="flex gap-2">
+            {product.variants.map((variant, index) => {
+              return (
+                <p
+                  key={index}
+                  onClick={() => setActiveVariant(index)}
+                  className="p-2 rounded-2xl bg-blue-600 text-zinc-200 cursor-pointer hover:bg-blue-700 duration-75"
+                >
+                  {variant.weight}kg
+                </p>
+              );
+            })}
+          </div>
+          {product.variants.length > 0 ? (
+            <p className="text-xl font-bold mt-5">
+              ${product.variants[activeVariant].price}
+            </p>
           ) : (
-            <p>${product.price}</p>
+            "no"
           )}
         </div>
         {product.available ? (

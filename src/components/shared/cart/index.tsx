@@ -147,9 +147,11 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                         <p className="text-xl">{item.product.name}</p>
                         <p className="text-md font-bold">
                           $
-                          {item.product.discount > 0
-                            ? item.product.discountedPrice * item.quantity
-                            : item.product.price * item.quantity}
+                          {item.product.variants[item.variant].discount > 0
+                            ? item.product.variants[item.variant]
+                                .discountedPrice * item.quantity
+                            : item.product.variants[item.variant].price *
+                              item.quantity}
                         </p>
                         <div className="flex gap-2 mt-2">
                           <IconChevronDown
@@ -172,7 +174,8 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                     </div>
                     <IconX
                       onClick={() =>
-                        item.product._id && removeItem(item.product._id)
+                        item.product._id &&
+                        removeItem(item.product._id, item.variant)
                       }
                       className="hidden lg:w-10 lg:h-10 p-2 text-zinc-800 lg:block cursor-pointer"
                     />

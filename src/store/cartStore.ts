@@ -9,7 +9,7 @@ interface CartState {
   address: string;
   paymentMethod: string;
   addItem: (item: CartItem) => void;
-  removeItem: (id: string) => void;
+  removeItem: (id: string, variant: number) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   openCart: () => void;
@@ -30,11 +30,13 @@ const useCartStore = create<CartState>((set) => ({
   setPaymentMethod: (paymentMethod) => set({ paymentMethod}),
   addItem: (item) =>
     set((state) => {
-      const existingItem = state.items.find((i) => i.product._id === item.product._id);
+      const existingItem = state.items.find(
+        (i) => item.product._id === i.product._id && item.variant === i.variant
+      );
       if (existingItem) {
         return {
           items: state.items.map((i) =>
-            i.product._id === item.product._id
+            i.product._id === item.product._id && item.variant === i.variant
               ? { ...i, quantity: i.quantity + 1 }
               : i
           ),
@@ -43,9 +45,9 @@ const useCartStore = create<CartState>((set) => ({
       return { items: [...state.items, { ...item, quantity: 1 }] };
     }),
 
-  removeItem: (id) =>
+  removeItem: (id, variant) =>
     set((state) => ({
-      items: state.items.filter((item) => item.product._id !== id),
+      items: state.items.filter((item) => item.product._id !== id && item.variant !== variant),
     })),
 
   updateQuantity: (id, quantity) =>

@@ -113,7 +113,7 @@ export const EditProductModal = ({
 
   return (
     <div
-      className={`z-50 overflow-scroll w-full h-full bg-zinc-800 fixed lg:w-1/4 top-0 right-0 p-6 border-zinc-600 border-l transform transition-all duration-300 ease-in-out ${
+      className={`z-50 overflow-scroll w-full h-full bg-zinc-200 fixed lg:w-1/4 top-0 right-0 p-6 border-zinc-600 border-l transform transition-all duration-300 ease-in-out ${
         isModalVisible ? "translate-x-0" : "translate-x-full"
       }`}
     >
