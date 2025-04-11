@@ -18,6 +18,7 @@ const ProductSchema = new Schema({
     available: {type: Boolean, required: true},
     category: {type: Schema.Types.ObjectId, ref: "Category", required: true},
     byOrder: {type: Boolean, required: true},
+    isFeatured: {type: Boolean, required: true},
     description: {type: String, required: true}
 })
 

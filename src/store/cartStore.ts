@@ -10,7 +10,7 @@ interface CartState {
   paymentMethod: string;
   addItem: (item: CartItem) => void;
   removeItem: (id: string, variant: number) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  updateQuantity: (id: string, quantity: number, variant: number) => void;
   clearCart: () => void;
   openCart: () => void;
   toggleCart: () => void;
@@ -46,15 +46,20 @@ const useCartStore = create<CartState>((set) => ({
     }),
 
   removeItem: (id, variant) =>
-    set((state) => ({
-      items: state.items.filter((item) => item.product._id !== id && item.variant !== variant),
+      set((state) => ({
+        items: state.items.filter(
+          (item) => !(item.product._id === id && item.variant === variant)
+        ),
     })),
+    
 
-  updateQuantity: (id, quantity) =>
-    set((state) => ({
-      items: state.items.map((item) =>
-        item.product._id === id ? { ...item, quantity } : item
-      ),
+  updateQuantity: (id, variant, quantity) =>
+      set((state) => ({
+        items: state.items.map((item) =>
+          item.product._id === id && item.variant === variant
+            ? { ...item, quantity }
+            : item
+        ),
     })),
 
   clearCart: () => set({ items: [] }),

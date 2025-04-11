@@ -6,6 +6,7 @@ export type Product = {
     available: boolean;
     category: Category;
     imageURL: string;
+    isFeatured: boolean;
     byOrder: boolean;
     description?: string;
 }
@@ -33,6 +34,7 @@ export type ProductDTO = {
     _id?: string;
     name: string;
     brand: string;
+    isFeatured: boolean;
     variants: ProductVariantDTO[];
     available: boolean;
     byOrder: boolean;

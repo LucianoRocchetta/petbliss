@@ -8,7 +8,6 @@ import { ProductCardAdmin } from "@/components/admin";
 import { ProductCardSkeleton } from "../productCardSkeleton";
 import { useSession } from "next-auth/react";
 import Pagination from "../pagination";
-import { debounce } from "lodash";
 
 type GridProps = {
   columns: number;
@@ -16,6 +15,7 @@ type GridProps = {
   category?: string;
   brand?: string;
   limit?: number;
+  isFeatured?: boolean;
   pagination?: boolean;
   order?: string;
   sortBy?: string;
@@ -29,6 +29,7 @@ export const Grid = ({
   order,
   sortBy,
   brand,
+  isFeatured,
   pagination = true,
 }: GridProps) => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -52,6 +53,7 @@ export const Grid = ({
           order,
           brand,
           sortBy,
+          isFeatured,
           page,
         });
 
@@ -66,7 +68,7 @@ export const Grid = ({
     };
 
     fetchProducts();
-  }, [page, keyword, category, order, sortBy, brand]);
+  }, [page, keyword, category, order, sortBy, brand, isFeatured]);
 
   return (
     <>

@@ -7,10 +7,11 @@ type SearchProps = {
     brand?: string,
     limit?: number,
     order?: string, 
+    isFeatured?: boolean,
     sortBy?: string,
 }
 
-export const getProducts = async ({ brand, order, sortBy, page = 1, keyword = "", category = "", limit=8  }: SearchProps) => {
+export const getProducts = async ({ brand, order, isFeatured, sortBy, page = 1, keyword = "", category = "", limit=8  }: SearchProps) => {
     try {
         const queryParams = new URLSearchParams({
             page: page.toString(),
@@ -19,7 +20,8 @@ export const getProducts = async ({ brand, order, sortBy, page = 1, keyword = ""
             limit: limit.toString(),
             ...(order && { order }),
             ...(sortBy && {sortBy}),
-            ...(brand && {brand})
+            ...(brand && {brand}),
+            ...(isFeatured && { isFeatured: isFeatured.toString() })
         }).toString();
 
         const res = await fetch(`/api/products?${queryParams}`);

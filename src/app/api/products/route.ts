@@ -37,6 +37,11 @@ export async function GET(request: NextRequest) {
             }
         }
 
+          const isFeaturedParam = searchParams.get("isFeatured");
+          if (isFeaturedParam !== null) {
+            query.isFeatured = isFeaturedParam === "true";
+          }
+
         if (categoryParam) {
             const productCategory = await category.findOne({ name: categoryParam });
 
@@ -86,6 +91,7 @@ export async function POST(request: NextRequest) {
       const brandParam = formData.get("brand")?.toString();
       const available = formData.get("available") === "true";
       const byOrder = formData.get("byOrder") === "true";
+      const isFeatured = formData.get("isFeatured") === "true";
   
       const variantsJSON = formData.get("variants")?.toString();
       const image = formData.get("image") as File;
@@ -159,6 +165,7 @@ export async function POST(request: NextRequest) {
         brand: productBrand._id,
         available,
         byOrder,
+        isFeatured,
         imageURL: imageUrl,
         variants: validatedVariants,
       });

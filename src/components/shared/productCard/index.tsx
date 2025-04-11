@@ -3,6 +3,7 @@ import { IconReport, IconShoppingCart } from "@tabler/icons-react";
 import useCartStore from "@/store/cartStore";
 import Image from "next/image";
 import { useState } from "react";
+import { formatPrice } from "@/utils";
 
 type ProductCardProps = {
   product: Product;
@@ -51,12 +52,19 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               );
             })}
           </div>
-          {product.variants.length > 0 ? (
-            <p className="text-xl font-bold mt-5">
-              ${product.variants[activeVariant].price}
-            </p>
+          {product.variants[activeVariant].discount > 0 ? (
+            <div className="flex mt-2 flex-col">
+              <p className="text-sm font-bold line-through">
+                ${formatPrice(product.variants[activeVariant].price)}
+              </p>
+              <p className="text-xl text-red-600">
+                ${formatPrice(product.variants[activeVariant].discountedPrice)}
+              </p>
+            </div>
           ) : (
-            "no"
+            <p className="text-xl font-bold mt-2">
+              ${formatPrice(product.variants[activeVariant].price)}
+            </p>
           )}
         </div>
         {product.available ? (
@@ -69,9 +77,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         )}
       </div>
       <div className="flex items-center justify-between absolute top-0 right-0 w-full p-4">
-        {product.discount > 0 ? (
+        {product.variants[activeVariant].discount > 0 ? (
           <div className="bg-red-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
-            <p className="font-bold">-{product.discount}%</p>
+            <p className="font-bold">
+              -{product.variants[activeVariant].discount}%
+            </p>
           </div>
         ) : (
           ""
