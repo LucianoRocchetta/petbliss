@@ -5,6 +5,8 @@ import { createProduct } from "@/services/productService";
 import { IconX } from "@tabler/icons-react";
 import { getCategoriesNames } from "@/services/categoryService";
 import { getBrandNames } from "@/services/brandService";
+import { ProductDTO, ProductVariantDTO } from "@/types";
+import { formatPrice } from "@/utils";
 
 interface CreateProductModalProps {
   setIsModalVisible: (isModalVisible: boolean) => void;
@@ -55,19 +57,34 @@ export const CreateProductModal = ({
   const formDataTemplate = {
     brand: "",
     name: "",
-    cost: 0,
-    profit: 0,
     imageURL: "",
-    available: "true",
-    discount: 0,
-    onSale: false,
+    available: true,
     byOrder: false,
     category: "",
+    isFeatured: false,
     description: "",
+    variants: [],
   };
 
-  const [formData, setFormData] = useState(formDataTemplate);
+  const [currentVariant, setCurrentVariant] = useState<ProductVariantDTO>({
+    weight: 0,
+    cost: 0,
+    profit: 0,
+    discount: 0,
+    onSale: false,
+  });
+  const [formData, setFormData] = useState<ProductDTO>(formDataTemplate);
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const calculateFinalPrice = (variant: ProductVariantDTO): number => {
+    const cost = Number(variant.cost);
+    const profit = Number(variant.profit);
+    const discount = Number(variant.discount);
+
+    const basePrice = cost + cost * (profit / 100);
+    const discountAmount = variant.onSale ? (basePrice * discount) / 100 : 0;
+    return basePrice - discountAmount;
+  };
 
   const handleFormChange = (
     e: React.ChangeEvent<
@@ -80,6 +97,17 @@ export const CreateProductModal = ({
     });
   };
 
+  const handleCurrentVariantChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value, type, checked } = e.target;
+    const parsedValue = type === "checkbox" ? checked : value;
+    setCurrentVariant((prev) => ({
+      ...prev,
+      [name]: type === "number" ? Number(parsedValue) : parsedValue,
+    }));
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -87,19 +115,47 @@ export const CreateProductModal = ({
     }
   };
 
+  const addVariant = () => {
+    if (
+      !currentVariant.weight ||
+      !currentVariant.cost ||
+      !currentVariant.profit
+    ) {
+      alert("Campos de variante obligatiorios");
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      variants: [...prev.variants, currentVariant],
+    }));
+
+    setCurrentVariant({
+      weight: 0,
+      cost: 0,
+      profit: 0,
+      discount: 0,
+      onSale: false,
+    });
+    setIsDiscountVisible(false);
+  };
+
+  const removeVariant = (index: number) => {
+    const updatedVariants = formData.variants.filter((_, i) => i !== index);
+    setFormData({ ...formData, variants: updatedVariants });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("name", formData.name);
-      formDataToSend.append("cost", String(formData.cost));
       formDataToSend.append("category", formData.category);
       formDataToSend.append("description", String(formData.description));
       formDataToSend.append("available", String(formData.available));
-      formDataToSend.append("onSale", String(formData.onSale));
-      formDataToSend.append("profit", String(formData.profit));
-      formDataToSend.append("discount", String(formData.discount || 0));
       formDataToSend.append("byOrder", String(formData.byOrder));
       formDataToSend.append("brand", formData.brand);
+      formDataToSend.append("variants", JSON.stringify(formData.variants));
+      formDataToSend.append("isFeatured", String(formData.isFeatured));
 
       if (imageFile) {
         formDataToSend.append("image", imageFile);
@@ -121,161 +177,219 @@ export const CreateProductModal = ({
 
   return (
     <div
-      className={`z-50 overflow-scroll w-full h-full bg-zinc-800 fixed lg:w-1/4 top-0 right-0 p-6 border-zinc-600 border-l transform ${
+      className={`z-50 w-full lg:flex h-full text-zinc-800 bg-zinc-800/80 fixed top-0 right-0 p-6 border-zinc-600 border-l transform ${
         isModalVisible ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300`}
     >
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold mb-4">Crear producto</h2>
-        <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)} />
+      <div className="flex w-full lg:w-3/4 flex-col mx-auto bg-zinc-50 p-5 rounded-2xl overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold">Crear Producto</h2>
+          <IconX
+            className="w-8 h-8 cursor-pointer"
+            onClick={() => setIsModalVisible(false)}
+          />
+        </div>
+
+        <form className="space-y-6">
+          <div className="bg-white rounded-2xl p-4 shadow">
+            <h3 className="text-lg font-semibold mb-4">Información general</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h2>Imagen</h2>
+                <input
+                  type="file"
+                  onChange={handleImageChange}
+                  className="p-2 border rounded-2xl w-full text-zinc-800"
+                />
+              </div>
+              <div>
+                <label>Nombre del producto</label>
+                <input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleFormChange}
+                  className="p-2 border rounded-2xl w-full"
+                />
+              </div>
+              <div>
+                <label>Marca</label>
+                <select
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleFormChange}
+                  className="p-2 border rounded-2xl w-full"
+                >
+                  <option value="" disabled>
+                    Selecciona una marca
+                  </option>
+                  {brands.map((brand) => (
+                    <option key={brand} value={brand}>
+                      {brand}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-span-2">
+                <label>Descripción</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleFormChange}
+                  className="p-2 border rounded-2xl w-full"
+                />
+              </div>
+              <div>
+                <label>Categoría</label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleFormChange}
+                  className="p-2 border rounded-2xl w-full"
+                >
+                  <option value="" disabled>
+                    Selecciona una categoría
+                  </option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label>Disponibilidad</label>
+                <select
+                  name="available"
+                  value={String(formData.available)}
+                  onChange={handleFormChange}
+                  className="p-2 border rounded-2xl w-full"
+                >
+                  <option value="true">Disponible</option>
+                  <option value="false">No disponible</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="byOrder"
+                  checked={formData.byOrder}
+                  onChange={(e) =>
+                    setFormData({ ...formData, byOrder: e.target.checked })
+                  }
+                />
+                <label>Por encargo</label>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="isFeatured"
+                  checked={formData.isFeatured}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isFeatured: e.target.checked })
+                  }
+                />
+                <label>Destacado</label>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-4 shadow">
+            <h3 className="text-lg font-semibold mb-4">Variantes</h3>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label>Peso (kg)</label>
+                <input
+                  type="text"
+                  name="weight"
+                  value={currentVariant.weight}
+                  onChange={handleCurrentVariantChange}
+                  className="p-2 border rounded-2xl w-full"
+                />
+              </div>
+              <div>
+                <label>Costo</label>
+                <input
+                  type="text"
+                  name="cost"
+                  value={currentVariant.cost}
+                  onChange={handleCurrentVariantChange}
+                  className="p-2 border rounded-2xl w-full"
+                />
+              </div>
+              <div>
+                <label>Ganancia (%)</label>
+                <input
+                  type="text"
+                  name="profit"
+                  value={currentVariant.profit}
+                  onChange={handleCurrentVariantChange}
+                  className="p-2 border rounded-2xl w-full"
+                />
+              </div>
+              <div className="col-span-2 flex items-center gap-2 mt-2">
+                <label>Con descuento</label>
+                <input
+                  type="checkbox"
+                  name="onSale"
+                  checked={currentVariant.onSale}
+                  onChange={(e) => {
+                    setIsDiscountVisible(e.target.checked);
+                    handleCurrentVariantChange(e);
+                  }}
+                />
+                {isDiscountVisible && (
+                  <input
+                    type="text"
+                    placeholder="Descuento (%)"
+                    name="discount"
+                    value={currentVariant.discount}
+                    onChange={handleCurrentVariantChange}
+                    className="p-2 border rounded-2xl w-32"
+                  />
+                )}
+              </div>
+            </div>
+            <h2 className="font-bold">Precio final:</h2>
+            <p>{formatPrice(calculateFinalPrice(currentVariant))}</p>
+            <button
+              type="button"
+              onClick={addVariant}
+              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-2xl"
+            >
+              Agregar variante
+            </button>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              {formData.variants.map((variant, index) => (
+                <div key={index} className="p-3 border rounded-2xl shadow">
+                  <p>Peso: {variant.weight}kg</p>
+                  <p>Costo: {variant.cost}</p>
+                  <p>Ganancia: {variant.profit}%</p>
+                  {variant.discount > 0 && (
+                    <p>Descuento: {variant.discount}%</p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => removeVariant(index)}
+                    className="mt-2 px-3 py-1 bg-red-600 text-white rounded-2xl text-sm"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              className="px-6 py-3 bg-blue-600 text-white rounded-2xl"
+              onClick={handleSubmit}
+            >
+              Crear producto
+            </button>
+          </div>
+        </form>
       </div>
-
-      <form className="space-y-2">
-        <div>
-          <h2>Marca</h2>
-          <select
-            name="brand"
-            value={formData.brand}
-            onChange={handleFormChange}
-            className="p-2 border rounded-2xl w-full text-zinc-800"
-          >
-            <option value="" disabled>
-              Selecciona una marca
-            </option>
-            {brands.map((brand) => (
-              <option key={brand} value={brand}>
-                {brand}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <h2>Nombre del producto</h2>
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleFormChange}
-            className="p-2 border rounded-2xl w-full text-zinc-800"
-          />
-        </div>
-        <div>
-          <h2>Costo</h2>
-          <input
-            name="cost"
-            type="number"
-            value={formData.cost}
-            onChange={handleFormChange}
-            className="p-2 border rounded-2xl w-full text-zinc-800"
-          />
-        </div>
-        <div>
-          <h2>Porcentaje de ganancia</h2>
-          <input
-            name="profit"
-            type="number"
-            value={formData.profit}
-            onChange={handleFormChange}
-            className="p-2 border rounded-2xl w-full text-zinc-800"
-          />
-        </div>
-        <div>
-          <h2>Disponibilidad</h2>
-          <select
-            name="available"
-            value={String(formData.available)}
-            onChange={handleFormChange}
-            className="p-2 border rounded-2xl w-full text-zinc-800"
-          >
-            <option value="true">Disponible</option>
-            <option value="false">No disponible</option>
-          </select>
-        </div>
-        <div className="flex items-center gap-5">
-          <h2>Con descuento</h2>
-          <div>
-            <input
-              type="checkbox"
-              name="onSale"
-              checked={formData.onSale}
-              onChange={(e) => {
-                setFormData({ ...formData, onSale: e.target.checked });
-                setIsDiscountVisible(e.target.checked);
-              }}
-              className="mr-2"
-            />
-            <label htmlFor="onSale">Sí</label>
-          </div>
-        </div>
-        {isDiscountVisible && (
-          <div>
-            <h2>Descuento</h2>
-            <input
-              name="discount"
-              type="number"
-              value={formData.discount}
-              onChange={handleFormChange}
-              className="p-2 border rounded-2xl w-full text-zinc-800"
-            />
-          </div>
-        )}
-
-        <div className="flex items-center gap-5">
-          <h2>Por encargo</h2>
-          <div>
-            <input
-              type="checkbox"
-              name="byOrder"
-              checked={formData.byOrder}
-              onChange={(e) =>
-                setFormData({ ...formData, byOrder: e.target.checked })
-              }
-              className="mr-2"
-            />
-            <label htmlFor="byOrder">Sí</label>
-          </div>
-        </div>
-        <div>
-          <h2>Categoría</h2>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleFormChange}
-            className="p-2 border rounded-2xl w-full text-zinc-800"
-          >
-            <option value="" disabled>
-              Selecciona una categoría
-            </option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <h2>Descripción</h2>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleFormChange}
-            className="p-2 border rounded-2xl w-full text-zinc-800"
-          />
-        </div>
-        <div>
-          <h2>Imagen</h2>
-          <input
-            type="file"
-            onChange={handleImageChange}
-            className="p-2 border rounded-2xl w-full text-zinc-800"
-          />
-        </div>
-      </form>
-      <button
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
-        onClick={handleSubmit}
-      >
-        Crear Producto
-      </button>
     </div>
   );
 };

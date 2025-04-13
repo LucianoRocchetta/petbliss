@@ -6,7 +6,7 @@ export default function HomePage() {
     <>
       <div className="w-full space-y-20">
         <HomeGrid />
-        <Carousel title="Productos destacados" category="Destacado" />
+        <Carousel title="Productos destacados" />
         {/* <Carousel title="Accesorios" category="accesorio" /> */}
       </div>
     </>

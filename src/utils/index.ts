@@ -6,3 +6,23 @@ export const generateSlug = (name: string): string => {
     .replace(/--+/g, "-")
     .trim();
 };
+
+export const formatPrice = (price:number): string => {
+  return new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "ARG",
+  }).format(price);
+}
+
+export const calculateFinalPrice = (
+  cost: number,
+  profit: number,
+  discount: number
+): number => {
+  const priceWithProfit = cost + cost * (profit / 100);
+  const finalPrice = discount > 0
+    ? priceWithProfit - priceWithProfit * (discount / 100)
+    : priceWithProfit;
+
+  return finalPrice;
+};

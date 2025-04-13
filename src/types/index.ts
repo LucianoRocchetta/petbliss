@@ -2,28 +2,41 @@ export type Product = {
     _id?: string;
     brand: Brand;
     name: string;
-    price: number;
-    discountedPrice: number;
-    cost: number;
+    variants: ProductVariant[];
     available: boolean;
-    profit: number;
-    onSale: boolean;
-    discount: number;
     category: Category;
     imageURL: string;
+    isFeatured: boolean;
     byOrder: boolean;
     description?: string;
 }
+
+export type ProductVariant = {
+    weight: number;
+    cost: number;
+    onSale: boolean;
+    discount: number;
+    profit: number;
+    price: number;
+    discountedPrice: number;
+}
+
+export type ProductVariantDTO = {
+    weight: number;
+    cost: number;
+    onSale: boolean;
+    discount: number;
+    profit: number;
+}
+
 
 export type ProductDTO = {
     _id?: string;
     name: string;
     brand: string;
-    cost: number;
+    isFeatured: boolean;
+    variants: ProductVariantDTO[];
     available: boolean;
-    discount: number;
-    profit: number;
-    onSale: boolean;
     byOrder: boolean;
     category: string;
     imageURL: string;
@@ -33,6 +46,7 @@ export type ProductDTO = {
 export type CartItem = {
     product: Product,
     quantity: number;
+    variant: number;
 }
 
 export type Brand = {

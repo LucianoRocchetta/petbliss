@@ -7,6 +7,7 @@ import { EditProductModal } from "../editProductModal";
 import { deleteProductById } from "@/services/productService";
 import { useState } from "react";
 import AlertDialogDelete from "@/components/shared/alertDialogDelete";
+import { formatPrice } from "@/utils";
 
 type ProductCardAdminProps = {
   product: Product;
@@ -14,6 +15,7 @@ type ProductCardAdminProps = {
 
 export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [activeVariant, setActiveVariant] = useState<number>(0);
 
   const handleIsModalVisible = () => {
     setIsModalVisible(true);
@@ -60,6 +62,19 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
         <div className="flex justify-between items-center">
           <div>
             <h3 className="text-xl font-semibold">{product.name}</h3>
+            <div className="flex gap-2 ">
+              {product.variants.map((variant, index) => {
+                return (
+                  <p
+                    key={index}
+                    onClick={() => setActiveVariant(index)}
+                    className="p-2 rounded-2xl bg-blue-600 text-zinc-200 cursor-pointer hover:bg-blue-700 duration-75"
+                  >
+                    {variant.weight}kg
+                  </p>
+                );
+              })}
+            </div>
             <p className={!product.category ? "text-red-600" : ""}>
               {product.category ? product.category.name : "Sin categoria"}
             </p>
@@ -69,13 +84,22 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
               {!product.available ? "No disponible" : `Disponible`}
             </p>
             <div>
-              {product.discount > 0 ? (
-                <div className="flex items-center gap-2">
-                  <p className="line-through">${product.price}</p>
-                  <p className="text-red-600">${product.discountedPrice}</p>
+              {product.variants[activeVariant].discount > 0 ? (
+                <div className="flex mt-2 flex-col">
+                  <p className="text-sm font-bold line-through">
+                    ${formatPrice(product.variants[activeVariant].price)}
+                  </p>
+                  <p className="text-xl text-red-600">
+                    $
+                    {formatPrice(
+                      product.variants[activeVariant].discountedPrice
+                    )}
+                  </p>
                 </div>
               ) : (
-                <p>${product.price}</p>
+                <p className="text-xl font-bold mt-2">
+                  ${formatPrice(product.variants[activeVariant].price)}
+                </p>
               )}
             </div>
           </div>
@@ -92,9 +116,11 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
           </div>
         </div>
         <div className="flex items-center justify-between absolute top-0 right-0 w-full p-4">
-          {product.discount > 0 ? (
+          {product.variants[activeVariant].discount > 0 ? (
             <div className="bg-red-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
-              <p className="font-bold">-{product.discount}%</p>
+              <p className="font-bold">
+                -{product.variants[activeVariant].discount}%
+              </p>
             </div>
           ) : (
             ""

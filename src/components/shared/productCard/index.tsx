@@ -2,6 +2,8 @@ import { Product } from "@/types";
 import { IconReport, IconShoppingCart } from "@tabler/icons-react";
 import useCartStore from "@/store/cartStore";
 import Image from "next/image";
+import { useState } from "react";
+import { formatPrice } from "@/utils";
 
 type ProductCardProps = {
   product: Product;
@@ -9,9 +11,10 @@ type ProductCardProps = {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem, openCart } = useCartStore();
+  const [activeVariant, setActiveVariant] = useState<number>(0);
 
   const handleAddItem = () => {
-    addItem({ product: product, quantity: 1 });
+    addItem({ product: product, quantity: 1, variant: activeVariant });
     openCart();
   };
 
@@ -35,14 +38,39 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       </div>
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-semibold">{product.name}</h3>
-          {product.discount > 0 ? (
-            <div className="flex items-center gap-2">
-              <p className="line-through">${product.price}</p>
-              <p className="text-red-600">${product.discountedPrice}</p>
+          <h3 className="text-xl font-semibold ">{product.name}</h3>
+          <div className="flex gap-2 my-2">
+            {product.variants.map((variant, index) => {
+              const isActive = index === activeVariant;
+
+              return (
+                <p
+                  key={index}
+                  onClick={() => setActiveVariant(index)}
+                  className={`p-2 rounded-2xl cursor-pointer duration-75 ${
+                    isActive
+                      ? "bg-blue-500 text-zinc-200"
+                      : "border-zinc-800 border"
+                  } hover:bg-blue-500 hover:text-zinc-200 hover:border-none`}
+                >
+                  {variant.weight}kg
+                </p>
+              );
+            })}
+          </div>
+          {product.variants[activeVariant].discount > 0 ? (
+            <div className="flex mt-2 flex-col">
+              <p className="text-sm font-bold line-through">
+                ${formatPrice(product.variants[activeVariant].price)}
+              </p>
+              <p className="text-xl text-red-600">
+                ${formatPrice(product.variants[activeVariant].discountedPrice)}
+              </p>
             </div>
           ) : (
-            <p>${product.price}</p>
+            <p className="text-xl font-bold mt-2">
+              ${formatPrice(product.variants[activeVariant].price)}
+            </p>
           )}
         </div>
         {product.available ? (
@@ -55,9 +83,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         )}
       </div>
       <div className="flex items-center justify-between absolute top-0 right-0 w-full p-4">
-        {product.discount > 0 ? (
+        {product.variants[activeVariant].discount > 0 ? (
           <div className="bg-red-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
-            <p className="font-bold">-{product.discount}%</p>
+            <p className="font-bold">
+              -{product.variants[activeVariant].discount}%
+            </p>
           </div>
         ) : (
           ""

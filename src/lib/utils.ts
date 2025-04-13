@@ -14,22 +14,21 @@ export function generateWhatsAppTemplateMessage(
 ) {
   let message = `*Pedido de Compra Pet Bliss*\n\n`;
   let total = 0;
-  let productTotal = 0;
 
   message += `*Productos en el carrito:*\n`;
+
   items.forEach((item) => {
-    if (item.product.discount > 0) {
-      productTotal = item.product.discountedPrice * item.quantity;
-    } else {
-      productTotal = item.product.price * item.quantity
-    }
-    
-    message += `*${item.product.name}*\n`;
+    const variant = item.product.variants[item.variant];
+    const unitPrice = variant.discount > 0 ? variant.discountedPrice : variant.price;
+    const subtotal = unitPrice * item.quantity;
+
+    message += `*${item.product.name} - ${variant.weight}kg*\n`;
     message += `\tCantidad: ${item.quantity}\n`;
-    message += `\tPrecio unitario: $${item.product.price.toFixed(2)}\n`;
-    message += `\tDescuento por producto: ${item.product.discount}%\n`;
-    message += `\tSubtotal: $${productTotal.toFixed(2)}\n\n`;
-    total += productTotal;
+    message += `\tPrecio unitario: $${unitPrice.toFixed(2)}\n`;
+    message += `\tDescuento: ${variant.discount}%\n`;
+    message += `\tSubtotal: $${subtotal.toFixed(2)}\n\n`;
+
+    total += subtotal;
   });
 
   message += `*Detalles del comprador:*\n`;
@@ -41,4 +40,5 @@ export function generateWhatsAppTemplateMessage(
 
   return encodeURIComponent(message);
 }
+
 

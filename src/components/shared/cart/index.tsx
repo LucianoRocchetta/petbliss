@@ -5,6 +5,7 @@ import useCartStore from "@/store/cartStore";
 import { generateWhatsAppTemplateMessage } from "@/lib/utils";
 import { CartItem } from "@/types";
 import { useState } from "react";
+import { formatPrice } from "@/utils";
 
 interface CartPanelProps {
   setIsOpen: (isOpen: Boolean) => void;
@@ -91,17 +92,21 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
 
   const toggleCartPanel = () => setIsOpen(!isOpen);
 
-  const handleIncreaseQuantity = (id: string) => {
-    const item = items.find((i) => i.product._id === id);
+  const handleIncreaseQuantity = (id: string, variant: number) => {
+    const item = items.find(
+      (i) => i.product._id === id && i.variant === variant
+    );
     if (item) {
-      updateQuantity(id, item.quantity + 1);
+      updateQuantity(id, variant, item.quantity + 1);
     }
   };
 
-  const handleDecreaseQuantity = (id: string) => {
-    const item = items.find((i) => i.product._id === id);
+  const handleDecreaseQuantity = (id: string, variant: number) => {
+    const item = items.find(
+      (i) => i.product._id === id && i.variant === variant
+    );
     if (item && item.quantity > 1) {
-      updateQuantity(id, item.quantity - 1);
+      updateQuantity(id, variant, item.quantity - 1);
     }
   };
 
@@ -144,18 +149,37 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                         height={100}
                       />
                       <div className="flex flex-col">
-                        <p className="text-xl">{item.product.name}</p>
+                        <div className="flex gap-2 items-center text-xl">
+                          <p>{item.product.name}</p>
+                          <p>{item.product.variants[item.variant].weight}kg</p>
+                        </div>
+                        {item.product.variants[item.variant].discount > 0 ? (
+                          <p className="text-sm font-bold line-through">
+                            $
+                            {formatPrice(
+                              item.product.variants[item.variant].price *
+                                item.quantity
+                            )}
+                          </p>
+                        ) : null}
                         <p className="text-md font-bold">
                           $
-                          {item.product.discount > 0
-                            ? item.product.discountedPrice * item.quantity
-                            : item.product.price * item.quantity}
+                          {formatPrice(
+                            item.product.variants[item.variant].discount > 0
+                              ? item.product.variants[item.variant]
+                                  .discountedPrice * item.quantity
+                              : item.product.variants[item.variant].price *
+                                  item.quantity
+                          )}
                         </p>
                         <div className="flex gap-2 mt-2">
                           <IconChevronDown
                             onClick={() =>
                               item.product._id &&
-                              handleDecreaseQuantity(item.product._id)
+                              handleDecreaseQuantity(
+                                item.product._id,
+                                item.variant
+                              )
                             }
                             className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
                           />
@@ -163,7 +187,10 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                           <IconChevronUp
                             onClick={() =>
                               item.product._id &&
-                              handleIncreaseQuantity(item.product._id)
+                              handleIncreaseQuantity(
+                                item.product._id,
+                                item.variant
+                              )
                             }
                             className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
                           />
@@ -172,7 +199,8 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                     </div>
                     <IconX
                       onClick={() =>
-                        item.product._id && removeItem(item.product._id)
+                        item.product._id &&
+                        removeItem(item.product._id, item.variant)
                       }
                       className="hidden lg:w-10 lg:h-10 p-2 text-zinc-800 lg:block cursor-pointer"
                     />
