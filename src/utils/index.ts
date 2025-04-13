@@ -13,3 +13,16 @@ export const formatPrice = (price:number): string => {
     currency: "ARG",
   }).format(price);
 }
+
+export const calculateFinalPrice = (
+  cost: number,
+  profit: number,
+  discount: number
+): number => {
+  const priceWithProfit = cost + cost * (profit / 100);
+  const finalPrice = discount > 0
+    ? priceWithProfit - priceWithProfit * (discount / 100)
+    : priceWithProfit;
+
+  return finalPrice;
+};

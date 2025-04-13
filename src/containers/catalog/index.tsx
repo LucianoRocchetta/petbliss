@@ -20,8 +20,6 @@ function CatalogContent() {
   const [searchInput, setSearchInput] = useState<string>("");
   const [brands, setBrands] = useState<Brand[]>([]);
   const [brand, setBrand] = useState<string>(searchParams.get("brand") || "");
-  const [sortBy, setSortBy] = useState<string>("price");
-  const [order, setOrder] = useState<string>("asc");
   const router = useRouter();
 
   useEffect(() => {
@@ -75,12 +73,6 @@ function CatalogContent() {
       query.delete("brand");
     }
     router.push(`/shop?${query.toString()}`);
-  };
-
-  const handleOrderBySelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    const [sortBy, order] = e.target.value.split("-");
-    setOrder(order);
-    setSortBy(sortBy);
   };
 
   const handleKeywordChange = useCallback(
@@ -145,17 +137,6 @@ function CatalogContent() {
               ))}
             </select>
           </div>
-          <div>
-            <h3 className="mr-2">Ordenar</h3>
-            <select
-              value={`${sortBy}-${order}`}
-              className="p-4 rounded-2xl text-zinc-800"
-              onChange={handleOrderBySelect}
-            >
-              <option value="price-asc">Precio - Ascendente</option>
-              <option value="price-desc">Precio - Descendente</option>
-            </select>
-          </div>
         </div>
       </div>
       <Grid
@@ -163,8 +144,6 @@ function CatalogContent() {
         category={category}
         columns={4}
         limit={8}
-        order={order}
-        sortBy={sortBy}
         brand={brand}
       />
     </section>

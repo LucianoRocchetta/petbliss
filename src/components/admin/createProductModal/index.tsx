@@ -6,6 +6,7 @@ import { IconX } from "@tabler/icons-react";
 import { getCategoriesNames } from "@/services/categoryService";
 import { getBrandNames } from "@/services/brandService";
 import { ProductDTO, ProductVariantDTO } from "@/types";
+import { formatPrice } from "@/utils";
 
 interface CreateProductModalProps {
   setIsModalVisible: (isModalVisible: boolean) => void;
@@ -74,6 +75,16 @@ export const CreateProductModal = ({
   });
   const [formData, setFormData] = useState<ProductDTO>(formDataTemplate);
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const calculateFinalPrice = (variant: ProductVariantDTO): number => {
+    const cost = Number(variant.cost);
+    const profit = Number(variant.profit);
+    const discount = Number(variant.discount);
+
+    const basePrice = cost + cost * (profit / 100);
+    const discountAmount = variant.onSale ? (basePrice * discount) / 100 : 0;
+    return basePrice - discountAmount;
+  };
 
   const handleFormChange = (
     e: React.ChangeEvent<
@@ -338,6 +349,8 @@ export const CreateProductModal = ({
                 )}
               </div>
             </div>
+            <h2 className="font-bold">Precio final:</h2>
+            <p>{formatPrice(calculateFinalPrice(currentVariant))}</p>
             <button
               type="button"
               onClick={addVariant}

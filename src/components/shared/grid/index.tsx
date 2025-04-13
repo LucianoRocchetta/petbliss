@@ -17,8 +17,6 @@ type GridProps = {
   limit?: number;
   isFeatured?: boolean;
   pagination?: boolean;
-  order?: string;
-  sortBy?: string;
 };
 
 export const Grid = ({
@@ -26,8 +24,6 @@ export const Grid = ({
   keyword,
   category,
   limit,
-  order,
-  sortBy,
   brand,
   isFeatured,
   pagination = true,
@@ -40,7 +36,7 @@ export const Grid = ({
 
   useEffect(() => {
     setPage(1);
-  }, [keyword, category, brand, sortBy, order]);
+  }, [keyword, category, brand]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -50,9 +46,7 @@ export const Grid = ({
           keyword,
           category,
           limit,
-          order,
           brand,
-          sortBy,
           isFeatured,
           page,
         });
@@ -68,7 +62,7 @@ export const Grid = ({
     };
 
     fetchProducts();
-  }, [page, keyword, category, order, sortBy, brand, isFeatured]);
+  }, [page, keyword, category, brand, isFeatured]);
 
   return (
     <>

@@ -16,8 +16,6 @@ export async function GET(request: NextRequest) {
         const categoryParam = searchParams.get("category");
         const page = parseInt(searchParams.get("page") || "1", 10);
         const brandParam = searchParams.get("brand");
-        const sortBy = searchParams.get("sortBy") || "price";
-        const order  = searchParams.get("order") === "desc" ? -1 : 1;
         const limit = parseInt(searchParams.get("limit") || "8", 10);
         const skip = (page - 1) * limit;
 
@@ -56,7 +54,6 @@ export async function GET(request: NextRequest) {
             .populate("category")
             .populate("brand")
             .skip(skip)
-            .sort({ [sortBy]: order})
             .limit(limit);
 
         const total = await product.countDocuments(query);

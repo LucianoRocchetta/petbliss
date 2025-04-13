@@ -39,13 +39,19 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-xl font-semibold ">{product.name}</h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 my-2">
             {product.variants.map((variant, index) => {
+              const isActive = index === activeVariant;
+
               return (
                 <p
                   key={index}
                   onClick={() => setActiveVariant(index)}
-                  className="p-2 rounded-2xl bg-blue-600 text-zinc-200 cursor-pointer hover:bg-blue-700 duration-75"
+                  className={`p-2 rounded-2xl cursor-pointer duration-75 ${
+                    isActive
+                      ? "bg-blue-500 text-zinc-200"
+                      : "border-zinc-800 border"
+                  } hover:bg-blue-500 hover:text-zinc-200 hover:border-none`}
                 >
                   {variant.weight}kg
                 </p>

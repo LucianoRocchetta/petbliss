@@ -6,6 +6,7 @@ import { IconX } from "@tabler/icons-react";
 import { updateProductById } from "@/services/productService";
 import { getCategoriesNames } from "@/services/categoryService";
 import { getBrandNames } from "@/services/brandService";
+import { calculateFinalPrice, formatPrice } from "@/utils";
 
 interface EditProductModal {
   product: Product;
@@ -85,6 +86,30 @@ export const EditProductModal = ({
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleVariantChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value, type, checked } = e.target;
+    const parsedValue = type === "checkbox" ? checked : value;
+
+    const updatedVariants = [...formData.variants];
+    updatedVariants[index] = {
+      ...updatedVariants[index],
+      [name]:
+        type === "checkbox"
+          ? parsedValue
+          : name === "weight" ||
+            name === "cost" ||
+            name === "profit" ||
+            name === "discount"
+          ? Number(parsedValue)
+          : parsedValue,
+    };
+
+    setFormData({ ...formData, variants: updatedVariants });
   };
 
   const handleCurrentVariantChange = (
@@ -330,13 +355,71 @@ export const EditProductModal = ({
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
               {formData.variants.map((variant, index) => (
-                <div key={index} className="p-3 border rounded-2xl shadow">
-                  <p>Peso: {variant.weight}kg</p>
-                  <p>Costo: {variant.cost}</p>
-                  <p>Ganancia: {variant.profit}%</p>
-                  {variant.discount > 0 && (
-                    <p>Descuento: {variant.discount}%</p>
+                <div
+                  key={index}
+                  className="p-3 border rounded-2xl shadow space-y-2"
+                >
+                  <div>
+                    <label>Peso (kg)</label>
+                    <input
+                      type="text"
+                      name="weight"
+                      value={variant.weight}
+                      onChange={(e) => handleVariantChange(index, e)}
+                      className="p-1 border rounded w-full"
+                    />
+                  </div>
+                  <div>
+                    <label>Costo</label>
+                    <input
+                      type="text"
+                      name="cost"
+                      value={variant.cost}
+                      onChange={(e) => handleVariantChange(index, e)}
+                      className="p-1 border rounded w-full"
+                    />
+                  </div>
+                  <div>
+                    <label>Ganancia (%)</label>
+                    <input
+                      type="text"
+                      name="profit"
+                      value={variant.profit}
+                      onChange={(e) => handleVariantChange(index, e)}
+                      className="p-1 border rounded w-full"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label>Con descuento</label>
+                    <input
+                      type="checkbox"
+                      name="onSale"
+                      checked={variant.onSale}
+                      onChange={(e) => handleVariantChange(index, e)}
+                    />
+                  </div>
+                  {variant.onSale && (
+                    <div>
+                      <label>Descuento (%)</label>
+                      <input
+                        type="text"
+                        name="discount"
+                        value={variant.discount}
+                        onChange={(e) => handleVariantChange(index, e)}
+                        className="p-1 border rounded w-full"
+                      />
+                    </div>
                   )}
+                  <h2 className="font-bold">Precio final:</h2>
+                  <p>
+                    {formatPrice(
+                      calculateFinalPrice(
+                        variant.cost,
+                        variant.profit,
+                        variant.discount
+                      )
+                    )}
+                  </p>
                   <button
                     type="button"
                     onClick={() => removeVariant(index)}
