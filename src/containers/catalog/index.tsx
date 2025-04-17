@@ -2,7 +2,7 @@
 
 import { Grid } from "@/components/shared/grid";
 import { ChangeEvent, useCallback, useEffect, useState, Suspense } from "react";
-import { debounce, set } from "lodash";
+import { debounce } from "lodash";
 import { useSearchParams } from "next/navigation";
 import { Brand, Category } from "@/types";
 import { getCategories } from "@/services/categoryService";
@@ -12,12 +12,16 @@ import { getBrands } from "@/services/brandService";
 
 function CatalogContent() {
   const searchParams = useSearchParams();
-  const [keyword, setKeyword] = useState<string>("");
+  const [keyword, setKeyword] = useState<string>(
+    searchParams.get("keyword") || ""
+  );
   const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<string>(
     searchParams.get("category") || ""
   );
-  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchInput, setSearchInput] = useState<string>(
+    searchParams.get("keyword") || ""
+  );
   const [brands, setBrands] = useState<Brand[]>([]);
   const [brand, setBrand] = useState<string>(searchParams.get("brand") || "");
   const router = useRouter();
@@ -26,6 +30,12 @@ function CatalogContent() {
     setKeyword("");
     setSearchInput("");
   }, [category, brand]);
+
+  useEffect(() => {
+    const newKeyword = searchParams.get("keyword") || "";
+    setKeyword(newKeyword);
+    setSearchInput(newKeyword);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -57,10 +67,14 @@ function CatalogContent() {
 
   const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedCategory = e.target.value;
+    setCategory(selectedCategory);
+    const query = new URLSearchParams(searchParams.toString());
     if (selectedCategory) {
-      setCategory(selectedCategory);
-      router.push(`/shop?category=${selectedCategory}`);
+      query.set("category", selectedCategory);
+    } else {
+      query.delete("category");
     }
+    router.push(`/shop?category=${selectedCategory}`);
   };
 
   const handleBrandChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -130,6 +144,7 @@ function CatalogContent() {
               className="p-4 rounded-2xl text-zinc-800"
               onChange={handleCategoryChange}
             >
+              <option value="">Todas las categorias</option>
               {categories.map((category) => (
                 <option key={category} value={category}>
                   {category}
