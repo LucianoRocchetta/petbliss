@@ -27,6 +27,24 @@ const Checkout = ({ items, setIsCheckoutVisible }: CheckoutProps) => {
     paymentMethod,
   } = useCartStore();
 
+  const handleCheckout = () => {
+    if (!name || !address || !paymentMethod) {
+      alert("Por favor, completa todos los campos antes de continuar.");
+      return;
+    }
+
+    const url = `https://wa.me/${
+      process.env.NEXT_PUBLIC_WHATSAPP_NUMBER
+    }?text=${generateWhatsAppTemplateMessage(
+      items,
+      name,
+      address,
+      paymentMethod
+    )}`;
+
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div>
       <h3 className="text-xl font-bold text-zinc-200 mb-2">Detalles</h3>
@@ -65,22 +83,12 @@ const Checkout = ({ items, setIsCheckoutVisible }: CheckoutProps) => {
         >
           Volver a Carrito
         </button>
-        <Link
-          href={`https://wa.me/${
-            process.env.NEXT_PUBLIC_WHATSAPP_NUMBER
-          }?text=${generateWhatsAppTemplateMessage(
-            items,
-            name,
-            address,
-            paymentMethod
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={handleCheckout}
+          className="bg-zinc-200 text-zinc-800 rounded-2xl w-full p-2"
         >
-          <button className="bg-zinc-200 text-zinc-800 rounded-2xl w-full p-2">
-            Finalizar Pedido
-          </button>
-        </Link>
+          Finalizar Pedido
+        </button>
       </div>
     </div>
   );
