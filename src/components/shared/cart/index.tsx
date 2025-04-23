@@ -1,11 +1,11 @@
 import { IconX, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import Image from "next/image";
-import Link from "next/link";
 import useCartStore from "@/store/cartStore";
 import { generateWhatsAppTemplateMessage } from "@/lib/utils";
 import { CartItem } from "@/types";
 import { useState } from "react";
 import { formatPrice } from "@/utils";
+import { toast } from "sonner";
 
 interface CartPanelProps {
   setIsOpen: (isOpen: Boolean) => void;
@@ -29,7 +29,7 @@ const Checkout = ({ items, setIsCheckoutVisible }: CheckoutProps) => {
 
   const handleCheckout = () => {
     if (!name || !address || !paymentMethod) {
-      alert("Por favor, completa todos los campos antes de continuar.");
+      toast.warning("Por favor completá con tus datos");
       return;
     }
 
