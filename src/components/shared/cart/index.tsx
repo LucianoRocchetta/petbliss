@@ -124,7 +124,7 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
 
   return (
     <div
-      className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l transform ${
+      className={`z-50 w-full h-full overflow-y-auto bg-zinc-800 fixed lg:w-1/4 lg:top-0 lg:right-0 p-6 border-zinc-600 border-l transform ${
         isOpen ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300`}
     >
@@ -143,22 +143,36 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
             <p className="text-zinc-400">El carrito está vacío</p>
           ) : (
             <>
-              <ul className="mt-2 overflow-y-auto grid grid-cols-1 gap-2">
+              <ul className="mt-2 grid grid-cols-1 gap-2">
                 {items.map((item, index) => (
                   <li
                     key={index}
-                    className="flex justify-between items-center p-2 bg-zinc-200 text-zinc-800 rounded-2xl"
+                    className="flex-col items-center p-5 bg-zinc-200 text-zinc-800 rounded-2xl"
                   >
-                    <div className="flex items-center">
-                      <Image
-                        alt={item.product.name}
-                        src={item.product.imageURL}
-                        width={100}
-                        height={100}
+                    <div className="flex items-center justify-end">
+                      <IconX
+                        onClick={() =>
+                          item.product._id &&
+                          removeItem(item.product._id, item.variant)
+                        }
+                        className="w-10 h-10 p-2 border rounded-full border-zinc-500 text-zinc-800 lg:block cursor-pointer"
                       />
-                      <div className="flex flex-col">
-                        <div className="flex gap-2 items-center text-xl">
-                          <p>{item.product.name}</p>
+                    </div>
+
+                    <div className="flex items-center">
+                      <div className="w-48 h-48 overflow-hidden relative">
+                        <Image
+                          src={item.product.imageURL}
+                          alt={item.product.name}
+                          width={250}
+                          height={250}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <div className="ml-5">
+                        <div className="flex-col gap-2 items-center">
+                          <p className="text-2xl">{item.product.name}</p>
                           <p>{item.product.variants[item.variant].weight}kg</p>
                         </div>
                         {item.product.variants[item.variant].discount > 0 ? (
@@ -181,17 +195,6 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                           )}
                         </p>
                         <div className="flex gap-2 mt-2">
-                          <IconChevronDown
-                            onClick={() =>
-                              item.product._id &&
-                              handleDecreaseQuantity(
-                                item.product._id,
-                                item.variant
-                              )
-                            }
-                            className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
-                          />
-                          <p className="font-bold text-xl">{item.quantity}</p>
                           <IconChevronUp
                             onClick={() =>
                               item.product._id &&
@@ -202,16 +205,20 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                             }
                             className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
                           />
+                          <p className="font-bold text-xl">{item.quantity}</p>
+                          <IconChevronDown
+                            onClick={() =>
+                              item.product._id &&
+                              handleDecreaseQuantity(
+                                item.product._id,
+                                item.variant
+                              )
+                            }
+                            className="w-8 h-8 p-2 rounded-full text-zinc-200 bg-zinc-800 lg:block cursor-pointer"
+                          />
                         </div>
                       </div>
                     </div>
-                    <IconX
-                      onClick={() =>
-                        item.product._id &&
-                        removeItem(item.product._id, item.variant)
-                      }
-                      className="hidden lg:w-10 lg:h-10 p-2 text-zinc-800 lg:block cursor-pointer"
-                    />
                   </li>
                 ))}
               </ul>

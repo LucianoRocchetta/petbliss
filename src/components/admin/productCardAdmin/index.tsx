@@ -8,6 +8,7 @@ import { deleteProductById } from "@/services/productService";
 import { useState } from "react";
 import AlertDialogDelete from "@/components/shared/alertDialogDelete";
 import { formatPrice } from "@/utils";
+import { toast } from "sonner";
 
 type ProductCardAdminProps = {
   product: Product;
@@ -26,10 +27,10 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
       const res = await deleteProductById(productId);
 
       if (!res) {
-        alert("Failed to delete product");
+        toast.error("Error al eliminar el producto");
         return;
       }
-      alert("Product deleted successfully");
+      toast.success("Producto eliminado correctamente");
     } catch (error) {
       console.error(error);
     }
@@ -84,21 +85,21 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
               {!product.available ? "No disponible" : `Disponible`}
             </p>
             <div>
-              {product.variants[activeVariant].discount > 0 ? (
+              {product.variants[activeVariant]?.discount > 0 ? (
                 <div className="flex mt-2 flex-col">
                   <p className="text-sm font-bold line-through">
-                    ${formatPrice(product.variants[activeVariant].price)}
+                    ${formatPrice(product.variants[activeVariant]?.price)}
                   </p>
                   <p className="text-xl text-red-600">
                     $
                     {formatPrice(
-                      product.variants[activeVariant].discountedPrice
+                      product.variants[activeVariant]?.discountedPrice
                     )}
                   </p>
                 </div>
               ) : (
                 <p className="text-xl font-bold mt-2">
-                  ${formatPrice(product.variants[activeVariant].price)}
+                  ${formatPrice(product.variants[activeVariant]?.price)}
                 </p>
               )}
             </div>
@@ -116,10 +117,10 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
           </div>
         </div>
         <div className="flex items-center justify-between absolute top-0 right-0 w-full p-4">
-          {product.variants[activeVariant].discount > 0 ? (
+          {product.variants[activeVariant]?.discount > 0 ? (
             <div className="bg-red-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
               <p className="font-bold">
-                -{product.variants[activeVariant].discount}%
+                -{product.variants[activeVariant]?.discount}%
               </p>
             </div>
           ) : (

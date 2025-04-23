@@ -1,3 +1,5 @@
+import { disconnect } from "process";
+
 export const generateSlug = (name: string): string => {
   return name
     .toLowerCase()
@@ -19,6 +21,9 @@ export const calculateFinalPrice = (
   profit: number,
   discount: number
 ): number => {
+  cost = Number(cost)
+  profit = Number(profit)
+  discount = Number(discount)
   const priceWithProfit = cost + cost * (profit / 100);
   const finalPrice = discount > 0
     ? priceWithProfit - priceWithProfit * (discount / 100)

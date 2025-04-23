@@ -7,6 +7,7 @@ import Image from "next/image";
 import AlertDialogDelete from "@/components/shared/alertDialogDelete";
 import { deleteBrandById, getBrands } from "@/services/brandService";
 import { CreateBrandModal } from "@/components/admin/createBrandModal";
+import { toast } from "sonner";
 
 export const AdminBrandsPanel = () => {
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -27,7 +28,11 @@ export const AdminBrandsPanel = () => {
   const handleDeleteBrand = async (brandId: string) => {
     try {
       const res = await deleteBrandById(brandId);
-      if (!res) return alert("Failed to delete category");
+      if (!res) {
+        toast.error("Error al eliminar la marca");
+        return;
+      }
+      toast.success("Marca eliminada correctamente");
       setBrands(brands.filter((brand) => brand._id !== brandId));
     } catch (error) {
       console.log(error);

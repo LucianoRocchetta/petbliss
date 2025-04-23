@@ -5,6 +5,7 @@ import { TopbarMenu } from "@/components/shared";
 import { Roboto } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { Footer } from "@/containers/footer";
+import { Toaster, toast } from "sonner";
 import { Metadata } from "next";
 
 const roboto = Roboto({
@@ -32,7 +33,7 @@ export default function RootLayout({
         <body className={`${roboto.className} text-zinc-200 bg-zinc-800`}>
           <TopbarMenu />
           <main className="w-3/4 m-auto my-20">{children}</main>
-
+          <Toaster position="top-right" richColors />
           <Footer />
         </body>
       </html>

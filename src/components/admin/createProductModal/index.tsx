@@ -7,6 +7,7 @@ import { getCategoriesNames } from "@/services/categoryService";
 import { getBrandNames } from "@/services/brandService";
 import { ProductDTO, ProductVariantDTO } from "@/types";
 import { formatPrice } from "@/utils";
+import { toast } from "sonner";
 
 interface CreateProductModalProps {
   setIsModalVisible: (isModalVisible: boolean) => void;
@@ -121,7 +122,7 @@ export const CreateProductModal = ({
       !currentVariant.cost ||
       !currentVariant.profit
     ) {
-      alert("Campos de variante obligatiorios");
+      toast.warning("Campos de variante incompletos");
       return;
     }
 
@@ -146,6 +147,8 @@ export const CreateProductModal = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("name", formData.name);
@@ -164,24 +167,22 @@ export const CreateProductModal = ({
       const res = await createProduct(formDataToSend);
 
       if (res) {
-        alert("Product created");
+        toast.success("Producto creado correctamente");
         setFormData(formDataTemplate);
         setIsModalVisible(false);
-      } else {
-        alert("Failed to create product");
       }
     } catch (error) {
-      alert(error);
+      toast.error("Error al crear el producto");
     }
   };
 
   return (
     <div
-      className={`z-50 w-full lg:flex h-full text-zinc-800 bg-zinc-800/80 fixed top-0 right-0 p-6 border-zinc-600 border-l transform ${
-        isModalVisible ? "translate-x-0" : "translate-x-full"
-      } transition-transform duration-300`}
+      className={
+        "z-50 w-full overflow-y-auto lg:flex h-full text-zinc-800 bg-zinc-800/80 fixed top-0 right-0 lg:p-6"
+      }
     >
-      <div className="flex w-full lg:w-3/4 flex-col mx-auto bg-zinc-50 p-5 rounded-2xl overflow-y-auto">
+      <div className="flex w-full lg:w-3/4 flex-col mx-auto bg-zinc-50 p-5 lg:rounded-2xl overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Crear Producto</h2>
           <IconX
@@ -382,6 +383,7 @@ export const CreateProductModal = ({
 
           <div className="flex justify-end">
             <button
+              type="submit"
               className="px-6 py-3 bg-blue-600 text-white rounded-2xl"
               onClick={handleSubmit}
             >

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Category } from "@/types";
 import { IconX } from "@tabler/icons-react";
 import { createCategory } from "@/services/categoryService";
+import { toast } from "sonner";
 
 interface CreateCategoryModalProps {
   setIsModalVisible: (isModalVisible: boolean) => void;
@@ -39,6 +40,8 @@ export const CreateCategoryModal = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("name", formData.name);
@@ -50,14 +53,12 @@ export const CreateCategoryModal = ({
       const res = await createCategory(formDataToSend);
 
       if (res) {
-        alert("Category created");
+        toast.success("Categoria creada correctamente");
         setFormData(formDataTemplate);
         setIsModalVisible(false);
-      } else {
-        alert("Failed to create category");
       }
     } catch (error) {
-      alert(error);
+      toast.error("Error al crear la categoria");
     }
   };
 
@@ -92,6 +93,7 @@ export const CreateCategoryModal = ({
         </div>
       </form>
       <button
+        type="submit"
         className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
         onClick={handleSubmit}
       >
