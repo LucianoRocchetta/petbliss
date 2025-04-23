@@ -7,6 +7,7 @@ import { updateProductById } from "@/services/productService";
 import { getCategoriesNames } from "@/services/categoryService";
 import { getBrandNames } from "@/services/brandService";
 import { calculateFinalPrice, formatPrice } from "@/utils";
+import { toast } from "sonner";
 
 interface EditProductModal {
   product: Product;
@@ -129,7 +130,7 @@ export const EditProductModal = ({
       !currentVariant.cost ||
       !currentVariant.profit
     ) {
-      alert("Campos de variante obligatiorios");
+      toast.warning("Campos de variante incompletos");
       return;
     }
 
@@ -154,6 +155,8 @@ export const EditProductModal = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     try {
       const updatedData = {
         _id: formData._id,
@@ -170,22 +173,22 @@ export const EditProductModal = ({
 
       const res = await updateProductById(updatedData);
 
-      if (res.status === 200) {
-        alert("Product updated");
+      if (res) {
+        toast.success("Producto modificado correctamente");
         setIsModalVisible(false);
       }
     } catch (error) {
-      alert("Error updating product");
+      toast.error("Error al modificar el producto");
     }
   };
 
   return (
     <div
-      className={`z-50 w-full lg:flex h-full text-zinc-800 bg-zinc-800/80 fixed top-0 right-0 p-6 border-zinc-600 border-l transform ${
-        isModalVisible ? "translate-x-0" : "translate-x-full"
-      } transition-transform duration-300`}
+      className={
+        "z-50 w-full overflow-y-auto lg:flex h-full text-zinc-800 bg-zinc-800/80 fixed top-0 right-0 lg:p-6"
+      }
     >
-      <div className="flex w-full lg:w-3/4 flex-col mx-auto bg-zinc-50 p-5 rounded-2xl overflow-y-auto">
+      <div className="flex w-full lg:w-3/4 flex-col mx-auto bg-zinc-50 p-5 lg:rounded-2xl overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Modificar Producto</h2>
           <IconX
@@ -434,6 +437,7 @@ export const EditProductModal = ({
 
           <div className="flex justify-end">
             <button
+              type="submit"
               className="px-6 py-3 bg-blue-600 text-white rounded-2xl"
               onClick={handleSubmit}
             >

@@ -37,7 +37,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <div>
+        <div className="w-3/4">
           <h3 className="text-xl font-semibold ">{product.name}</h3>
           <div className="flex gap-2 my-2">
             {product.variants.map((variant, index) => {
@@ -58,18 +58,18 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               );
             })}
           </div>
-          {product.variants[activeVariant].discount > 0 ? (
+          {product.variants[activeVariant]?.discount > 0 ? (
             <div className="flex mt-2 flex-col">
               <p className="text-sm font-bold line-through">
-                ${formatPrice(product.variants[activeVariant].price)}
+                ${formatPrice(product.variants[activeVariant]?.price)}
               </p>
               <p className="text-xl text-red-600">
-                ${formatPrice(product.variants[activeVariant].discountedPrice)}
+                ${formatPrice(product.variants[activeVariant]?.discountedPrice)}
               </p>
             </div>
           ) : (
             <p className="text-xl font-bold mt-2">
-              ${formatPrice(product.variants[activeVariant].price)}
+              ${formatPrice(product.variants[activeVariant]?.price)}
             </p>
           )}
         </div>
@@ -83,10 +83,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         )}
       </div>
       <div className="flex items-center justify-between absolute top-0 right-0 w-full p-4">
-        {product.variants[activeVariant].discount > 0 ? (
+        {product.variants[activeVariant]?.discount > 0 ? (
           <div className="bg-red-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
             <p className="font-bold">
-              -{product.variants[activeVariant].discount}%
+              -{product.variants[activeVariant]?.discount}%
             </p>
           </div>
         ) : (

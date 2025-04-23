@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Brand } from "@/types";
 import { IconX } from "@tabler/icons-react";
 import { createBrand } from "@/services/brandService";
+import { toast } from "sonner";
 
 interface CreateBrandModalProps {
   setIsModalVisible: (isModalVisible: boolean) => void;
@@ -39,6 +40,8 @@ export const CreateBrandModal = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("name", formData.name);
@@ -50,14 +53,12 @@ export const CreateBrandModal = ({
       const res = await createBrand(formDataToSend);
 
       if (res) {
-        alert("Brand created");
+        toast.success("Marca creada correctamente");
         setFormData(formDataTemplate);
         setIsModalVisible(false);
-      } else {
-        alert("Failed to create brand");
       }
     } catch (error) {
-      alert(error);
+      toast.error("Error al crear la marca");
     }
   };
 
@@ -92,6 +93,7 @@ export const CreateBrandModal = ({
         </div>
       </form>
       <button
+        type="submit"
         className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
         onClick={handleSubmit}
       >
