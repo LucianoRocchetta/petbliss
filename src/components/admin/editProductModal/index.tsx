@@ -8,6 +8,7 @@ import { getCategoriesNames } from "@/services/categoryService";
 import { getBrandNames } from "@/services/brandService";
 import { calculateFinalPrice, formatPrice } from "@/utils";
 import { toast } from "sonner";
+import { getSuppliersNames } from "@/services/supplierService";
 
 interface EditProductModal {
   product: Product;
@@ -21,6 +22,7 @@ export const EditProductModal = ({
   isModalVisible,
 }: EditProductModal) => {
   const [categories, setCategories] = useState<string[]>([]);
+  const [suppliers, setSuppliers] = useState<string[]>([]);
   const [isDiscountVisible, setIsDiscountVisible] = useState<boolean>(false);
   const [brands, setBrands] = useState<string[]>([]);
 
@@ -51,8 +53,23 @@ export const EditProductModal = ({
       }
     };
 
+    const fetchSuppliersNames = async () => {
+      try {
+        const res = await getSuppliersNames();
+
+        const suppliersNames = res.map(
+          (supplier: { _id: string; name: string }) => supplier.name
+        );
+
+        setSuppliers(suppliersNames);
+      } catch (error) {
+        console.error("Failed to fetch suppliers names");
+      }
+    };
+
     fetchBrandsNames();
     fetchCategoriesNames();
+    fetchSuppliersNames();
   }, []);
 
   const formDataTemplate = {
@@ -74,6 +91,7 @@ export const EditProductModal = ({
     profit: 0,
     discount: 0,
     onSale: false,
+    supplier: "",
   });
 
   const [formData, setFormData] = useState<ProductDTO>(formDataTemplate);
@@ -91,36 +109,50 @@ export const EditProductModal = ({
 
   const handleVariantChange = (
     index: number,
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, type, checked } = e.target;
-    const parsedValue = type === "checkbox" ? checked : value;
+    const { name, value, type } = e.target;
+
+    let parsedValue: string | number | boolean = value;
+
+    if (e.target instanceof HTMLInputElement && type === "checkbox") {
+      parsedValue = e.target.checked;
+    } else if (
+      name === "weight" ||
+      name === "cost" ||
+      name === "profit" ||
+      name === "discount"
+    ) {
+      parsedValue = Number(value);
+    }
 
     const updatedVariants = [...formData.variants];
     updatedVariants[index] = {
       ...updatedVariants[index],
-      [name]:
-        type === "checkbox"
-          ? parsedValue
-          : name === "weight" ||
-            name === "cost" ||
-            name === "profit" ||
-            name === "discount"
-          ? Number(parsedValue)
-          : parsedValue,
+      [name]: parsedValue,
     };
 
     setFormData({ ...formData, variants: updatedVariants });
   };
 
   const handleCurrentVariantChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, type, checked } = e.target;
-    const parsedValue = type === "checkbox" ? checked : value;
+    const { name, value, type } = e.target;
+
+    let parsedValue: string | number | boolean = value;
+
+    if (e.target instanceof HTMLInputElement && type === "checkbox") {
+      parsedValue = e.target.checked;
+    }
+
+    if (type === "number") {
+      parsedValue = Number(parsedValue);
+    }
+
     setCurrentVariant((prev) => ({
       ...prev,
-      [name]: type === "number" ? Number(parsedValue) : parsedValue,
+      [name]: parsedValue,
     }));
   };
 
@@ -128,7 +160,8 @@ export const EditProductModal = ({
     if (
       !currentVariant.weight ||
       !currentVariant.cost ||
-      !currentVariant.profit
+      !currentVariant.profit ||
+      !currentVariant.supplier
     ) {
       toast.warning("Campos de variante incompletos");
       return;
@@ -145,6 +178,7 @@ export const EditProductModal = ({
       profit: 0,
       discount: 0,
       onSale: false,
+      supplier: "",
     });
     setIsDiscountVisible(false);
   };
@@ -294,7 +328,7 @@ export const EditProductModal = ({
 
           <div className="bg-white rounded-2xl p-4 shadow">
             <h3 className="text-lg font-semibold mb-4">Variantes</h3>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div>
                 <label>Peso (kg)</label>
                 <input
@@ -324,6 +358,24 @@ export const EditProductModal = ({
                   onChange={handleCurrentVariantChange}
                   className="p-2 border rounded-2xl w-full"
                 />
+              </div>
+              <div>
+                <label>Proveedor</label>
+                <select
+                  name="supplier"
+                  value={currentVariant.supplier}
+                  onChange={handleCurrentVariantChange}
+                  className="p-2 border rounded-2xl w-full"
+                >
+                  <option value="" disabled>
+                    Selecciona un proveedor
+                  </option>
+                  {suppliers.map((supplier) => (
+                    <option key={supplier} value={supplier}>
+                      {supplier}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="col-span-2 flex items-center gap-2 mt-2">
                 <label>Con descuento</label>
@@ -362,6 +414,24 @@ export const EditProductModal = ({
                   key={index}
                   className="p-3 border rounded-2xl shadow space-y-2"
                 >
+                  <div>
+                    <label>Proveedor</label>
+                    <select
+                      name="supplier"
+                      value={variant.supplier}
+                      onChange={(e) => handleVariantChange(index, e)}
+                      className="p-1 border rounded w-full"
+                    >
+                      <option value="" disabled>
+                        Selecciona un proveedor
+                      </option>
+                      {suppliers.map((supplier) => (
+                        <option key={supplier} value={supplier}>
+                          {supplier}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <div>
                     <label>Peso (kg)</label>
                     <input

@@ -118,6 +118,7 @@ export async function POST(request: NextRequest) {
         const profit = Number(variant.profit);
         const discount = Number(variant.discount ?? 0);
         const onSale = Boolean(variant.onSale);
+        const supplier = String(variant.supplier);
   
         if (
           isNaN(weight) || weight <= 0 ||
@@ -139,6 +140,7 @@ export async function POST(request: NextRequest) {
           onSale,
           price,
           discountedPrice,
+          supplier
         };
       });
 

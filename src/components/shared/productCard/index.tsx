@@ -63,7 +63,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               <p className="text-sm font-bold line-through">
                 ${formatPrice(product.variants[activeVariant]?.price)}
               </p>
-              <p className="text-xl text-red-600">
+              <p className="text-xl text-green-700 font-extrabold">
                 ${formatPrice(product.variants[activeVariant]?.discountedPrice)}
               </p>
             </div>

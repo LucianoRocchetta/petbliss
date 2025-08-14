@@ -76,6 +76,11 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
                 );
               })}
             </div>
+            <p className="text-sm font-bold mt-2">
+              {product.variants[activeVariant]?.supplier
+                ? product.variants[activeVariant]?.supplier
+                : "Sin proveedor"}
+            </p>
             <p className={!product.category ? "text-red-600" : ""}>
               {product.category ? product.category.name : "Sin categoria"}
             </p>
@@ -90,7 +95,7 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
                   <p className="text-sm font-bold line-through">
                     ${formatPrice(product.variants[activeVariant]?.price)}
                   </p>
-                  <p className="text-xl text-red-600">
+                  <p className="text-xl text-green-700 font-extrabold">
                     $
                     {formatPrice(
                       product.variants[activeVariant]?.discountedPrice

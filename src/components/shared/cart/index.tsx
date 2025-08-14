@@ -155,18 +155,18 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                           item.product._id &&
                           removeItem(item.product._id, item.variant)
                         }
-                        className="w-10 h-10 p-2 border rounded-full border-zinc-500 text-zinc-800 lg:block cursor-pointer"
+                        className="w-10 h-10 p-2 border rounded-full border-zinc-500 text-zinc-800 lg:block cursor-pointer hover:bg-zinc-300 duration-100"
                       />
                     </div>
 
                     <div className="flex items-center">
-                      <div className="w-48 h-48 overflow-hidden relative">
+                      <div className="w-36 h-36 overflow-hidden relative">
                         <Image
                           src={item.product.imageURL}
                           alt={item.product.name}
                           width={250}
                           height={250}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                         />
                       </div>
 
@@ -184,7 +184,7 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                             )}
                           </p>
                         ) : null}
-                        <p className="text-md font-bold">
+                        <p className="text-md font-extrabold">
                           $
                           {formatPrice(
                             item.product.variants[item.variant].discount > 0
