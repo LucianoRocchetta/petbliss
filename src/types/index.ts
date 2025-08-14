@@ -19,9 +19,16 @@ export type ProductVariant = {
     profit: number;
     price: number;
     discountedPrice: number;
+    supplier: string;
+}
+
+export type Supplier = {
+    _id?: string;
+    name: string;
 }
 
 export type ProductVariantDTO = {
+    supplier: string;
     weight: number;
     cost: number;
     onSale: boolean;

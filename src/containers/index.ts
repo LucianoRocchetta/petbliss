@@ -1,5 +1,6 @@
 export * from './admin-categories-panel/index';
 export * from './admin-products-grid/index';
+export * from './admin-suppliers-panel/index';
 export * from './carousel/index';
 export * from './catalog/index';
 export * from './categories/index';

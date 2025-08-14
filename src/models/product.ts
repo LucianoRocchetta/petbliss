@@ -8,6 +8,7 @@ const productVariantSchema = new Schema({
     profit: {type: Number, required: true},
     discount: {type: Number, required: true},
     onSale: {type: Boolean, required: true},
+    supplier: {type: String, required: true}
 })
 
 const ProductSchema = new Schema({
