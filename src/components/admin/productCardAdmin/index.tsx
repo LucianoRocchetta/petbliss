@@ -92,10 +92,16 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
             <div>
               {product.variants[activeVariant]?.discount > 0 ? (
                 <div className="flex mt-2 flex-col">
-                  <p className="text-sm font-bold line-through">
-                    ${formatPrice(product.variants[activeVariant]?.price)}
-                  </p>
-                  <p className="text-xl text-green-700 font-extrabold">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium line-through">
+                      ${formatPrice(product.variants[activeVariant]?.price)}
+                    </p>
+
+                    <p className="font-medium text-green-700">
+                      -{product.variants[activeVariant]?.discount}%
+                    </p>
+                  </div>
+                  <p className="text-xl text-zinc-800 font-extrabold">
                     $
                     {formatPrice(
                       product.variants[activeVariant]?.discountedPrice
@@ -122,15 +128,6 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
           </div>
         </div>
         <div className="flex items-center justify-between absolute top-0 right-0 w-full p-4">
-          {product.variants[activeVariant]?.discount > 0 ? (
-            <div className="bg-red-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
-              <p className="font-bold">
-                -{product.variants[activeVariant]?.discount}%
-              </p>
-            </div>
-          ) : (
-            ""
-          )}
           {product.byOrder ? (
             <div className="flex gap-1 bg-blue-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
               <IconReport className="w-8 h-8 text-zinc-200" />

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <footer className="bg-zinc-800 flex items-center justify-between py-10 border-t border-zinc-600 w-3/4 m-auto">
+    <footer className="bg-zinc-800 flex items-center justify-between py-10 border-t border-zinc-600 w-3/4 m-auto mt-20">
       <h2 className="text-bold text-zinc-400">
         Copyright © 2025 Petblissarg.com. Todos los derechos reservados.
       </h2>

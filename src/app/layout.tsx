@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { Footer } from "@/containers/footer";
 import { Toaster, toast } from "sonner";
 import { Metadata } from "next";
+import Image from "next/image";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -32,7 +33,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${roboto.className} text-zinc-200 bg-zinc-800`}>
           <TopbarMenu />
-          <main className="w-3/4 m-auto my-20">{children}</main>
+          <main>{children}</main>
           <Toaster position="top-right" richColors />
           <Footer />
         </body>

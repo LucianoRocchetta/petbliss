@@ -102,7 +102,7 @@ function CatalogContent() {
   };
 
   return (
-    <section>
+    <section className="w-3/4 m-auto my-20">
       <div className="mb-5 p-5 bg-zinc-700 rounded-2xl">
         <div className="relative w-full lg:w-1/4">
           <IconSearch
