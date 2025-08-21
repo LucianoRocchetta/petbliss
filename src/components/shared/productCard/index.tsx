@@ -38,7 +38,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       </div>
       <div className="flex justify-between items-center">
         <div className="w-3/4">
-          <h3 className="text-xl font-semibold ">{product.name}</h3>
+          <h3 className="text-2xl font-semibold tracking-wide text-gray-800">
+            {product.name}
+          </h3>
           <div className="flex gap-2 my-2">
             {product.variants.map((variant, index) => {
               const isActive = index === activeVariant;
@@ -61,20 +63,16 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           {product.variants[activeVariant]?.discount > 0 ? (
             <div className="flex mt-2 flex-col">
               <div className="flex items-center gap-2">
-                <p className="text-sm font-medium line-through">
+                <p className="text-sm font-medium text-zinc-400 line-through">
                   ${formatPrice(product.variants[activeVariant]?.price)}
                 </p>
-
-                <p className="font-medium text-green-700">
-                  -{product.variants[activeVariant]?.discount}%
-                </p>
               </div>
-              <p className="text-xl text-zinc-800 font-extrabold">
+              <p className="text-2xl text-zinc-800 font-extrabold">
                 ${formatPrice(product.variants[activeVariant]?.discountedPrice)}
               </p>
             </div>
           ) : (
-            <p className="text-xl font-bold mt-2">
+            <p className="text-2xl font-bold mt-2">
               ${formatPrice(product.variants[activeVariant]?.price)}
             </p>
           )}
@@ -88,7 +86,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <p className="text-red-600">No disponible</p>
         )}
       </div>
-      <div className="flex items-center justify-between absolute top-0 right-0 w-full p-4">
+      <div className="flex items-center bg-red-400/15 rounded-t-2xl absolute top-0 right-0 w-full p-2">
+        <div className="bg-red-500 p-1 rounded-2xl flex items-center content-center">
+          <p className="font-bold text-2xl text-zinc-200">
+            {product.variants[activeVariant]?.discount}%{" "}
+            <span className="font-normal text-sm">OFF</span>
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center justify-end absolute top-0 right-0 w-full p-2">
         {product.byOrder ? (
           <div className="flex gap-1 bg-blue-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
             <IconReport className="w-8 h-8 text-zinc-200" />
