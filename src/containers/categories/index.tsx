@@ -30,7 +30,7 @@ export default function Categories() {
   return (
     <section>
       <h2 className="text-2xl font-bold mb-2">Categorias</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 ">
         {!isLoading
           ? categories
               .filter((category) => category.name != "Destacado")
@@ -47,23 +47,18 @@ export default function Categories() {
                       boxShadow: "0px 10px 20px rgba(0,0,0,0.2)",
                     }}
                     transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                    className="rounded-2xl h-40 relative overflow-hidden flex items-center p-5 bg-zinc-900"
-                    style={{
-                      backgroundImage: `linear-gradient(to bottom, #505050, #434343)`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
+                    className="rounded-2xl h-40 relative overflow-hidden flex items-center p-5 bg-zinc-700"
                   >
                     <div className="absolute inset-0 bg-zinc-800 opacity-30"></div>
-                    <h2 className="text-2xl text-zinc-200 font-bold z-30">
+                    <h2 className="text-3xl text-zinc-200 font-bold z-30">
                       {category.name}
                     </h2>
                     <Image
                       src={category.imageURL}
                       alt={category.name}
-                      width={150}
-                      height={150}
-                      className="absolute bottom-0 right-0"
+                      width={250}
+                      height={250}
+                      className="absolute -bottom-0 right-0 lg:-bottom-16"
                     />
                   </motion.div>
                 </Link>

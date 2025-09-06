@@ -48,12 +48,7 @@ export default function Brands() {
                     boxShadow: "0px 10px 20px rgba(0,0,0,0.2)",
                   }}
                   transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                  className="rounded-2xl h-40 relative overflow-hidden flex items-center justify-center p-5 bg-zinc-900"
-                  style={{
-                    backgroundImage: `linear-gradient(to bottom, #505050, #434343)`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
+                  className="rounded-2xl h-40 relative overflow-hidden flex items-center justify-center p-5 bg-zinc-700"
                 >
                   <div className="absolute inset-0 bg-zinc-800 opacity-10"></div>
                   <Image

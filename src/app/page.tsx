@@ -13,6 +13,7 @@ export default function HomePage() {
           fill
           className="object-cover"
           priority
+          unoptimized
         />
       </div>
       <div className="space-y-20 w-3/4 m-auto">
