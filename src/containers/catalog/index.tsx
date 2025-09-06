@@ -154,13 +154,7 @@ function CatalogContent() {
           </div>
         </div>
       </div>
-      <Grid
-        keyword={keyword}
-        category={category}
-        columns={4}
-        limit={8}
-        brand={brand}
-      />
+      <Grid keyword={keyword} category={category} limit={8} brand={brand} />
     </section>
   );
 }

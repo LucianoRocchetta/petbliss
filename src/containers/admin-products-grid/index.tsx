@@ -43,7 +43,7 @@ export const AdminProductsGrid = () => {
         </button>
       </div>
 
-      <Grid keyword={keyword} columns={4} />
+      <Grid keyword={keyword} />
       {isModalVisible && (
         <CreateProductModal
           isModalVisible={isModalVisible}

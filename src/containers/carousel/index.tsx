@@ -18,7 +18,7 @@ export const Carousel = ({ title }: CarouselProps) => {
           Ver más {title}
         </Link>
       </div>
-      <Grid columns={4} isFeatured={true} limit={4} pagination={false} />
+      <Grid isFeatured={true} limit={4} pagination={false} />
     </section>
   );
 };
