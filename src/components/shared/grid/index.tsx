@@ -68,7 +68,7 @@ export const Grid = ({
     <>
       {isLoading ? (
         <div
-          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-4 mb-5`}
+          className={`grid grid-cols-1 lg:grid-cols-${columns} md:grid-cols-2 gap-4 mb-5`}
         >
           {Array(4)
             .fill(null)
@@ -79,7 +79,7 @@ export const Grid = ({
       ) : (
         <>
           <div
-            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-4 mb-5`}
+            className={`grid grid-cols-1 lg:grid-cols-${columns} md:grid-cols-2 gap-4 mb-5`}
           >
             {products.length > 0 ? (
               products
