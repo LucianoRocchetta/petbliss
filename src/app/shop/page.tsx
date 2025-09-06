@@ -12,6 +12,7 @@ export default function ShopPage() {
           fill
           className="object-cover"
           priority
+          unoptimized
         />
       </div>
       <Catalog />
