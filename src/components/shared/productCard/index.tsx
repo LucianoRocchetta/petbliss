@@ -86,14 +86,18 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <p className="text-red-600">No disponible</p>
         )}
       </div>
-      <div className="flex items-center bg-red-400/15 rounded-t-2xl absolute top-0 right-0 w-full p-2">
-        <div className="bg-red-500 p-1 rounded-2xl flex items-center content-center">
-          <p className="font-bold text-2xl text-zinc-200">
-            {product.variants[activeVariant]?.discount}%{" "}
-            <span className="font-normal text-sm">OFF</span>
-          </p>
+      {product.variants[activeVariant]?.discount > 0 ? (
+        <div className="flex items-center bg-red-400/15 rounded-t-2xl absolute top-0 right-0 w-full p-2">
+          <div className="bg-red-500 p-1 rounded-2xl flex items-center content-center">
+            <p className="font-bold text-2xl text-zinc-200">
+              {product.variants[activeVariant]?.discount}%{" "}
+              <span className="font-normal text-sm">OFF</span>
+            </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
       <div className="flex items-center justify-end absolute top-0 right-0 w-full p-2">
         {product.byOrder ? (
           <div className="flex gap-1 bg-blue-600/90 p-1 rounded-2xl text-zinc-200 items-center justify-center">
