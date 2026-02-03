@@ -1,5 +1,60 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+# PetBliss - E-commerce de Productos para Mascotas
+
+Sistema de e-commerce especializado en productos para mascotas con un robusto sistema de gestión de productos, variantes y proveedores.
+
+## 🆕 Nuevo Sistema de Productos
+
+El sistema de productos ha sido completamente rediseñado para soportar diferentes tipos de productos con variantes específicas:
+
+- **Alimentos** (food): Con variantes de peso, sabor, edad y dieta especial
+- **Accesorios** (accessory): Con variantes de talle, color y material
+- **Snacks** (snack): Con variantes de peso, sabor y textura
+- **Medicinas** (medicine): Con variantes de dosis, presentación y cantidad
+- **Higiene** (hygiene): Con variantes de volumen, aroma y subtipo
+- **Juguetes** (toy): Con variantes de tamaño, material e interactividad
+- **Otros** (other): Con variantes genéricas personalizables
+
+### 🚀 Inicio Rápido con el Nuevo Sistema
+
+```typescript
+import connectDB from "@/lib/mongoose";
+import Product from "@/models/product";
+
+// Conectar a la base de datos 'production'
+await connectDB(true);
+
+// Crear un producto de alimento
+const product = await Product.create({
+  productType: "food",
+  brand: brandId,
+  name: "Alimento Premium",
+  category: categoryId,
+  targetAnimal: "dog",
+  // ... más campos
+});
+```
+
+Para ejemplos completos, consulta `PRODUCT_EXAMPLES.ts`.
+
+## ⚙️ Configuración
+
+### Variables de Entorno
+
+Antes de ejecutar el proyecto, configura tus variables de entorno:
+
+1. Crea un archivo `.env.local` en la raíz del proyecto
+2. Consulta **[ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md)** para la configuración completa
+
+**Variables principales:**
+```env
+MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net
+MONGODB_DB_NAME=production  # Cambia a "test" para desarrollo
+NODE_ENV=development
+NEXTAUTH_SECRET=tu-secret-aqui
+```
+
 ## Getting Started
 
 First, run the development server:
