@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Product, ProductDTO, ProductVariantDTO } from "@/types";
+import { Product, ProductDTO, ProductType } from "@/types";
 import { IconX } from "@tabler/icons-react";
 import { updateProductById } from "@/services/productService";
 import { getCategoriesNames } from "@/services/categoryService";
 import { getBrandNames } from "@/services/brandService";
-import { calculateFinalPrice, formatPrice } from "@/utils";
+import { formatPrice } from "@/utils";
 import { toast } from "sonner";
 import { getSuppliersNames } from "@/services/supplierService";
+import { formatVariantName } from "@/utils/productHelpers";
 
 interface EditProductModal {
   product: Product;
@@ -22,58 +23,30 @@ export const EditProductModal = ({
   isModalVisible,
 }: EditProductModal) => {
   const [categories, setCategories] = useState<string[]>([]);
-  const [suppliers, setSuppliers] = useState<string[]>([]);
-  const [isDiscountVisible, setIsDiscountVisible] = useState<boolean>(false);
   const [brands, setBrands] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchCategoriesNames = async () => {
+    const fetchData = async () => {
       try {
-        const res = await getCategoriesNames();
+        const [categoriesRes, brandsRes] = await Promise.all([
+          getCategoriesNames(),
+          getBrandNames(),
+        ]);
 
-        const categoryNames = res.map(
-          (category: { name: string }) => category.name
-        );
-
-        setCategories(categoryNames);
+        setCategories(categoriesRes.map((c: { name: string }) => c.name));
+        setBrands(brandsRes.map((b: { name: string }) => b.name));
       } catch (error) {
-        console.error("Failed to fetch categories names");
+        console.error("Failed to fetch data");
       }
     };
 
-    const fetchBrandsNames = async () => {
-      try {
-        const res = await getBrandNames();
-
-        const brandNames = res.map((brand: { name: string }) => brand.name);
-
-        setBrands(brandNames);
-      } catch (error) {
-        console.error("Failed to fetch brands names");
-      }
-    };
-
-    const fetchSuppliersNames = async () => {
-      try {
-        const res = await getSuppliersNames();
-
-        const suppliersNames = res.map(
-          (supplier: { _id: string; name: string }) => supplier.name
-        );
-
-        setSuppliers(suppliersNames);
-      } catch (error) {
-        console.error("Failed to fetch suppliers names");
-      }
-    };
-
-    fetchBrandsNames();
-    fetchCategoriesNames();
-    fetchSuppliersNames();
+    fetchData();
   }, []);
 
-  const formDataTemplate = {
+  const [formData, setFormData] = useState<ProductDTO>({
     _id: product._id,
+    productType: product.productType,
+    targetAnimal: product.targetAnimal,
     name: product.name,
     brand: product.brand.name,
     imageURL: product.imageURL,
@@ -83,109 +56,18 @@ export const EditProductModal = ({
     byOrder: product.byOrder,
     category: product.category.name,
     description: product.description,
-  };
-
-  const [currentVariant, setCurrentVariant] = useState<ProductVariantDTO>({
-    weight: 0,
-    cost: 0,
-    profit: 0,
-    discount: 0,
-    onSale: false,
-    supplier: "",
   });
-
-  const [formData, setFormData] = useState<ProductDTO>(formDataTemplate);
 
   const handleFormChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
-  };
-
-  const handleVariantChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-
-    let parsedValue: string | number | boolean = value;
-
-    if (e.target instanceof HTMLInputElement && type === "checkbox") {
-      parsedValue = e.target.checked;
-    } else if (
-      name === "weight" ||
-      name === "cost" ||
-      name === "profit" ||
-      name === "discount"
-    ) {
-      parsedValue = Number(value);
-    }
-
-    const updatedVariants = [...formData.variants];
-    updatedVariants[index] = {
-      ...updatedVariants[index],
-      [name]: parsedValue,
-    };
-
-    setFormData({ ...formData, variants: updatedVariants });
-  };
-
-  const handleCurrentVariantChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-
-    let parsedValue: string | number | boolean = value;
-
-    if (e.target instanceof HTMLInputElement && type === "checkbox") {
-      parsedValue = e.target.checked;
-    }
-
-    if (type === "number") {
-      parsedValue = Number(parsedValue);
-    }
-
-    setCurrentVariant((prev) => ({
-      ...prev,
-      [name]: parsedValue,
-    }));
-  };
-
-  const addVariant = () => {
-    if (
-      !currentVariant.weight ||
-      !currentVariant.cost ||
-      !currentVariant.profit ||
-      !currentVariant.supplier
-    ) {
-      toast.warning("Campos de variante incompletos");
-      return;
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      variants: [...prev.variants, currentVariant],
-    }));
-
-    setCurrentVariant({
-      weight: 0,
-      cost: 0,
-      profit: 0,
-      discount: 0,
-      onSale: false,
-      supplier: "",
-    });
-    setIsDiscountVisible(false);
-  };
-
-  const removeVariant = (index: number) => {
-    const updatedVariants = formData.variants.filter((_, i) => i !== index);
-    setFormData({ ...formData, variants: updatedVariants });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -194,6 +76,8 @@ export const EditProductModal = ({
     try {
       const updatedData = {
         _id: formData._id,
+        productType: formData.productType,
+        targetAnimal: formData.targetAnimal,
         brand: formData.brand,
         name: formData.name,
         variants: formData.variants,
@@ -217,11 +101,7 @@ export const EditProductModal = ({
   };
 
   return (
-    <div
-      className={
-        "z-50 w-full overflow-y-auto lg:flex h-full text-zinc-800 bg-zinc-800/80 fixed top-0 right-0 lg:p-6"
-      }
-    >
+    <div className="z-50 w-full overflow-y-auto lg:flex h-full text-zinc-800 bg-zinc-800/80 fixed top-0 right-0 lg:p-6">
       <div className="flex w-full lg:w-3/4 flex-col mx-auto bg-zinc-50 p-5 lg:rounded-2xl overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Modificar Producto</h2>
@@ -235,6 +115,33 @@ export const EditProductModal = ({
           <div className="bg-white rounded-2xl p-4 shadow">
             <h3 className="text-lg font-semibold mb-4">Información general</h3>
             <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label>Tipo de producto</label>
+                <input
+                  value={formData.productType}
+                  disabled
+                  className="p-2 border rounded-2xl w-full bg-gray-100"
+                  title="El tipo de producto no se puede cambiar"
+                />
+              </div>
+              <div>
+                <label>Animal objetivo</label>
+                <select
+                  name="targetAnimal"
+                  value={formData.targetAnimal}
+                  onChange={handleFormChange}
+                  className="p-2 border rounded-2xl w-full"
+                >
+                  <option value="dog">Perro</option>
+                  <option value="cat">Gato</option>
+                  <option value="both">Perro y Gato</option>
+                  <option value="bird">Ave</option>
+                  <option value="fish">Pez</option>
+                  <option value="reptile">Reptil</option>
+                  <option value="rodent">Roedor</option>
+                  <option value="all">Todos</option>
+                </select>
+              </div>
               <div>
                 <label>Nombre del producto</label>
                 <input
@@ -327,191 +234,51 @@ export const EditProductModal = ({
           </div>
 
           <div className="bg-white rounded-2xl p-4 shadow">
-            <h3 className="text-lg font-semibold mb-4">Variantes</h3>
-            <div className="grid grid-cols-4 gap-4">
-              <div>
-                <label>Peso (kg)</label>
-                <input
-                  type="text"
-                  name="weight"
-                  value={currentVariant.weight}
-                  onChange={handleCurrentVariantChange}
-                  className="p-2 border rounded-2xl w-full"
-                />
-              </div>
-              <div>
-                <label>Costo</label>
-                <input
-                  type="text"
-                  name="cost"
-                  value={currentVariant.cost}
-                  onChange={handleCurrentVariantChange}
-                  className="p-2 border rounded-2xl w-full"
-                />
-              </div>
-              <div>
-                <label>Ganancia (%)</label>
-                <input
-                  type="text"
-                  name="profit"
-                  value={currentVariant.profit}
-                  onChange={handleCurrentVariantChange}
-                  className="p-2 border rounded-2xl w-full"
-                />
-              </div>
-              <div>
-                <label>Proveedor</label>
-                <select
-                  name="supplier"
-                  value={currentVariant.supplier}
-                  onChange={handleCurrentVariantChange}
-                  className="p-2 border rounded-2xl w-full"
-                >
-                  <option value="" disabled>
-                    Selecciona un proveedor
-                  </option>
-                  {suppliers.map((supplier) => (
-                    <option key={supplier} value={supplier}>
-                      {supplier}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-span-2 flex items-center gap-2 mt-2">
-                <label>Con descuento</label>
-                <input
-                  type="checkbox"
-                  name="onSale"
-                  checked={currentVariant.onSale}
-                  onChange={(e) => {
-                    setIsDiscountVisible(e.target.checked);
-                    handleCurrentVariantChange(e);
-                  }}
-                />
-                {isDiscountVisible && (
-                  <input
-                    type="text"
-                    placeholder="Descuento (%)"
-                    name="discount"
-                    value={currentVariant.discount}
-                    onChange={handleCurrentVariantChange}
-                    className="p-2 border rounded-2xl w-32"
-                  />
-                )}
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={addVariant}
-              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-2xl"
-            >
-              Agregar variante
-            </button>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-              {formData.variants.map((variant, index) => (
+            <h3 className="text-lg font-semibold mb-4">Variantes existentes</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Nota: Para modificar variantes, es recomendable eliminar el
+              producto y crearlo nuevamente con las variantes correctas.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* {formData.variants.map((variant, index) => (
                 <div
                   key={index}
-                  className="p-3 border rounded-2xl shadow space-y-2"
+                  className="p-3 border rounded-2xl shadow space-y-2 bg-gray-50"
                 >
-                  <div>
-                    <label>Proveedor</label>
-                    <select
-                      name="supplier"
-                      value={variant.supplier}
-                      onChange={(e) => handleVariantChange(index, e)}
-                      className="p-1 border rounded w-full"
-                    >
-                      <option value="" disabled>
-                        Selecciona un proveedor
-                      </option>
-                      {suppliers.map((supplier) => (
-                        <option key={supplier} value={supplier}>
-                          {supplier}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label>Peso (kg)</label>
-                    <input
-                      type="text"
-                      name="weight"
-                      value={variant.weight}
-                      onChange={(e) => handleVariantChange(index, e)}
-                      className="p-1 border rounded w-full"
-                    />
-                  </div>
-                  <div>
-                    <label>Costo</label>
-                    <input
-                      type="text"
-                      name="cost"
-                      value={variant.cost}
-                      onChange={(e) => handleVariantChange(index, e)}
-                      className="p-1 border rounded w-full"
-                    />
-                  </div>
-                  <div>
-                    <label>Ganancia (%)</label>
-                    <input
-                      type="text"
-                      name="profit"
-                      value={variant.profit}
-                      onChange={(e) => handleVariantChange(index, e)}
-                      className="p-1 border rounded w-full"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <label>Con descuento</label>
-                    <input
-                      type="checkbox"
-                      name="onSale"
-                      checked={variant.onSale}
-                      onChange={(e) => handleVariantChange(index, e)}
-                    />
-                  </div>
-                  {variant.onSale && (
-                    <div>
-                      <label>Descuento (%)</label>
-                      <input
-                        type="text"
-                        name="discount"
-                        value={variant.discount}
-                        onChange={(e) => handleVariantChange(index, e)}
-                        className="p-1 border rounded w-full"
-                      />
-                    </div>
-                  )}
-                  <h2 className="font-bold">Precio final:</h2>
-                  <p>
-                    {formatPrice(
-                      calculateFinalPrice(
-                        variant.cost,
-                        variant.profit,
-                        variant.discount
-                      )
-                    )}
+                  <p className="font-semibold text-sm">
+                    {formatVariantName(formData.productType, variant)}
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => removeVariant(index)}
-                    className="mt-2 px-3 py-1 bg-red-600 text-white rounded-2xl text-sm"
-                  >
-                    Eliminar
-                  </button>
+                  <p className="text-sm">Stock: {variant.stock}</p>
+                  <p className="text-sm">
+                    Precio: ${formatPrice(variant.discountedPrice)}
+                  </p>
+                  {variant.onSale && (
+                    <p className="text-sm text-red-600">
+                      Descuento: {variant.discount}%
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-500">
+                    Proveedores: {variant.suppliers.length}
+                  </p>
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setIsModalVisible(false)}
+              className="px-6 py-3 bg-gray-400 text-white rounded-2xl"
+            >
+              Cancelar
+            </button>
             <button
               type="submit"
               className="px-6 py-3 bg-blue-600 text-white rounded-2xl"
               onClick={handleSubmit}
             >
-              Modificar producto
+              Guardar cambios
             </button>
           </div>
         </form>

@@ -4,6 +4,7 @@ import useCartStore from "@/store/cartStore";
 import Image from "next/image";
 import { useState } from "react";
 import { formatPrice } from "@/utils";
+import { formatVariantName } from "@/utils/productHelpers";
 
 type ProductCardProps = {
   product: Product;
@@ -16,6 +17,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const handleAddItem = () => {
     addItem({ product: product, quantity: 1, variant: activeVariant });
     openCart();
+  };
+
+  const getVariantLabel = (variant: any) => {
+    return formatVariantName(product.productType, variant);
   };
 
   return (
@@ -41,7 +46,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <h3 className="text-2xl font-semibold tracking-wide text-gray-800">
             {product.name}
           </h3>
-          <div className="flex gap-2 my-2">
+          <div className="flex gap-2 my-2 flex-wrap">
             {product.variants.map((variant, index) => {
               const isActive = index === activeVariant;
 
@@ -49,17 +54,20 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                 <p
                   key={index}
                   onClick={() => setActiveVariant(index)}
-                  className={`p-2 rounded-2xl cursor-pointer duration-75 ${
+                  className={`p-2 rounded-2xl cursor-pointer duration-75 text-xs ${
                     isActive
                       ? "bg-blue-500 text-zinc-200"
                       : "border-zinc-800 border"
                   } hover:bg-blue-500 hover:text-zinc-200 hover:border-none`}
                 >
-                  {variant.weight}kg
+                  {getVariantLabel(variant)}
                 </p>
               );
             })}
           </div>
+          <p className="text-xs text-gray-600 mb-1">
+            Stock: {product.variants[activeVariant]?.stock || 0}
+          </p>
           {product.variants[activeVariant]?.discount > 0 ? (
             <div className="flex mt-2 flex-col">
               <div className="flex items-center gap-2">

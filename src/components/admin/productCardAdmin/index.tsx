@@ -1,6 +1,6 @@
 "use client";
 
-import { Product } from "@/types";
+import { Product, ProductVariant } from "@/types";
 import { IconPencil, IconTrash, IconReport } from "@tabler/icons-react";
 import Image from "next/image";
 import { EditProductModal } from "../editProductModal";
@@ -8,6 +8,7 @@ import { deleteProductById } from "@/services/productService";
 import { useState } from "react";
 import AlertDialogDelete from "@/components/shared/alertDialogDelete";
 import { formatPrice } from "@/utils";
+import { formatVariantName } from "@/utils/productHelpers";
 import { toast } from "sonner";
 
 type ProductCardAdminProps = {
@@ -36,6 +37,23 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
     }
   };
 
+  const getVariantLabel = (variant: ProductVariant) => {
+    return formatVariantName(product.productType, variant);
+  };
+
+  const getSupplierInfo = (variant: any) => {
+    if (!variant.suppliers || variant.suppliers.length === 0) {
+      return "Sin proveedor";
+    }
+    const preferredSupplier = variant.suppliers.find((s: any) => s.isPreferred);
+    const supplier = preferredSupplier || variant.suppliers[0];
+    const supplierName =
+      typeof supplier.supplier === "object"
+        ? supplier.supplier.name
+        : "Proveedor";
+    return `${supplierName} ${preferredSupplier ? "⭐" : ""}`;
+  };
+
   return (
     <>
       {isModalVisible && (
@@ -46,7 +64,7 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
         />
       )}
       <div
-        key={product.name}
+        key={product._id}
         className="relative border rounded-2xl bg-zinc-200 text-zinc-900 p-4 hover:shadow-lg hover:shadow-zinc-900"
       >
         <div className="flex justify-center items-center mb-4">
@@ -65,23 +83,31 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
             <h3 className="text-2xl font-semibold tracking-wide text-gray-800">
               {product.name}
             </h3>
-            <div className="flex gap-2 ">
-              {product.variants.map((variant, index) => {
-                return (
-                  <p
-                    key={index}
-                    onClick={() => setActiveVariant(index)}
-                    className="p-2 rounded-2xl bg-blue-600 text-zinc-200 cursor-pointer hover:bg-blue-700 duration-75"
-                  >
-                    {variant.weight}kg
-                  </p>
-                );
-              })}
+            <div className="flex gap-2 flex-wrap max-w-md">
+            
+                {product.variants.map((variant, index) => {
+                  const isActive = index === activeVariant;
+                  return (
+                    <p
+                      key={variant._id}
+                      onClick={() => setActiveVariant(index)}
+                      className={`p-2 rounded-2xl text-xs cursor-pointer duration-75 ${
+                        isActive
+                          ? "bg-blue-600 text-zinc-200"
+                          : "bg-blue-400 text-zinc-100"
+                      } hover:bg-blue-700`}
+                    >
+                      {getVariantLabel(variant)}
+                    </p>
+                  );
+                })}
+           
             </div>
             <p className="text-sm font-bold mt-2">
-              {product.variants[activeVariant]?.supplier
-                ? product.variants[activeVariant]?.supplier
-                : "Sin proveedor"}
+              {getSupplierInfo(product.variants[activeVariant])}
+            </p>
+            <p className="text-xs text-gray-600">
+              Stock: {product.variants[activeVariant]?.stock || 0}
             </p>
             <p className={!product.category ? "text-red-600" : ""}>
               {product.category ? product.category.name : "Sin categoria"}
@@ -116,12 +142,12 @@ export const ProductCardAdmin = ({ product }: ProductCardAdminProps) => {
           <div className="flex gap-2">
             <IconPencil
               onClick={handleIsModalVisible}
-              className="w-10 h-10 p-2 border rounded-full text-zinc-800 border-zinc-800"
+              className="w-10 h-10 p-2 border rounded-full text-zinc-800 border-zinc-800 cursor-pointer hover:bg-zinc-800 hover:text-zinc-200"
             />
             <AlertDialogDelete
               onConfirm={() => handleDeleteProduct(product._id ?? "")}
             >
-              <IconTrash className="w-10 h-10 p-2 rounded-full text-zinc-200 bg-red-600" />
+              <IconTrash className="w-10 h-10 p-2 rounded-full text-zinc-200 bg-red-600 cursor-pointer hover:bg-red-700" />
             </AlertDialogDelete>
           </div>
         </div>
