@@ -1,5 +1,5 @@
-import { VariantFieldProps } from "../../types";
-import { INPUT_CLASS, CHECKBOX_CLASS, SIZE_OPTIONS } from "../../utils/constants";
+import { VariantFieldProps } from "@/types";
+import { INPUT_CLASS, CHECKBOX_CLASS, SIZE_OPTIONS } from "@/utils/constants";
 
 export const ToyVariantFields = ({ currentVariant, onChange }: VariantFieldProps) => {
   return (

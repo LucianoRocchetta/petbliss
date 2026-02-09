@@ -1,5 +1,5 @@
 import { ProductType } from "@/types";
-import { VariantFieldProps } from "../../types";
+import { VariantFieldProps } from "@/types";
 import { FoodVariantFields } from "./FoodVariantFields";
 import { AccessoryVariantFields } from "./AccessoryVariantFields";
 import { SnackVariantFields } from "./SnackVariantFields";

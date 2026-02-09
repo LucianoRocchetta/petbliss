@@ -1,6 +1,5 @@
 import { ProductDTO } from "@/types";
 
-// Reutilizamos las opciones del módulo de creación
 export {
   PRODUCT_TYPE_OPTIONS,
   TARGET_ANIMAL_OPTIONS,
@@ -18,17 +17,15 @@ export {
   BASE_VARIANT_TEMPLATE,
   INPUT_CLASS,
   CHECKBOX_CLASS,
-} from "../../createProductModal/utils/constants";
+  CURRENT_SUPPLIER_TEMPLATE,
+  FORM_DATA_TEMPLATE,
+} from "@/utils/constants";
 
-// ========== TEMPLATES ESPECÍFICOS DE EDICIÓN ==========
+// ========== HELPERS ESPECÍFICOS DE EDICIÓN ==========
 
-export const CURRENT_SUPPLIER_TEMPLATE = {
-  supplier: "",
-  cost: 0,
-  isPreferred: false,
-};
-
-// Helper para crear formData desde un producto existente
+/**
+ * Crea un ProductDTO desde un producto existente para edición
+ */
 export const createFormDataFromProduct = (product: any): ProductDTO => ({
   _id: product._id,
   productType: product.productType,

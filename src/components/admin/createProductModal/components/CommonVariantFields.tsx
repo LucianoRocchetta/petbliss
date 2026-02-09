@@ -1,5 +1,5 @@
-import { CurrentVariant } from "../types";
-import { INPUT_CLASS, CHECKBOX_CLASS } from "../utils/constants";
+import { CurrentVariant } from "@/types";
+import { INPUT_CLASS, CHECKBOX_CLASS } from "@/utils/constants";
 
 type CommonVariantFieldsProps = {
   currentVariant: CurrentVariant;

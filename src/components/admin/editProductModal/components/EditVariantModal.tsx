@@ -1,7 +1,6 @@
 import { IconX } from "@tabler/icons-react";
 import { formatPrice } from "@/utils";
-import { ProductType } from "@/types";
-import { CurrentVariant, CurrentSupplier, SupplierOption } from "../types";
+import { ProductType, CurrentVariant, CurrentSupplier, SupplierOption } from "@/types";
 import { VariantFields } from "../../createProductModal/components/variant-fields";
 import { CommonVariantFields } from "../../createProductModal/components/CommonVariantFields";
 import { SupplierSection } from "../../createProductModal/components/SupplierSection";

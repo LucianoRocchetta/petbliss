@@ -1,5 +1,5 @@
-import { VariantFieldProps } from "../../types";
-import { INPUT_CLASS, SNACK_WEIGHT_UNIT_OPTIONS, TEXTURE_OPTIONS } from "../../utils/constants";
+import { VariantFieldProps } from "@/types";
+import { INPUT_CLASS, SNACK_WEIGHT_UNIT_OPTIONS, TEXTURE_OPTIONS } from "@/utils/constants";
 
 export const SnackVariantFields = ({ currentVariant, onChange }: VariantFieldProps) => {
   return (

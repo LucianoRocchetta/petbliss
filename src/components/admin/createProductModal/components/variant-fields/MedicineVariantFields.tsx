@@ -1,5 +1,5 @@
-import { VariantFieldProps } from "../../types";
-import { INPUT_CLASS, CHECKBOX_CLASS, PRESENTATION_OPTIONS } from "../../utils/constants";
+import { VariantFieldProps } from "@/types";
+import { INPUT_CLASS, CHECKBOX_CLASS, PRESENTATION_OPTIONS } from "@/utils/constants";
 
 export const MedicineVariantFields = ({ currentVariant, onChange }: VariantFieldProps) => {
   return (

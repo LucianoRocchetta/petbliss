@@ -1,5 +1,5 @@
-import { CurrentVariant, CurrentSupplier, SupplierOption } from "../types";
-import { INPUT_CLASS } from "../utils/constants";
+import { CurrentVariant, CurrentSupplier, SupplierOption } from "@/types";
+import { INPUT_CLASS } from "@/utils/constants";
 
 type SupplierSectionProps = {
   suppliers: SupplierOption[];

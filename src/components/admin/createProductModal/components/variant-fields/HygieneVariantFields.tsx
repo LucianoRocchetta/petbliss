@@ -1,5 +1,5 @@
-import { VariantFieldProps } from "../../types";
-import { INPUT_CLASS, VOLUME_UNIT_OPTIONS, HYGIENE_SUBTYPE_OPTIONS } from "../../utils/constants";
+import { VariantFieldProps } from "@/types";
+import { INPUT_CLASS, VOLUME_UNIT_OPTIONS, HYGIENE_SUBTYPE_OPTIONS } from "@/utils/constants";
 
 export const HygieneVariantFields = ({ currentVariant, onChange }: VariantFieldProps) => {
   return (

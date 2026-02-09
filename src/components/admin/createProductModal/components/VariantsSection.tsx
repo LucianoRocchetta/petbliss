@@ -1,6 +1,5 @@
-import { ProductType, ProductDTO } from "@/types";
+import { ProductType, ProductDTO, CurrentVariant, CurrentSupplier, SupplierOption } from "@/types";
 import { formatPrice } from "@/utils";
-import { CurrentVariant, CurrentSupplier, SupplierOption } from "../types";
 import { VariantFields } from "./variant-fields";
 import { CommonVariantFields } from "./CommonVariantFields";
 import { SupplierSection } from "./SupplierSection";

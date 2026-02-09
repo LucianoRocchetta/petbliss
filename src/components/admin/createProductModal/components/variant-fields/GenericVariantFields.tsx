@@ -1,5 +1,5 @@
-import { VariantFieldProps } from "../../types";
-import { INPUT_CLASS } from "../../utils/constants";
+import { VariantFieldProps } from "@/types";
+import { INPUT_CLASS } from "@/utils/constants";
 
 export const GenericVariantFields = ({ currentVariant, onChange }: VariantFieldProps) => {
   return (

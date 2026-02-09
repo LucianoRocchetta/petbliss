@@ -5,7 +5,7 @@ import {
   PRODUCT_TYPE_OPTIONS,
   TARGET_ANIMAL_OPTIONS,
   AVAILABILITY_OPTIONS,
-} from "../utils/constants";
+} from "@/utils/constants";
 
 type GeneralInfoSectionProps = {
   formData: ProductDTO;

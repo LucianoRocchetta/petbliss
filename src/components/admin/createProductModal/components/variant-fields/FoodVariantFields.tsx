@@ -1,10 +1,10 @@
-import { VariantFieldProps } from "../../types";
+import { VariantFieldProps } from "@/types";
 import {
   INPUT_CLASS,
   WEIGHT_UNIT_OPTIONS,
   AGE_RANGE_OPTIONS,
   SPECIAL_DIET_OPTIONS,
-} from "../../utils/constants";
+} from "@/utils/constants";
 
 export const FoodVariantFields = ({ currentVariant, onChange }: VariantFieldProps) => {
   return (

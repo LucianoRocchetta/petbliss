@@ -1,24 +1,22 @@
-import { Product, ProductDTO, ProductType, ProductVariant, BaseVariantDTO } from "@/types";
+import { Product, ProductDTO, ProductType } from "@/types";
 
-// ========== TIPOS DEL MÓDULO ==========
+// Importar tipos compartidos desde @/types
+export type {
+  SupplierOption,
+  CurrentSupplier,
+  CurrentVariant,
+  VariantFieldProps,
+  ValidationResult,
+} from "@/types";
 
-export type SupplierOption = {
-  _id: string;
-  name: string;
-};
+// Re-importar para uso local
+import type {
+  SupplierOption,
+  CurrentSupplier,
+  CurrentVariant,
+} from "@/types";
 
-export type CurrentSupplier = {
-  supplier: string;
-  cost: number;
-  isPreferred: boolean;
-};
-
-export type CurrentVariant = BaseVariantDTO & Record<string, any>;
-
-export type VariantFieldProps = {
-  currentVariant: CurrentVariant;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-};
+// ========== TIPOS ESPECÍFICOS DEL MÓDULO ==========
 
 // Props para el modal de edición de variante
 export type EditVariantModalProps = {

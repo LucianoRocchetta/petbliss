@@ -1,6 +1,6 @@
 import { formatPrice } from "@/utils";
 import { ProductType } from "@/types";
-import { getVariantDisplayName } from "../utils/variantHelpers";
+import { getVariantDisplayName } from "@/utils/productHelpers";
 
 type VariantCardProps = {
   variant: any;

@@ -264,3 +264,43 @@ export type Category = {
   name: string;
   imageURL: string;
 };
+
+// ========== TIPOS COMPARTIDOS PARA MODALES DE PRODUCTO ==========
+
+/**
+ * Opción de proveedor para selects
+ */
+export type SupplierOption = {
+  _id: string;
+  name: string;
+};
+
+/**
+ * Proveedor actual en edición/creación de variante
+ */
+export type CurrentSupplier = {
+  supplier: string;
+  cost: number;
+  isPreferred: boolean;
+};
+
+/**
+ * Variante actual en edición/creación
+ */
+export type CurrentVariant = BaseVariantDTO & Record<string, any>;
+
+/**
+ * Props para componentes de campos de variante
+ */
+export type VariantFieldProps = {
+  currentVariant: CurrentVariant;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+};
+
+/**
+ * Resultado de validación de variante
+ */
+export type ValidationResult = {
+  isValid: boolean;
+  message?: string;
+};
