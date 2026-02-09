@@ -6,3 +6,4 @@ export * from './catalog/index';
 export * from './categories/index';
 export * from './footer/index';
 export * from './home-grid/index';
+export * from './home-hero/index';

@@ -2,14 +2,14 @@
 
 import "@/styles/globals.css";
 import { TopbarMenu } from "@/components/shared";
-import { Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { Footer } from "@/containers/footer";
 import { Toaster, toast } from "sonner";
 import { Metadata } from "next";
 import Image from "next/image";
 
-const roboto = Roboto({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   style: ["normal", "italic"],
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <SessionProvider>
       <html lang="en">
-        <body className={`${roboto.className} text-zinc-200 bg-zinc-800`}>
+        <body className={`${inter.className} text-zinc-200 bg-zinc-800`}>
           <TopbarMenu />
           <main>{children}</main>
           <Toaster position="top-right" richColors />

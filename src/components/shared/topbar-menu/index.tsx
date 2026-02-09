@@ -1,16 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import { IconCategory, IconShoppingCart } from "@tabler/icons-react";
-import CartPanel from "../cart";
-import Image from "next/image";
 import useCartStore from "@/store/cartStore";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, ShoppingCartIcon } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import CartPanel from "../cart";
 
 export default function SearchBar() {
   const pathname = usePathname();
@@ -49,7 +46,7 @@ export default function SearchBar() {
 }
 
 export const TopbarMenu = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const { isOpen, toggleCart } = useCartStore();
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -77,47 +74,68 @@ export const TopbarMenu = () => {
     <>
       <CartPanel isOpen={isOpen} setIsOpen={toggleCart} />
 
-      <div className="flex flex-col bg-zinc-700/30 shadow-zinc-600 items-center justify-center">
-        <div
-          className={`w-3/4 m-auto flex lg:flex-row justify-between items-center ${
-            session?.user.role == "admin" ? "border-b border-zinc-600" : ""
-          }`}
-        >
+      <div className="flex flex-col items-center justify-center fixed w-full max-w-[1440px] top-0 left-1/2 transform -translate-x-1/2 z-40">
+        <div className={`w-full flex lg:flex-row justify-between items-center bg-white/60 shadow-zinc-600 rounded-b-[20px] z-40 backdrop-blur-[16px] px-4`}>
           <Link href="/" className="p-2 flex items-center justify-start">
             <Image
-              src={"/images/logo.png"}
+              src={"/images/logo-rounded-black.png"}
               alt="pet-bliss-logo"
               width={200}
               height={200}
               className="w-16 h-16"
             />
-            <h1 className="hidden lg:block text-2xl lg:text-3xl ml-2">
-              Pet Bliss
-            </h1>
           </Link>
 
-          {!isMobile && <SearchBar />}
+          {/* {!isMobile && <SearchBar />} */}
 
-          <menu className="flex items-center">
-            <ul className="flex gap-2">
-              <Link
-                href={"/shop"}
-                className="flex items-center gap-2 bg-zinc-700 p-2 rounded-full hover:bg-zinc-800 duration-300"
-              >
-                <IconCategory className="w-10 h-10 p-2 rounded-full bg-zinc-200 text-zinc-800 lg:block " />
-                <h2 className="hidden lg:text-lg lg:block">Catálogo</h2>
-              </Link>
+          <menu className="flex items-center gap-5 text-black">
+            <Link
+              href={"/shop"}
+              className="flex items-center"
+            >
+              <h2 className="hidden lg:text-lg lg:block">Catálogo</h2>
+            </Link>
+            <Link
+              href={"/shop"}
+              className="flex items-center"
+            >
+              <h2 className="hidden lg:text-lg lg:block">Contacto</h2>
+            </Link>
+            <Link
+              href={"/shop"}
+              className="flex items-center"
+            >
+              <h2 className="hidden lg:text-lg lg:block">Sobre nosotros</h2>
+            </Link>
+          </menu>
+
+          <ul className="flex gap-5 text-black">
+            <li>
               <button
                 onClick={toggleCart}
-                className="flex items-center gap-2 bg-zinc-700 p-2 rounded-full hover:bg-zinc-800 duration-300"
+                className="flex items-center"
               >
-                <IconShoppingCart className="w-10 h-10 p-2 rounded-full bg-zinc-200 text-zinc-800" />
+                <SearchIcon className="w-6 h-6" />
               </button>
-            </ul>
-          </menu>
+            </li>
+            <li>
+              <button
+                onClick={toggleCart}
+                className="flex items-center"
+              >
+                <ShoppingCartIcon className="w-6 h-6" />
+              </button>
+            </li>
+          </ul>
         </div>
 
-        {session?.user.role == "admin" ? (
+        <div className="w-full flex justify-center items-end bg-black shadow-zinc-600 rounded-b-[20px] -mt-3 z-30 h-[50px] pb-2.5">
+          <p className="text-[#E6E6E6] text-sm">
+            Envíos gratis los miércoles y viernes
+          </p>
+        </div>
+
+        {/* {session?.user.role == "admin" ? (
           <div className="w-3/4 my-4 flex flex-row items-center justify-end gap-2">
             <Link
               href={"/admin"}
@@ -134,7 +152,7 @@ export const TopbarMenu = () => {
           </div>
         ) : (
           ""
-        )}
+        )} */}
 
         {isMobile && <SearchBar />}
       </div>
