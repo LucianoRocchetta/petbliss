@@ -66,3 +66,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom Swiper Pagination Styles */
+.swiper-pagination-custom .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #E6E6E6;
+  opacity: 1;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.swiper-pagination-custom .swiper-pagination-bullet-active {
+  width: 32px;
+  background-color: white;
+}
+
+.section-container{
+  @apply w-full max-w-[1440px] mx-auto;
+}
