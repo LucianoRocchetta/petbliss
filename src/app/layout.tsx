@@ -31,9 +31,9 @@ export default function RootLayout({
   return (
     <SessionProvider>
       <html lang="en">
-        <body className={`${inter.className} text-zinc-200 bg-zinc-800`}>
+        <body className={`${inter.className} text-black bg-white`}>
           <TopbarMenu />
-          <main>{children}</main>
+          <main className="w-screen overflow-x-hidden">{children}</main>
           <Toaster position="top-right" richColors />
           <Footer />
         </body>

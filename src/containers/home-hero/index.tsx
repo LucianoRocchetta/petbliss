@@ -120,13 +120,13 @@ export const HomeHero = () => {
                     {slide.subtitle}
                   </p>
                   <div className="flex flex-wrap gap-4">
-                    <Button variant="default" size="hero" asChild>
+                    <Button variant="default" size="default" asChild>
                       <Link href={slide.primaryButton.href}>
                         {slide.primaryButton.text}
                         <IconArrowRight className="w-5 h-5" />
                       </Link>
                     </Button>
-                    <Button variant="outline" size="hero" asChild>
+                    <Button variant="outline" size="default" asChild>
                       <a href={slide.secondaryButton.href}>
                         {slide.secondaryButton.text}
                       </a>

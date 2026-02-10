@@ -15,18 +15,18 @@ const buttonVariants = cva(
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 rounded-md",
         outline:
           "bg-white/10 backdrop-blur-sm text-white font-medium rounded-full border border-white/30 hover:bg-white/20",
+        outlineDark:
+          "bg-transparent text-[#1A1A1A] font-medium rounded-full border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white hover:shadow-lg active:scale-[0.98]",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 rounded-md",
         ghost: "hover:bg-accent hover:text-accent-foreground rounded-md",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2",
+        default: "h-12 px-6 py-3 text-base [&_svg]:size-5",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
-        // Hero button size
-        hero: "h-12 px-6 py-3 text-base [&_svg]:size-5",
       },
     },
     defaultVariants: {

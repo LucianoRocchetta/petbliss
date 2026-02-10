@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <>
       <HomeHero />
-      <div className="space-y-20 w-3/4 m-auto">
+      <div className="space-y-20">
         <HomeGrid />
         <Carousel title="Productos destacados" />
       </div>
