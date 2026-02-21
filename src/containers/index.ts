@@ -8,4 +8,5 @@ export * from './footer/index';
 export * from './home-featured-products/index';
 export * from './home/home-grid/index';
 export * from './home/home-hero/index';
+export * from './home/home-perfect-experience/index';
 export * from './home/home-why-petbliss/index';
