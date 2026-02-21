@@ -1,5 +1,5 @@
-import { Carousel, FeaturedProducts, HomeHero } from "@/containers";
-import HomeGrid from "@/containers/home-grid";
+import { Carousel, FeaturedProducts, HomeHero, WhyPetbliss } from "@/containers";
+import HomeGrid from "@/containers/home/home-grid";
 import Brands from "@/containers/brands";
 
 export default function HomePage() {
@@ -9,6 +9,7 @@ export default function HomePage() {
       <div className="space-y-20">
         <Brands />
         <FeaturedProducts />
+        <WhyPetbliss />
         
         
         {/* <HomeGrid />
