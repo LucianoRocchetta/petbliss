@@ -7,3 +7,4 @@ export * from './categories/index';
 export * from './footer/index';
 export * from './home-grid/index';
 export * from './home-hero/index';
+export * from './home-featured-products/index';

@@ -1,8 +1,7 @@
 import Image from "next/image";
-import Categories from "../categories";
-import Brands from "../brands";
 import Link from "next/link";
-import { IconCreditCard, IconTruckDelivery } from "@tabler/icons-react";
+import Brands from "../brands";
+import Categories from "../categories";
 
 export default function HomeGrid() {
   return (

@@ -89,6 +89,9 @@
 .section-container-extended-r{
   @apply w-full max-w-[1440px] mx-auto px-4;
 }
+.section-y-padding{
+  @apply lg:py-20 py-10;
+}
 
 /* Brands Swiper Styles */
 .brands-swiper {

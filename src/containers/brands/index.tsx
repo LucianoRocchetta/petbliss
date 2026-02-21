@@ -32,7 +32,7 @@ export default function Brands() {
   }, []);
 
   return (
-    <section className="relative">
+    <section className="relative section-y-padding">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between section-container">
         <div>
           <h2 className="section-title">Comprá por marca</h2>
