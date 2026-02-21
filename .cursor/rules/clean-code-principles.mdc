@@ -1,0 +1,236 @@
+---
+alwaysApply: true
+---
+
+# Principios de Clean Code y Arquitectura React
+
+Este documento define los principios y patrones que se aplican en todo el proyecto para mantener un código limpio, escalable y mantenible.
+
+## Estructura de Carpetas para Componentes
+
+Cada container o feature compleja debe seguir esta estructura:
+
+```
+feature-name/
+├── components/       # Componentes UI específicos de la feature
+│   └── index.ts      # Barrel exports
+├── hooks/            # Custom hooks de la feature
+│   └── index.ts      # Barrel exports
+├── constants/        # Constantes y configuraciones
+│   └── index.ts
+├── types/            # Tipos e interfaces específicos
+│   └── index.ts
+└── index.tsx         # Componente principal (entry point)
+```
+
+Ejemplo de referencia: [home-featured-products](mdc:src/containers/home-featured-products/index.tsx)
+
+---
+
+## Principios SOLID
+
+### S - Single Responsibility Principle (SRP)
+Cada componente, hook o función debe tener una única responsabilidad.
+
+```tsx
+// ✅ Correcto - Cada componente hace una sola cosa
+<ProductImage />      // Solo maneja la imagen
+<VariantSelector />   // Solo maneja selección de variantes
+<PriceSection />      // Solo muestra precio y botón
+
+// ❌ Incorrecto - Un componente que hace todo
+<ProductCardWithImageAndVariantsAndPriceAndCart />
+```
+
+### O - Open/Closed Principle (OCP)
+Los componentes deben ser abiertos para extensión pero cerrados para modificación.
+
+```tsx
+// ✅ Correcto - Componente genérico extensible
+<VariantSelector
+  label="Peso"
+  options={weights}
+  formatOption={(w) => `${w}kg`}
+/>
+
+// ❌ Incorrecto - Componente específico que requiere modificación
+<WeightSelector weights={weights} />
+<FlavorSelector flavors={flavors} />
+```
+
+### L - Liskov Substitution Principle (LSP)
+Los tipos derivados deben ser sustituibles por sus tipos base sin alterar el comportamiento.
+
+### I - Interface Segregation Principle (ISP)
+Crear interfaces específicas en lugar de interfaces grandes y genéricas.
+
+```tsx
+// ✅ Correcto - Interfaces específicas
+interface ProductImageProps {
+  imageUrl: string
+  altText: string
+  patternImage: string
+}
+
+// ❌ Incorrecto - Interface gigante con props opcionales
+interface ProductProps {
+  imageUrl?: string
+  price?: number
+  variants?: Variant[]
+  // ... 20 props más
+}
+```
+
+### D - Dependency Inversion Principle (DIP)
+Los módulos de alto nivel no deben depender de módulos de bajo nivel.
+
+```tsx
+// ✅ Correcto - El componente recibe la función como prop
+<PriceSection onAddToCart={handleAddToCart} />
+
+// ❌ Incorrecto - El componente importa y usa el store directamente
+// dentro de PriceSection: import useCartStore from "@/store/cartStore"
+```
+
+---
+
+## Principios DRY, KISS, YAGNI
+
+### DRY (Don't Repeat Yourself)
+Extraer lógica repetida a hooks o utils.
+
+```tsx
+// ✅ Correcto - Hook reutilizable
+const { uniqueWeights, uniqueFlavors } = useProductVariants(product)
+
+// ❌ Incorrecto - Lógica duplicada en cada componente
+const weights = Array.from(new Set(product.variants.map(v => v.weight)))
+```
+
+### KISS (Keep It Simple, Stupid)
+Mantener componentes simples y fáciles de entender.
+
+```tsx
+// ✅ Correcto - Componente simple y declarativo
+export const FeaturedProducts = () => {
+  const { products, isLoading } = useFeaturedProducts()
+
+  return (
+    <section>
+      <SectionHeader />
+      {isLoading ? <LoadingSkeleton /> : <ProductsCarousel products={products} />}
+      <MobileCTA />
+    </section>
+  )
+}
+```
+
+### YAGNI (You Aren't Gonna Need It)
+No agregar funcionalidad hasta que sea necesaria.
+
+```tsx
+// ✅ Correcto - Solo lo necesario
+interface ProductImageProps {
+  imageUrl: string
+  altText: string
+  patternImage: string
+}
+
+// ❌ Incorrecto - Props "por si acaso"
+interface ProductImageProps {
+  imageUrl: string
+  altText: string
+  patternImage: string
+  fallbackImage?: string      // No se usa actualmente
+  lazyLoad?: boolean          // No se usa actualmente
+  onError?: () => void        // No se usa actualmente
+}
+```
+
+---
+
+## Patrones de React
+
+### Composición sobre Herencia
+Preferir composición de componentes pequeños.
+
+```tsx
+// ✅ Correcto - Composición
+<FeaturedProductCard>
+  <ProductImage />
+  <VariantSelector />
+  <PriceSection />
+</FeaturedProductCard>
+```
+
+### Custom Hooks para Lógica de Estado
+Extraer lógica de estado compleja a custom hooks.
+
+```tsx
+// ✅ Correcto
+export const useProductVariants = (product: Product) => {
+  // Toda la lógica de variantes encapsulada
+  return { selectedWeight, setSelectedWeight, currentPrice }
+}
+
+// Uso en componente
+const { selectedWeight, currentPrice } = useProductVariants(product)
+```
+
+### Barrel Exports
+Usar archivos `index.ts` para exportar módulos.
+
+```tsx
+// components/index.ts
+export { FeaturedProductCard } from "./FeaturedProductCard"
+export { LoadingSkeleton } from "./LoadingSkeleton"
+export { ProductsCarousel } from "./ProductsCarousel"
+
+// Uso
+import { FeaturedProductCard, LoadingSkeleton } from "./components"
+```
+
+---
+
+## Convenciones de Código
+
+### Nomenclatura
+- Componentes: `PascalCase` → `ProductCard.tsx`
+- Hooks: `camelCase` con prefijo `use` → `useProductVariants.ts`
+- Constantes: `SCREAMING_SNAKE_CASE` → `FEATURED_PRODUCTS_CONFIG`
+- Tipos/Interfaces: `PascalCase` → `ProductImageProps`
+
+### Archivos
+- Un componente por archivo
+- Nombre del archivo = nombre del componente
+- Usar `index.ts` solo para barrel exports
+
+### Props
+- Usar interfaces para props (no types)
+- Nombrar interfaces con sufijo `Props`
+- Documentar props complejas
+
+```tsx
+interface VariantSelectorProps {
+  label: string
+  options: (string | number)[]
+  selectedOption: string | number
+  onSelect: (option: string | number) => void
+  formatOption?: (option: string | number) => string
+}
+```
+
+---
+
+## Checklist de Refactor
+
+Antes de hacer merge, verificar:
+
+- [ ] Cada componente tiene una única responsabilidad
+- [ ] No hay lógica duplicada
+- [ ] Los hooks encapsulan la lógica de estado
+- [ ] Las constantes están en archivos separados
+- [ ] Los tipos están definidos en `types/index.ts`
+- [ ] Hay barrel exports en cada carpeta
+- [ ] El componente principal es simple y declarativo
+- [ ] No hay props innecesarias
