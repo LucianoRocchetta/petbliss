@@ -1,22 +1,22 @@
 "use client"
 
-import { IconShield } from "@tabler/icons-react"
 import { motion } from "framer-motion"
+import { Heart, Shield, Sparkles } from "lucide-react"
 
 
 const whyPetbliss = [
   {
-    icon: <IconShield className="text-white" />,
+    icon: <Shield className="text-white" />,
     title: "Confianza y Calidad",
     description: "Ingredientes de primera calidad con los que puede contar, siempre.",
   },
   {
-    icon: <IconShield className="text-white" />,
+    icon: <Heart className="text-white" />,
     title: "Cuidado y Bienestar",
     description: "La salud y felicidad de su mascota es nuestra máxima prioridad.",
   },
   {
-    icon: <IconShield className="text-white" />,
+    icon: <Sparkles className="text-white" />,
     title: "Transparencia",
     description: "Información clara sobre cada ingrediente y su fuente.",
   },
