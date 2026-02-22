@@ -1,12 +1,13 @@
 import Image from "next/image"
 import { Truck, CreditCard, Gift, ShieldCheck } from "lucide-react"
+import { FadeText } from "@/components/ui"
 
 export const PerfectExperience = () => {
   return (
     <section className="w-full section-y-padding">
       <div className="section-container flex flex-col gap-10">
         <div>
-          <h2 className="section-title">La experiencia perfecta</h2>
+          <FadeText text="La experiencia perfecta" className="text-start" direction="in" wordDelay={0.2} />
           <p className="section-paragraph">Diseñamos cada paso para que el cuidado de su mascota sea sencillo.</p>
         </div>
 

@@ -1,5 +1,6 @@
 "use client"
 
+import { FadeText } from "@/components/ui"
 import { motion } from "framer-motion"
 import { Heart, Shield, Sparkles } from "lucide-react"
 
@@ -27,7 +28,7 @@ export const WhyPetbliss = () => {
     <section className="bg-[#1A1A1A] w-full section-y-padding">
       <div className="section-container flex flex-col gap-10">
         <div>
-          <h2 className="section-title text-white">Porqué las mascotas eligen PetBliss</h2>
+          <FadeText text="Porqué las mascotas eligen PetBliss" className="text-white text-start" direction="in" wordDelay={0.2} />
           <p className="section-paragraph max-w-[550px]">
             Nuestro compromiso va más allá que simple comida: es acerca de crear una vida saludable y feliz para tus amados compañeros
           </p>

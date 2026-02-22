@@ -1,19 +1,90 @@
-import { IconBrandWhatsapp, IconBrandInstagram } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
+import { Heart } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-zinc-800 flex items-center justify-between py-10 border-t border-zinc-600 w-3/4 m-auto mt-20">
-      <h2 className="text-bold text-zinc-400">
-        Copyright © 2025 Petblissarg.com. Todos los derechos reservados.
-      </h2>
-      <div className="lg:fixed flex bottom-0 right-0 lg:bottom-10 lg:right-20 lg:grid gap-2">
-        <Link href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}>
-          <IconBrandWhatsapp className="w-12 h-12 text-zinc-200 border border-zinc-200 rounded-full p-2 hover:bg-zinc-200 hover:text-zinc-800 duration-200 cursor-pointer" />
-        </Link>
-        <Link href="https://www.instagram.com/petblissarg">
-          <IconBrandInstagram className="w-12 h-12 text-zinc-200 border border-zinc-200 rounded-full p-2 hover:bg-zinc-200 hover:text-zinc-800 duration-200 cursor-pointer" />
-        </Link>
+    <footer className="bg-[#1A1A1A] m-auto mt-20 w-full">
+      <div className="section-container flex flex-col gap-10 p-10">
+
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-5">
+            <Link href="/" className="flex items-center gap-4">
+              <Image 
+                src="/images/logo-rounded-black.png" 
+                alt="Petbliss Logo" 
+                width={100} 
+                height={100} 
+                className="w-16 h-16"
+              />
+              <h2 className="text-4xl font-bold text-white">Petbliss</h2>
+            </Link>
+
+            <p className="text-lg font-light text-[#E3E3E3]">Nutrición Premium para tus queridas <br /> mascotas.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div>
+              <h3 className="text-2xl font-bold text-white">Acerca de</h3>
+              <ul className="flex flex-col gap-2 mt-5">
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Sobre nosotros</Link>
+                </li>
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Reseñas</Link>
+                </li>
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Ubicación</Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-bold text-white">Soporte</h3>
+              <ul className="flex flex-col gap-2 mt-5">
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Contactanos</Link>
+                </li>
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Preguntas frecuentes</Link>
+                </li>
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Envíos y devoluciones</Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-bold text-white">Catálogo</h3>
+              <ul className="flex flex-col gap-2 mt-5">
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Alimento para gatos</Link>
+                </li>
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Alimento para perros</Link>
+                </li>
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Snacks</Link>
+                </li>
+                <li className="text-lg font-light text-[#E3E3E3]">
+                  <Link href="/shop">Salud y belleza</Link>
+                </li>
+              </ul>
+            </div>
+
+
+          </div>
+
+        </div>
+
+        <div className="w-full border-t border-[#737373]/50 pt-5 flex items-center justify-between text-[#E3E3E3]">
+          <p>
+            © 2026 Petbliss. Todos los derechos reservados.
+          </p>
+          <p className="text-bold flex items-center gap-2">
+            Hecho con <Heart className="w-5 h-5 text-white" /> para mascotas en todas partes
+          </p>
+        </div>
       </div>
     </footer>
   );

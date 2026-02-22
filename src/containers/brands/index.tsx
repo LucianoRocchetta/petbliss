@@ -7,6 +7,7 @@ import { Brand } from "@/types";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { FadeText } from "@/components/ui/fade-in-text";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -35,7 +36,7 @@ export default function Brands() {
     <section className="relative section-y-padding">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between section-container">
         <div>
-          <h2 className="section-title">Comprá por marca</h2>
+          <FadeText text="Comprá por marca" direction="in" wordDelay={0.2} />
           <p className="section-paragraph">
             Hacé click en la que más te interese para ver sus productos.
           </p>
