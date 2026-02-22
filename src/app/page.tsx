@@ -1,5 +1,10 @@
-import { Carousel, FeaturedProducts, HomeHero, WhyPetbliss, PerfectExperience } from "@/containers";
-import HomeGrid from "@/containers/home/home-grid";
+import { 
+  FeaturedProducts, 
+  HomeHero, 
+  PerfectExperience, 
+  WhyPetbliss, 
+  Faqs, 
+} from "@/containers";
 import Brands from "@/containers/brands";
 
 export default function HomePage() {
@@ -11,7 +16,7 @@ export default function HomePage() {
         <FeaturedProducts />
         <WhyPetbliss />
         <PerfectExperience />
-        
+        <Faqs />
         {/* <HomeGrid />
         <Carousel title="Productos destacados" /> */}
       </div>

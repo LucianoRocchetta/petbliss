@@ -1,3 +1,4 @@
+import { type AccordionItemData } from "@/components/ui";
 import { ProductDTO } from "@/types";
 
 // ========== OPCIONES DE SELECT ==========
@@ -136,3 +137,76 @@ export const CURRENT_SUPPLIER_TEMPLATE = {
 
 export const INPUT_CLASS = "p-2 border rounded-2xl w-full";
 export const CHECKBOX_CLASS = "flex items-center gap-2";
+
+// ========== PREGUNTAS FRECUENTES ==========
+
+export type Category = "todos" | "envios" | "devoluciones" | "metodos-de-pago"
+
+interface FilterButton {
+  id: Category
+  label: string
+}
+
+export const FILTER_BUTTONS: FilterButton[] = [
+  { id: "todos", label: "Todos" },
+  { id: "envios", label: "Envíos" },
+  { id: "devoluciones", label: "Devoluciones" },
+  { id: "metodos-de-pago", label: "Métodos de pago" },
+]
+
+export const FAQ_ITEMS: AccordionItemData[] = [
+  {
+    id: "1",
+    title: "¿Hacen envíos al CABA?",
+    content: "Sí, hacemos envíos gratis a CABA todos los lunes y miércoles.",
+    category: "envios",
+  },
+  {
+    id: "2",
+    title: "¿Hacen envíos al AMBA?",
+    content: "Sí, realizamos envíos al AMBA con un costo adicional según la zona. Los envíos se realizan los días martes y jueves.",
+    category: "envios",
+  },
+  {
+    id: "3",
+    title: "¿Hacen envíos al interior del país?",
+    content: "Sí, realizamos envíos a todo el país a través de correo privado. El tiempo de entrega varía según la zona.",
+    category: "envios",
+  },
+  {
+    id: "6",
+    title: "¿Qué sucede si vivo lejos?",
+    content: "No te preocupes, llegamos a todo el país. Los tiempos de entrega pueden variar entre 3 a 7 días hábiles según tu ubicación.",
+    category: "envios",
+  },
+  {
+    id: "4",
+    title: "¿Puedo solicitar una devolución de mi dinero?",
+    content: "Sí, tenés hasta 30 días desde la recepción del producto para solicitar una devolución completa si no estás satisfecho.",
+    category: "devoluciones",
+  },
+  {
+    id: "5",
+    title: "¿Cuánto demora una devolución?",
+    content: "Una vez recibido el producto devuelto, procesamos el reembolso en un plazo de 5 a 10 días hábiles.",
+    category: "devoluciones",
+  },
+  {
+    id: "7",
+    title: "¿Qué métodos de pago aceptan?",
+    content: "Aceptamos tarjetas de crédito y débito, transferencia bancaria, Mercado Pago y pago en efectivo en puntos de pago.",
+    category: "metodos-de-pago",
+  },
+  {
+    id: "8",
+    title: "¿Cuándo realizo el pago?",
+    content: "El pago se realiza al momento de confirmar tu pedido. Una vez acreditado, comenzamos a preparar tu envío.",
+    category: "metodos-de-pago",
+  },
+  {
+    id: "9",
+    title: "¿Se puede pagar con QR?",
+    content: "Sí, podés pagar con QR a través de Mercado Pago o cualquier billetera virtual compatible.",
+    category: "metodos-de-pago",
+  },
+]

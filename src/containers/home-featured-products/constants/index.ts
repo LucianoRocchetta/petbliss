@@ -12,7 +12,7 @@ export const CAROUSEL_BREAKPOINTS = {
     slidesPerView: 2,
   },
   1440: {
-    slidesPerView: 2.5,
+    slidesPerView: 3,
   },
 } as const
 

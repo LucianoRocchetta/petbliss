@@ -129,9 +129,9 @@ export const TopbarMenu = () => {
           </ul>
         </div>
 
-        <div className="w-full flex justify-center items-end bg-black shadow-zinc-600 rounded-b-[20px] -mt-3 z-30 h-[50px] pb-2.5">
+        <div className="w-full flex justify-center items-end bg-black shadow-zinc-600 rounded-b-[20px] -mt-3.5 z-30 h-[50px] pb-2.5">
           <p className="text-[#E6E6E6] text-sm">
-            Envíos gratis los miércoles y viernes
+            Envíos gratis los lunes y miércoles
           </p>
         </div>
 

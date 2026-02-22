@@ -33,7 +33,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${inter.className} text-black bg-white`}>
           <TopbarMenu />
-          <main className="w-screen overflow-x-hidden">{children}</main>
+          <main className="max-w-screen overflow-x-hidden">{children}</main>
           <Toaster position="top-right" richColors />
           <Footer />
         </body>
