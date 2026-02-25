@@ -13,6 +13,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import {
+  fadeUpSoftVariants,
+  viewportAnimationProps,
+  transitions,
+  cardHoverProps,
+  getStaggerDelay,
+} from "@/lib/animations";
 
 export default function Brands() {
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -37,15 +44,26 @@ export default function Brands() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between section-container">
         <div>
           <FadeText text="Comprá por marca" direction="in" wordDelay={0.2} />
-          <p className="section-paragraph">
+          <motion.p
+            className="section-paragraph"
+            variants={fadeUpSoftVariants}
+            {...viewportAnimationProps}
+            transition={{ ...transitions.default, delay: 0.35 }}
+          >
             Hacé click en la que más te interese para ver sus productos.
-          </p>
+          </motion.p>
         </div>
-        <Button className="w-fit hidden lg:block" variant="outlineDark" size="default" asChild>
-          <Link href="#">
-            Ver todas las marcas
-          </Link>
-        </Button>
+        <motion.div
+          variants={fadeUpSoftVariants}
+          {...viewportAnimationProps}
+          transition={{ ...transitions.default, delay: 0.4 }}
+        >
+          <Button className="w-fit hidden lg:block" variant="outlineDark" size="default" asChild>
+            <Link href="#">
+              Ver todas las marcas
+            </Link>
+          </Button>
+        </motion.div>
       </div>
       <div className="mt-10 section-container-extended-r">
         <Swiper
@@ -57,16 +75,17 @@ export default function Brands() {
           className="w-full brands-swiper"
         >
           {!isLoading
-            ? brands.map((brand) => (
+            ? brands.map((brand, index) => (
                 <SwiperSlide key={brand._id} className="!w-auto">
                   <Link className="select-none" href={`/shop?brand=${brand.slug}`} passHref>
                     <motion.div
-                      whileHover={{
-                        scale: 1.01,
-                        y: -5,
-                        boxShadow: "0px 10px 20px rgba(0,0,0,0.2)",
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        delay: getStaggerDelay(index, 0.05),
+                        duration: 0.5,
                       }}
-                      transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                      {...cardHoverProps}
                       className="rounded-xl size-40 relative overflow-hidden flex items-center justify-center p-5 bg-[#E6E6E6]"
                     >
                       <Image
@@ -84,19 +103,30 @@ export default function Brands() {
                 .fill(null)
                 .map((_, index) => (
                   <SwiperSlide key={index} className="!w-auto">
-                    <BrandsCardSkeleton />
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: getStaggerDelay(index, 0.05) }}
+                    >
+                      <BrandsCardSkeleton />
+                    </motion.div>
                   </SwiperSlide>
                 ))}
         </Swiper>
       </div>
       
-      <div className="lg:hidden mt-4 flex items-center justify-center w-full">
+      <motion.div
+        className="lg:hidden mt-4 flex items-center justify-center w-full"
+        variants={fadeUpSoftVariants}
+        {...viewportAnimationProps}
+        transition={{ ...transitions.default, delay: 0.5 }}
+      >
         <Button variant="outlineDark" size="default" asChild>
           <Link href="#">
             Ver todas las marcas
           </Link>
         </Button>
-      </div>
+      </motion.div>
     </section>
   );
 }

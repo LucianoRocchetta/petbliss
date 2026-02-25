@@ -1,6 +1,8 @@
 "use client"
 
+import { getStaggerDelay } from "@/lib/animations"
 import { IconChevronRight } from "@tabler/icons-react"
+import { motion } from "framer-motion"
 import { Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 
@@ -26,9 +28,18 @@ export const ProductsCarousel = ({ products }: ProductsCarouselProps) => {
         breakpoints={CAROUSEL_BREAKPOINTS}
         className="!overflow-visible"
       >
-        {products.map((product) => (
+        {products.map((product, index) => (
           <SwiperSlide key={product._id}>
-            <FeaturedProductCard product={product} />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: getStaggerDelay(index, 0.05),
+                duration: 0.5,
+              }}
+            >
+              <FeaturedProductCard product={product} />
+            </motion.div>
           </SwiperSlide>
         ))}
       </Swiper>
