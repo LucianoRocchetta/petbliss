@@ -82,7 +82,7 @@ export const TopbarMenu = () => {
               alt="pet-bliss-logo"
               width={200}
               height={200}
-              className="w-16 h-16"
+              className="lg:w-16 lg:h-16 w-12 h-12"
             />
           </Link>
 

@@ -13,7 +13,7 @@ export const SectionHeader = () => {
         asChild
         className="hidden md:inline-flex"
       >
-        <Link href="/productos">
+        <Link href="/shop">
           Ver todos los productos
           <IconArrowRight className="w-5 h-5" />
         </Link>

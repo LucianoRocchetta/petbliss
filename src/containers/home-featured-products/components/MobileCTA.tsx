@@ -8,7 +8,7 @@ export const MobileCTA = () => {
   return (
     <div className="mt-8 md:hidden">
       <Button variant="outlineDark" size="default" asChild className="w-full">
-        <Link href="/productos">
+        <Link href="/shop">
           Ver todos los productos
           <IconArrowRight className="w-5 h-5" />
         </Link>

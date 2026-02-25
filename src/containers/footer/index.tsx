@@ -6,7 +6,7 @@ export const Footer = () => {
   return (
     <footer className="bg-[#1A1A1A] m-auto mt-20 w-full">
       <div className="section-container flex flex-col gap-10">
-        <div className="flex justify-between py-10">
+        <div className="flex flex-col lg:flex-row lg:justify-between gap-5 py-10">
           <div className="flex flex-col gap-5">
             <Link href="/" className="flex items-center gap-4">
               <Image 
@@ -45,7 +45,7 @@ export const Footer = () => {
                   <Link href="/shop">Contactanos</Link>
                 </li>
                 <li className="text-base font-light text-[#E3E3E3]">
-                  <Link href="/shop">Preguntas frecuentes</Link>
+                  <Link href="/">Preguntas frecuentes</Link>
                 </li>
                 <li className="text-base font-light text-[#E3E3E3]">
                   <Link href="/shop">Envíos y devoluciones</Link>
@@ -57,16 +57,16 @@ export const Footer = () => {
               <h3 className="text-2xl font-bold text-white">Catálogo</h3>
               <ul className="flex flex-col gap-2 mt-5">
                 <li className="text-base font-light text-[#E3E3E3]">
-                  <Link href="/shop">Alimento para gatos</Link>
+                  <Link href="/shop?category=Gatos">Alimento para gatos</Link>
                 </li>
                 <li className="text-base font-light text-[#E3E3E3]">
-                  <Link href="/shop">Alimento para perros</Link>
+                  <Link href="/shop?category=Perros">Alimento para perros</Link>
                 </li>
                 <li className="text-base font-light text-[#E3E3E3]">
-                  <Link href="/shop">Snacks</Link>
+                  <Link href="/shop?category=Snacks">Snacks</Link>
                 </li>
                 <li className="text-base font-light text-[#E3E3E3]">
-                  <Link href="/shop">Salud y belleza</Link>
+                  <Link href="/shop?category=Salud">Salud y belleza</Link>
                 </li>
               </ul>
             </div>
@@ -76,7 +76,7 @@ export const Footer = () => {
 
         </div>
 
-        <div className="w-full border-t border-[#737373]/50 py-5 flex items-center justify-between text-[#E3E3E3]">
+        <div className="w-full border-t border-[#737373]/50 py-5 flex flex-col lg:flex-row lg:items-center lg:justify-between text-[#E3E3E3] text-sm lg:text-base gap-2">
           <p>
             © 2026 Petbliss. Todos los derechos reservados.
           </p>
