@@ -33,6 +33,7 @@ export type CreateProductPresentationalProps = {
   currentVariant: CurrentVariant;
   currentSupplier: CurrentSupplier;
   calculatedPrice: number;
+  submitting: boolean;
 
   // Handlers
   onClose: () => void;

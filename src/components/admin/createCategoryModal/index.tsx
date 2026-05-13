@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Category } from "@/types";
-import { IconX } from "@tabler/icons-react";
+import { IconX, IconLoader2 } from "@tabler/icons-react";
 import { createCategory } from "@/services/categoryService";
 import { toast } from "sonner";
 
@@ -22,6 +22,7 @@ export const CreateCategoryModal = ({
 
   const [formData, setFormData] = useState<Category>(formDataTemplate);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,63 +43,94 @@ export const CreateCategoryModal = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData.name.trim()) {
+      toast.warning("El nombre de la categoría es obligatorio");
+      return;
+    }
+
+    if (!imageFile) {
+      toast.warning("Seleccione una imagen para la categoría");
+      return;
+    }
+
+    setSubmitting(true);
+
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append("name", formData.name);
-
-      if (imageFile) {
-        formDataToSend.append("image", imageFile);
-      }
+      formDataToSend.append("name", formData.name.trim());
+      formDataToSend.append("image", imageFile);
 
       const res = await createCategory(formDataToSend);
 
       if (res) {
-        toast.success("Categoria creada correctamente");
+        toast.success("Categoría creada correctamente");
         setFormData(formDataTemplate);
+        setImageFile(null);
         setIsModalVisible(false);
       }
     } catch (error) {
-      toast.error("Error al crear la categoria");
+      toast.error("Error al crear la categoría");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <div
-      className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/4 top-0 right-0 p-6 border-zinc-600 border-l transform ${
+      className={`z-50 w-full h-full bg-zinc-800 fixed lg:w-1/3 top-0 right-0 p-6 border-zinc-600 border-l transform overflow-y-auto ${
         isModalVisible ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300`}
     >
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold mb-4">Crear Categoria</h2>
-        <IconX className="w-8 h-8" onClick={() => setIsModalVisible(false)} />
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-white">Crear Categoría</h2>
+        <button
+          type="button"
+          onClick={() => setIsModalVisible(false)}
+          className="p-1 hover:bg-zinc-700 rounded-lg transition-colors"
+        >
+          <IconX className="w-6 h-6 text-zinc-400" />
+        </button>
       </div>
 
-      <form>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <h2>Nombre de la categoria</h2>
+          <label htmlFor="category-name" className="block text-sm text-zinc-300 mb-1">
+            Nombre de la categoría <span className="text-red-400">*</span>
+          </label>
           <input
+            id="category-name"
             name="name"
             value={formData.name}
             onChange={handleFormChange}
+            placeholder="Ej: Perros"
             className="p-2 border rounded-2xl text-zinc-800 w-full"
           />
         </div>
+
         <div>
-          <h2>Imagen</h2>
+          <label htmlFor="category-image" className="block text-sm text-zinc-300 mb-1">
+            Imagen <span className="text-red-400">*</span>
+          </label>
           <input
+            id="category-image"
             type="file"
             onChange={handleImageChange}
-            className="p-2 border rounded-2xl text-zinc-800 w-full"
+            className="p-2 border rounded-2xl text-zinc-800 w-full bg-white"
           />
+          {imageFile && (
+            <p className="text-xs text-zinc-400 mt-1">{imageFile.name}</p>
+          )}
         </div>
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          {submitting && <IconLoader2 className="w-4 h-4 animate-spin" />}
+          {submitting ? "Creando..." : "Crear Categoría"}
+        </button>
       </form>
-      <button
-        type="submit"
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
-        onClick={handleSubmit}
-      >
-        Crear Categoria
-      </button>
     </div>
   );
 };

@@ -91,7 +91,24 @@ export const getProductsByCategory = async (category: string) => {
     return await res.json();
 }
 
-export const updateProductById = async (newData: ProductDTO) => {
+export const updateProductById = async (newData: ProductDTO, image?: File) => {
+    if (image) {
+      const formData = new FormData();
+      formData.append("data", JSON.stringify(newData));
+      formData.append("image", image);
+
+      const res = await fetch(`/api/products/${newData._id}`, {
+        method: "PUT",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("Error updating product");
+      }
+
+      return await res.json();
+    }
+
     const res = await fetch(`/api/products/${newData._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

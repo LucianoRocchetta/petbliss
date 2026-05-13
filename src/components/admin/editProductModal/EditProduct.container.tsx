@@ -39,6 +39,8 @@ export const EditProductModal = ({
   const [formData, setFormData] = useState<ProductDTO>(() =>
     createFormDataFromProduct(product)
   );
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   // ========== EDIT VARIANT STATES ==========
   const [isEditingVariant, setIsEditingVariant] = useState(false);
@@ -91,6 +93,16 @@ export const EditProductModal = ({
   const handleCheckboxChange = useCallback(
     (field: "byOrder" | "isFeatured", checked: boolean) => {
       setFormData((prev) => ({ ...prev, [field]: checked }));
+    },
+    []
+  );
+
+  const handleImageChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        setImageFile(file);
+      }
     },
     []
   );
@@ -332,19 +344,24 @@ export const EditProductModal = ({
         return;
       }
 
+      setSubmitting(true);
+
       try {
-        const res = await updateProductById(formData);
+        const res = await updateProductById(formData, imageFile || undefined);
 
         if (res) {
           toast.success("Producto modificado correctamente");
+          setImageFile(null);
           setIsModalVisible(false);
         }
       } catch (error) {
         console.error("Error updating product:", error);
         toast.error("Error al modificar el producto");
+      } finally {
+        setSubmitting(false);
       }
     },
-    [formData, setIsModalVisible]
+    [formData, imageFile, setIsModalVisible]
   );
 
   // ========== CALCULATED VALUES ==========
@@ -362,6 +379,7 @@ export const EditProductModal = ({
       brands={brands}
       suppliers={suppliers}
       productType={productType}
+      submitting={submitting}
       // Variant editing state
       isEditingVariant={isEditingVariant}
       editingVariant={editingVariant}
@@ -376,6 +394,7 @@ export const EditProductModal = ({
       // Handlers - General
       onClose={handleClose}
       onFormChange={handleFormChange}
+      onImageChange={handleImageChange}
       onCheckboxChange={handleCheckboxChange}
       onSubmit={handleSubmit}
       // Handlers - Edit Variant

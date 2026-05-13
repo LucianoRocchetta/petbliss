@@ -36,6 +36,7 @@ export const CreateProductModal = ({
   const [productType, setProductType] = useState<ProductType>("food");
   const [formData, setFormData] = useState<ProductDTO>(FORM_DATA_TEMPLATE);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [currentVariant, setCurrentVariant] = useState<CurrentVariant>(
     getInitialVariant("food")
   );
@@ -238,6 +239,8 @@ export const CreateProductModal = ({
         return;
       }
 
+      setSubmitting(true);
+
       try {
         const formDataToSend = new FormData();
         formDataToSend.append("name", formData.name);
@@ -248,10 +251,10 @@ export const CreateProductModal = ({
         formDataToSend.append("brand", formData.brand);
         formDataToSend.append("productType", formData.productType);
         formDataToSend.append("targetAnimal", formData.targetAnimal);
-        
+
         const variantsJSON = JSON.stringify(formData.variants);
         formDataToSend.append("variants", variantsJSON);
-        
+
         formDataToSend.append("isFeatured", String(formData.isFeatured));
         formDataToSend.append("image", imageFile);
 
@@ -260,11 +263,14 @@ export const CreateProductModal = ({
         if (res) {
           toast.success("Producto creado correctamente");
           setFormData(FORM_DATA_TEMPLATE);
+          setImageFile(null);
           setIsModalVisible(false);
         }
       } catch (error) {
         console.error("❌ [SUBMIT] Error:", error);
         toast.error("Error al crear el producto");
+      } finally {
+        setSubmitting(false);
       }
     },
     [formData, imageFile, setIsModalVisible]
@@ -287,6 +293,7 @@ export const CreateProductModal = ({
       currentVariant={currentVariant}
       currentSupplier={currentSupplier}
       calculatedPrice={calculatedPrice}
+      submitting={submitting}
       // Handlers
       onClose={handleClose}
       onFormChange={handleFormChange}

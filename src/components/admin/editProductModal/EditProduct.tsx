@@ -1,11 +1,10 @@
-import { IconX } from "@tabler/icons-react";
+import { IconX, IconLoader2 } from "@tabler/icons-react";
 import { EditProductPresentationalProps } from "./types";
 import {
   GeneralInfoSection,
   VariantsSection,
-  EditVariantModal,
-  AddVariantModal,
 } from "./components";
+import { VariantFormModal } from "../createProductModal/components";
 
 export const EditProduct = ({
   // Data
@@ -14,6 +13,7 @@ export const EditProduct = ({
   brands,
   suppliers,
   productType,
+  submitting,
 
   // Variant editing state
   isEditingVariant,
@@ -33,6 +33,7 @@ export const EditProduct = ({
   onFormChange,
   onCheckboxChange,
   onSubmit,
+  onImageChange,
 
   // Handlers - Edit Variant
   onEditVariant,
@@ -70,6 +71,7 @@ export const EditProduct = ({
             categories={categories}
             brands={brands}
             onFormChange={onFormChange}
+            onImageChange={onImageChange}
             onCheckboxChange={onCheckboxChange}
           />
 
@@ -87,16 +89,19 @@ export const EditProduct = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 bg-gray-400 text-white rounded-2xl hover:bg-gray-500 transition-colors"
+              disabled={submitting}
+              className="px-6 py-3 bg-gray-400 text-white rounded-2xl hover:bg-gray-500 transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-colors"
+              disabled={submitting}
+              className="px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               onClick={onSubmit}
             >
-              Guardar cambios
+              {submitting && <IconLoader2 className="w-4 h-4 animate-spin" />}
+              {submitting ? "Guardando..." : "Guardar cambios"}
             </button>
           </div>
         </form>
@@ -104,10 +109,11 @@ export const EditProduct = ({
 
       {/* Modal para editar variante */}
       {isEditingVariant && editingVariant && editingVariantIndex !== null && (
-        <EditVariantModal
+        <VariantFormModal
           isOpen={isEditingVariant}
+          title={`Editar Variante #${editingVariantIndex + 1}`}
+          confirmLabel="Guardar cambios"
           variant={editingVariant}
-          variantIndex={editingVariantIndex}
           productType={productType}
           suppliers={suppliers}
           calculatedPrice={calculatedPrice}
@@ -117,13 +123,15 @@ export const EditProduct = ({
           onCurrentSupplierChange={onEditSupplierChange}
           onAddSupplier={onAddEditSupplier}
           onRemoveSupplier={onRemoveEditSupplier}
-          onSave={onSaveVariant}
+          onConfirm={onSaveVariant}
         />
       )}
 
       {/* Modal para agregar nueva variante */}
-      <AddVariantModal
+      <VariantFormModal
         isOpen={isAddingVariant}
+        title="Agregar Nueva Variante"
+        confirmLabel="Agregar variante"
         variant={newVariant}
         productType={productType}
         suppliers={suppliers}

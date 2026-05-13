@@ -5,6 +5,7 @@ import { generateWhatsAppTemplateMessage } from "@/lib/utils";
 import { CartItem } from "@/types";
 import { useState } from "react";
 import { formatPrice } from "@/utils";
+import { getVariantDisplayName } from "@/utils/productHelpers";
 import { toast } from "sonner";
 
 interface CartPanelProps {
@@ -173,7 +174,9 @@ export default function CartPanel({ setIsOpen, isOpen }: CartPanelProps) {
                       <div className="ml-5">
                         <div className="flex-col gap-2 items-center">
                           <p className="text-2xl">{item.product.name}</p>
-                          <p>{item.product.variants[item.variant].weight}kg</p>
+                          <p className="text-sm text-gray-500">
+                            {getVariantDisplayName(item.product.variants[item.variant], item.product.productType)}
+                          </p>
                         </div>
                         {item.product.variants[item.variant].discount > 0 ? (
                           <p className="text-sm font-bold line-through">

@@ -35,8 +35,11 @@ export const GeneralInfoSection = ({
       <h3 className="text-lg font-semibold mb-4">Información general</h3>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label>Tipo de producto</label>
+          <label htmlFor="product-type" className="text-sm font-medium">
+            Tipo de producto <span className="text-red-500">*</span>
+          </label>
           <select
+            id="product-type"
             value={productType}
             onChange={(e) => onProductTypeChange(e.target.value as ProductType)}
             className={INPUT_CLASS}
@@ -49,8 +52,11 @@ export const GeneralInfoSection = ({
           </select>
         </div>
         <div>
-          <label>Animal objetivo</label>
+          <label htmlFor="target-animal" className="text-sm font-medium">
+            Animal objetivo
+          </label>
           <select
+            id="target-animal"
             name="targetAnimal"
             value={formData.targetAnimal}
             onChange={onFormChange}
@@ -64,16 +70,22 @@ export const GeneralInfoSection = ({
           </select>
         </div>
         <div>
-          <label>Imagen</label>
+          <label htmlFor="product-image" className="text-sm font-medium">
+            Imagen <span className="text-red-500">*</span>
+          </label>
           <input
+            id="product-image"
             type="file"
             onChange={onImageChange}
-            className={`${INPUT_CLASS} text-zinc-800`}
+            className={`${INPUT_CLASS} text-zinc-800 bg-white`}
           />
         </div>
         <div>
-          <label>Nombre del producto</label>
+          <label htmlFor="product-name" className="text-sm font-medium">
+            Nombre del producto <span className="text-red-500">*</span>
+          </label>
           <input
+            id="product-name"
             name="name"
             value={formData.name}
             onChange={onFormChange}
@@ -81,8 +93,11 @@ export const GeneralInfoSection = ({
           />
         </div>
         <div>
-          <label>Marca</label>
+          <label htmlFor="product-brand" className="text-sm font-medium">
+            Marca <span className="text-red-500">*</span>
+          </label>
           <select
+            id="product-brand"
             name="brand"
             value={formData.brand}
             onChange={onFormChange}
@@ -99,8 +114,11 @@ export const GeneralInfoSection = ({
           </select>
         </div>
         <div className="col-span-2">
-          <label>Descripción</label>
+          <label htmlFor="product-description" className="text-sm font-medium">
+            Descripción <span className="text-red-500">*</span>
+          </label>
           <textarea
+            id="product-description"
             name="description"
             value={formData.description}
             onChange={onFormChange}
@@ -108,8 +126,11 @@ export const GeneralInfoSection = ({
           />
         </div>
         <div>
-          <label>Categoría</label>
+          <label htmlFor="product-category" className="text-sm font-medium">
+            Categoría <span className="text-red-500">*</span>
+          </label>
           <select
+            id="product-category"
             name="category"
             value={formData.category}
             onChange={onFormChange}
@@ -126,8 +147,11 @@ export const GeneralInfoSection = ({
           </select>
         </div>
         <div>
-          <label>Disponibilidad</label>
+          <label htmlFor="product-available" className="text-sm font-medium">
+            Disponibilidad
+          </label>
           <select
+            id="product-available"
             name="available"
             value={String(formData.available)}
             onChange={onFormChange}
@@ -142,21 +166,27 @@ export const GeneralInfoSection = ({
         </div>
         <div className={CHECKBOX_CLASS}>
           <input
+            id="product-byOrder"
             type="checkbox"
             name="byOrder"
             checked={formData.byOrder}
             onChange={(e) => onCheckboxChange("byOrder", e.target.checked)}
           />
-          <label>Por encargo</label>
+          <label htmlFor="product-byOrder" className="text-sm">
+            Por encargo
+          </label>
         </div>
         <div className={CHECKBOX_CLASS}>
           <input
+            id="product-featured"
             type="checkbox"
             name="isFeatured"
             checked={formData.isFeatured}
             onChange={(e) => onCheckboxChange("isFeatured", e.target.checked)}
           />
-          <label>Destacado</label>
+          <label htmlFor="product-featured" className="text-sm">
+            Destacado
+          </label>
         </div>
       </div>
     </div>

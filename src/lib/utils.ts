@@ -1,6 +1,7 @@
 import { CartItem } from "@/types"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { getVariantDisplayName } from "@/utils/productHelpers"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -22,7 +23,7 @@ export function generateWhatsAppTemplateMessage(
     const unitPrice = variant.discount > 0 ? variant.discountedPrice : variant.price;
     const subtotal = unitPrice * item.quantity;
 
-    message += `*${item.product.name} - ${variant.weight}kg*\n`;
+    message += `*${item.product.name} - ${getVariantDisplayName(variant, item.product.productType)}*\n`;
     message += `\tCantidad: ${item.quantity}\n`;
     message += `\tPrecio unitario: $${unitPrice.toFixed(2)}\n`;
     message += `\tDescuento: ${variant.discount}%\n`;

@@ -85,7 +85,7 @@ export default function Brands() {
                         delay: getStaggerDelay(index, 0.05),
                         duration: 0.5,
                       }}
-                      {...cardHoverProps}
+                      whileHover={cardHoverProps.whileHover}
                       className="rounded-xl size-40 relative overflow-hidden flex items-center justify-center p-5 bg-[#E6E6E6]"
                     >
                       <Image

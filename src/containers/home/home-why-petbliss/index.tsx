@@ -55,7 +55,7 @@ export const WhyPetbliss = () => {
                 delay: getStaggerDelay(index, 0.1, 0.2),
                 duration: 0.5,
               }}
-              {...cardHoverProps}
+              whileHover={cardHoverProps.whileHover}
               className="flex flex-col gap-[10px] bg-white/5 rounded-[10px] p-6"
             >
               <div className="w-10 h-10 bg-white/10 rounded-[5px] flex items-center justify-center">{item.icon}</div>

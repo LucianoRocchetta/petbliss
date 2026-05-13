@@ -1,6 +1,6 @@
 import { ProductType, ProductDTO } from "@/types";
 import { IconPlus } from "@tabler/icons-react";
-import { VariantCard } from "./VariantCard";
+import { VariantCard } from "../../createProductModal/components/VariantCard";
 
 type VariantsSectionProps = {
   formData: ProductDTO;

@@ -36,7 +36,7 @@ export const CommonVariantFields = ({ currentVariant, onChange }: CommonVariantF
           checked={currentVariant.onSale || false}
           onChange={onChange}
         />
-        <label>Con descuento</label>
+        <label>En oferta</label>
         {currentVariant.onSale && (
           <input
             type="number"

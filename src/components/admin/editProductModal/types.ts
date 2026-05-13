@@ -18,23 +18,6 @@ import type {
 
 // ========== TIPOS ESPECÍFICOS DEL MÓDULO ==========
 
-// Props para el modal de edición de variante
-export type EditVariantModalProps = {
-  isOpen: boolean;
-  variant: CurrentVariant;
-  variantIndex: number;
-  productType: ProductType;
-  suppliers: SupplierOption[];
-  calculatedPrice: number;
-  onClose: () => void;
-  onVariantChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  onCurrentSupplierChange: (supplier: CurrentSupplier) => void;
-  onAddSupplier: () => void;
-  onRemoveSupplier: (index: number) => void;
-  onSave: () => void;
-  currentSupplier: CurrentSupplier;
-};
-
 // Props para el Container
 export type EditProductModalProps = {
   product: Product;
@@ -50,6 +33,7 @@ export type EditProductPresentationalProps = {
   brands: string[];
   suppliers: SupplierOption[];
   productType: ProductType;
+  submitting: boolean;
 
   // Variant editing state
   isEditingVariant: boolean;
@@ -69,6 +53,7 @@ export type EditProductPresentationalProps = {
   onFormChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => void;
+  onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCheckboxChange: (field: "byOrder" | "isFeatured", checked: boolean) => void;
   onSubmit: (e: React.FormEvent) => void;
 

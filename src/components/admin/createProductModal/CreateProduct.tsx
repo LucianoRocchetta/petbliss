@@ -1,4 +1,4 @@
-import { IconX } from "@tabler/icons-react";
+import { IconX, IconLoader2 } from "@tabler/icons-react";
 import { CreateProductPresentationalProps } from "./types";
 import { GeneralInfoSection, VariantsSection } from "./components";
 
@@ -12,6 +12,7 @@ export const CreateProduct = ({
   currentVariant,
   currentSupplier,
   calculatedPrice,
+  submitting,
   // Handlers
   onClose,
   onFormChange,
@@ -68,10 +69,12 @@ export const CreateProduct = ({
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-6 py-3 bg-blue-600 text-white rounded-2xl"
+              disabled={submitting}
+              className="px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               onClick={onSubmit}
             >
-              Crear producto
+              {submitting && <IconLoader2 className="w-4 h-4 animate-spin" />}
+              {submitting ? "Creando..." : "Crear producto"}
             </button>
           </div>
         </form>
