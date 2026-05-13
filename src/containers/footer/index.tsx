@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Heart } from "lucide-react";
+import { Heart } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export const Footer = () => {
   return (
@@ -9,17 +9,20 @@ export const Footer = () => {
         <div className="flex flex-col lg:flex-row lg:justify-between gap-5 py-10">
           <div className="flex flex-col gap-5">
             <Link href="/" className="flex items-center gap-4">
-              <Image 
-                src="/images/logo-rounded-black.png" 
-                alt="Petbliss Logo" 
-                width={100} 
-                height={100} 
+              <Image
+                src="/images/logo-rounded-black.png"
+                alt="Petbliss Logo"
+                width={100}
+                height={100}
                 className="w-16 h-16"
+                quality={100}
               />
               <h2 className="text-4xl font-bold text-white">Petbliss</h2>
             </Link>
 
-            <p className="text-base font-light text-[#E3E3E3]">Nutrición Premium para tus queridas <br /> mascotas.</p>
+            <p className="text-base font-light text-[#E3E3E3]">
+              Nutrición Premium para tus queridas <br /> mascotas.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -70,21 +73,17 @@ export const Footer = () => {
                 </li>
               </ul>
             </div>
-
-
           </div>
-
         </div>
 
         <div className="w-full border-t border-[#737373]/50 py-5 flex flex-col lg:flex-row lg:items-center lg:justify-between text-[#E3E3E3] text-sm lg:text-base gap-2">
-          <p>
-            © 2026 Petbliss. Todos los derechos reservados.
-          </p>
+          <p>© 2026 Petbliss. Todos los derechos reservados.</p>
           <p className="text-bold flex items-center gap-2">
-            Hecho con <Heart className="w-5 h-5 text-white" /> para mascotas en todas partes
+            Hecho con <Heart className="w-5 h-5 text-white" /> para mascotas en
+            todas partes
           </p>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}

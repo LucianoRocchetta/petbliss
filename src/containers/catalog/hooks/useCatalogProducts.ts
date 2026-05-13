@@ -1,12 +1,14 @@
-"use client"
+'use client'
 
-import { useCallback, useEffect, useState } from "react"
-import { getProducts } from "@/services/productService"
-import { Product } from "@/types"
-import { CATALOG_CONFIG } from "../constants"
-import { CatalogFilters, UseCatalogProductsReturn } from "../types"
+import { useCallback, useEffect, useState } from 'react'
+import { getProducts } from '@/services/productService'
+import { Product } from '@/types'
+import { CATALOG_CONFIG } from '../constants'
+import { CatalogFilters, UseCatalogProductsReturn } from '../types'
 
-export const useCatalogProducts = (filters: CatalogFilters): UseCatalogProductsReturn => {
+export const useCatalogProducts = (
+  filters: CatalogFilters
+): UseCatalogProductsReturn => {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -14,12 +16,10 @@ export const useCatalogProducts = (filters: CatalogFilters): UseCatalogProductsR
 
   const { keyword, category, brand } = filters
 
-  // Reset página cuando cambian los filtros
   useEffect(() => {
     setPage(1)
   }, [keyword, category, brand])
 
-  // Fetch productos
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true)
@@ -37,7 +37,7 @@ export const useCatalogProducts = (filters: CatalogFilters): UseCatalogProductsR
           setTotalPages(response.totalPages)
         }
       } catch (error) {
-        console.error("Error fetching catalog products:", error)
+        console.error('Error fetching catalog products:', error)
       } finally {
         setIsLoading(false)
       }
