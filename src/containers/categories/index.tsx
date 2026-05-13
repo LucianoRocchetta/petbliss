@@ -1,31 +1,32 @@
-"use client";
+'use client'
 
-import { CategoriesCardSkeleton } from "@/components/shared";
-import { getCategories } from "@/services/categoryService";
-import { Category } from "@/types";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { CategoriesCardSkeleton } from '@/components/shared'
+import { cardHoverProps } from '@/lib/animations'
+import { getCategories } from '@/services/categoryService'
+import { Category } from '@/types'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Categories() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [categories, setCategories] = useState<Category[]>([])
+  const [isLoading, setIsLoading] = useState<Boolean>(true)
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true)
     const getAllCategories = async () => {
       try {
-        const res = await getCategories();
+        const res = await getCategories()
 
-        setCategories(res);
-        setIsLoading(false);
+        setCategories(res)
+        setIsLoading(false)
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-    };
-    getAllCategories();
-  }, []);
+    }
+    getAllCategories()
+  }, [])
 
   return (
     <section>
@@ -33,7 +34,7 @@ export default function Categories() {
       <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 ">
         {!isLoading
           ? categories
-              .filter((category) => category.name != "Destacado")
+              .filter((category) => category.name != 'Destacado')
               .map((category) => (
                 <Link
                   key={category._id}
@@ -41,12 +42,7 @@ export default function Categories() {
                   passHref
                 >
                   <motion.div
-                    whileHover={{
-                      scale: 1.01,
-                      y: -5,
-                      boxShadow: "0px 10px 20px rgba(0,0,0,0.2)",
-                    }}
-                    transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                    {...cardHoverProps}
                     className="rounded-2xl h-40 relative overflow-hidden flex items-center p-5 bg-zinc-700"
                   >
                     <div className="absolute inset-0 bg-zinc-800 opacity-30"></div>
@@ -68,5 +64,5 @@ export default function Categories() {
               .map((_, index) => <CategoriesCardSkeleton key={index} />)}
       </div>
     </section>
-  );
+  )
 }

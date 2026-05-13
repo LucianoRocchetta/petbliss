@@ -1,33 +1,33 @@
-import { Product } from "@/types";
-import { IconReport, IconShoppingCart } from "@tabler/icons-react";
-import useCartStore from "@/store/cartStore";
-import Image from "next/image";
-import { useState } from "react";
-import { formatPrice } from "@/utils";
-import { formatVariantName } from "@/utils/productHelpers";
+import { Product } from '@/types'
+import { IconReport, IconShoppingCart } from '@tabler/icons-react'
+import useCartStore from '@/store/cartStore'
+import Image from 'next/image'
+import { useState } from 'react'
+import { formatPrice } from '@/utils'
+import { formatVariantName } from '@/utils/productHelpers'
 
 type ProductCardProps = {
-  product: Product;
-};
+  product: Product
+}
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const { addItem, openCart } = useCartStore();
-  const [activeVariant, setActiveVariant] = useState<number>(0);
+  const { addItem, openCart } = useCartStore()
+  const [activeVariant, setActiveVariant] = useState<number>(0)
 
   const handleAddItem = () => {
-    addItem({ product: product, quantity: 1, variant: activeVariant });
-    openCart();
-  };
+    addItem({ product: product, quantity: 1, variant: activeVariant })
+    openCart()
+  }
 
   const getVariantLabel = (variant: any) => {
-    return formatVariantName(product.productType, variant);
-  };
+    return formatVariantName(product.productType, variant)
+  }
 
   return (
     <div
       key={product.name}
       className={`relative border rounded-2xl bg-zinc-200 text-zinc-900 p-4 transition-opacity duration-300 hover:shadow-lg hover:shadow-zinc-900 ${
-        !product.available ? "opacity-50 grayscale" : ""
+        !product.available ? 'opacity-50 grayscale' : ''
       }`}
     >
       <div className="flex justify-center items-center mb-4">
@@ -38,6 +38,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             width={250}
             height={250}
             className="w-full h-full object-contain"
+            quality={100}
           />
         </div>
       </div>
@@ -48,7 +49,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </h3>
           <div className="flex gap-2 my-2 flex-wrap">
             {product.variants.map((variant, index) => {
-              const isActive = index === activeVariant;
+              const isActive = index === activeVariant
 
               return (
                 <p
@@ -56,13 +57,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                   onClick={() => setActiveVariant(index)}
                   className={`p-2 rounded-2xl cursor-pointer duration-75 text-xs ${
                     isActive
-                      ? "bg-blue-500 text-zinc-200"
-                      : "border-zinc-800 border"
+                      ? 'bg-blue-500 text-zinc-200'
+                      : 'border-zinc-800 border'
                   } hover:bg-blue-500 hover:text-zinc-200 hover:border-none`}
                 >
                   {getVariantLabel(variant)}
                 </p>
-              );
+              )
             })}
           </div>
           <p className="text-xs text-gray-600 mb-1">
@@ -98,13 +99,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className="flex items-center bg-red-400/15 rounded-t-2xl absolute top-0 right-0 w-full p-2">
           <div className="bg-red-500 p-1 rounded-2xl flex items-center content-center">
             <p className="font-bold text-2xl text-zinc-200">
-              {product.variants[activeVariant]?.discount}%{" "}
+              {product.variants[activeVariant]?.discount}%{' '}
               <span className="font-normal text-sm">OFF</span>
             </p>
           </div>
         </div>
       ) : (
-        ""
+        ''
       )}
       <div className="flex items-center justify-end absolute top-0 right-0 w-full p-2">
         {product.byOrder ? (
@@ -113,9 +114,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <p className="font-bold">Por encargo</p>
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
     </div>
-  );
-};
+  )
+}

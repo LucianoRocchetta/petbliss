@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { motion } from "framer-motion"
-import { CATALOG_CONFIG, GRID_CONFIG } from "../constants"
+import { motion } from 'framer-motion'
+import { CATALOG_CONFIG, GRID_CONFIG } from '../constants'
+import { fadeUpVariants, getStaggerDelay } from '@/lib/animations'
 
 const CardSkeleton = ({ index }: { index: number }) => (
   <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: index * 0.05 }}
+    variants={fadeUpVariants}
+    transition={{ delay: getStaggerDelay(index, 0.05) }}
     className="animate-pulse"
   >
     <div className="bg-[#E3E3E3] rounded-2xl aspect-[4/5] mb-4" />
@@ -22,7 +22,9 @@ const CardSkeleton = ({ index }: { index: number }) => (
 )
 
 export const LoadingSkeleton = () => (
-  <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${GRID_CONFIG.gap}`}>
+  <div
+    className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${GRID_CONFIG.gap}`}
+  >
     {Array.from({ length: CATALOG_CONFIG.skeletonCount }).map((_, index) => (
       <CardSkeleton key={index} index={index} />
     ))}
